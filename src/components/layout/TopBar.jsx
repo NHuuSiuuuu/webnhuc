@@ -4,15 +4,15 @@ function TopBar() {
   return (
     <div id="topbar">
       <div className=" container px-4 mx-auto ">
-        <div className="flex  justify-center items-center ">
+        <div className="text-center md:flex justify-center items-center ">
           {/* Liên hệ */}
-          <div className="flex px-4 w-[33.33%] tracking-wider">
+          <div className="hidden md:flex px-4 flex-1 tracking-wider ">
             <ul>
               <li>
                 <span>
                   <a href="">tsunsg@gmail.com</a>
                 </span>
-                 <span className="h-9">|</span>
+                <span className="h-9">|</span>
                 <span>
                   <a href="">Hotline: 093 407 6342</a>
                 </span>
@@ -21,12 +21,12 @@ function TopBar() {
           </div>
 
           {/* Content */}
-          <div className="flex px-4 w-[33.33%] text-center">
+          <div className="w-full  md:flex px-4 flex-1 text-center">
             Các đơn hàng giá trị cao sẽ được vận chuyển bằng hộp
           </div>
 
           {/* Tìm kiếm */}
-          <div className="flex px-4 w-[33.33%]">
+          <div className="hidden md:flex px-4 flex-1">
             <form action="" className="relative">
               <input
                 type="text"
