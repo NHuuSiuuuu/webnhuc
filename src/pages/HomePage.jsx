@@ -1,4 +1,5 @@
 import TopBar from "../components/layout/TopBar";
+import Header from "../components/layout/Header";
 
 function HomePage() {
   return (
@@ -7,7 +8,7 @@ function HomePage() {
       <TopBar />
 
       {/* Header */}
-      {/* <Header /> */}
+      <Header />
 
       {/* Hero Slide */}
       {/* <HeroSlide /> */}

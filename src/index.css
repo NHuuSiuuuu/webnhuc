@@ -1,7 +1,6 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+/* @import "tw-animate-css"; */
 @custom-variant dark (&:is(.dark *));
-
 
 @layer base {
   :root {
@@ -11,6 +10,13 @@
   body {
     @apply leading-normal text-base overflow-hidden;
   }
+  button,
+  a {
+    @apply cursor-pointer;
+  }
+  li {
+    @apply cursor-pointer;
+  }
 }
 
 @layer utilities {
@@ -18,6 +24,20 @@
     @apply bg-[#f0e2d0] text-base py-2.5 text-[#795444];
   }
   .container {
-    @apply text-[13px] ;
+    @apply text-[13px];
+  }
+
+  .nav {
+    @apply flex justify-center items-center;
+
+    a {
+      @apply uppercase font-bold mr-2.5;
+    }
+  }
+  .clearanceSale {
+    @apply text-[12px] font-extralight text-start text-black text-nowrap block px-[18px] py-[9px];
+  }
+  .clearanceSale:hover {
+    @apply text-[#a47b67] pl-[22px];
   }
 }
