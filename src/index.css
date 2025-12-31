@@ -17,6 +17,9 @@
   li {
     @apply cursor-pointer;
   }
+  .section-container {
+    @apply w-full md:w-[90%] px-[15px] md:mx-[15px];
+  }
 }
 
 @layer utilities {

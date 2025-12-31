@@ -12,6 +12,7 @@ module.exports = {
     container: {
       // Thằng container này chỉ hỗ trợ căn trái phải hay responsieve ... ko htro font-size, color, background...
       center: true,
+      padding: "15px",
       screens: {
         md: "750px",
         lg: "970px",

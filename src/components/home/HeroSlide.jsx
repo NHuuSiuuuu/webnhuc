@@ -14,32 +14,33 @@ function HeroSide() {
     cssEase: "linear",
   };
   return (
-    <div className="slider-container">
+    <div className="relative z-20 slider-container">
       <Slider {...settings}>
         <div>
-          <img
-            src="https://cdn.hstatic.net/1000321269/file/banner_shopee__1__70b2c5c0497c414d803974a096108d69.png"
-            alt=""
-          />
+          <a>
+            <img
+              src="https://cdn.hstatic.net/1000321269/file/banner_shopee__1__70b2c5c0497c414d803974a096108d69.png"
+              alt=""
+            />
+          </a>
         </div>
         <div>
-          <img
-            src="https://cdn.hstatic.net/1000321269/file/4_38e4d6063822418887fbf0db4e9a19e7.png"
-            alt=""
-          />
+          <a>
+            <img
+              src="https://cdn.hstatic.net/1000321269/file/4_38e4d6063822418887fbf0db4e9a19e7.png"
+              alt=""
+            />
+          </a>
         </div>
         <div>
-          <img
-            src="https://cdn.hstatic.net/1000321269/file/banner_shopee_fa461afda7ed4057a831b2c5583ac427.png"
-            alt=""
-          />
+          <a>
+            <img
+              src="https://cdn.hstatic.net/1000321269/file/banner_shopee_fa461afda7ed4057a831b2c5583ac427.png"
+              alt=""
+            />
+          </a>
         </div>
       </Slider>
-    
-
-    <div>
-      
-    </div>
     </div>
   );
 }
