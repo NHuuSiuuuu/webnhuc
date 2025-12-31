@@ -1,5 +1,6 @@
 import TopBar from "../components/layout/TopBar";
 import Header from "../components/layout/Header";
+import HeroSlide from "../components/home/HeroSlide";
 
 function HomePage() {
   return (
@@ -11,7 +12,7 @@ function HomePage() {
       <Header />
 
       {/* Hero Slide */}
-      {/* <HeroSlide /> */}
+      <HeroSlide />
 
       {/* CategoryList */}
       {/* <CategoryList /> */}

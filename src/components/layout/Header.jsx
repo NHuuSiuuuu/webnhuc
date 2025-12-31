@@ -125,7 +125,7 @@ function Header() {
       <div
         onClick={() => setOpen(false)}
         className={`fixed z-9 inset-0 bg-black/50  transition-opacity  duration-300 ${
-          open ? "opacity-100 visible" : "opacity-0 invisible"
+          open ? "opacity-100 visible" : "opacity-0 invisible" // open ? "opacity-100 " : "hidden": có thể viết như này. Nưng sẽ mất
         }`}
       />
 

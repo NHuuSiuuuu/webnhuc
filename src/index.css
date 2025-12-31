@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply leading-normal text-base overflow-hidden;
+    @apply leading-normal text-base;
   }
   button,
   a {
@@ -39,5 +39,29 @@
   }
   .clearanceSale:hover {
     @apply text-[#a47b67] pl-[22px];
+  }
+
+  /* Next và Prev */
+  .slick-prev {
+    @apply !left-2 z-20;
+  }
+
+  .slick-next {
+    @apply !right-2 z-20;
+  }
+
+  .slider-container .slick-prev,
+  .slider-container .slick-next {
+    @apply opacity-0 transform transition-opacity duration-300;
+  }
+
+  .slider-container:hover .slick-prev,
+  .slider-container:hover .slick-next {
+    @apply opacity-100;
+  }
+
+  .slick-prev:before,
+  .slick-next:before {
+    @apply !text-2xl;
   }
 }
