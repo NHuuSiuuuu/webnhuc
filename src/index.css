@@ -93,8 +93,16 @@
     width: 100%;
   }
 
- .productList .slick-prev:before,
-.productList .slick-next:before {
-  content: none !important;
-}
+  .productList .slick-prev:before,
+  .productList .slick-next:before {
+    content: none !important;
+  }
+
+  /* Footer */
+  .footerTitle h4 {
+    @apply text-white text-[20px] capitalize  tracking-[0.4px] leading-0.5 mb-6;
+  }
+  .footerContent p {
+    @apply text-[#9f9f9f]  text-[14px] leading-[21px];
+  }
 }
