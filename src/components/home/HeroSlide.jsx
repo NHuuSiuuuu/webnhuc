@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 function HeroSide() {
   var settings = {
-    dots: false, // hiện dấu ...
+    dots: true, // hiện dấu ...
     infinite: true, // có lặp hay không
     speed: 500, // Tốc độ animation
     slidesToShow: 1, // Hiện mấy slide

@@ -10,6 +10,14 @@
   body {
     @apply leading-normal text-base;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-[#a47b67];
+  }
   button,
   a {
     @apply cursor-pointer;
@@ -67,4 +75,26 @@
   .slick-next:before {
     @apply !text-2xl;
   }
+
+  /*  */
+
+  /* react-slick chia width → KHÔNG cộng thêm padding/margin */
+  .slick-track {
+    display: flex;
+    gap: 20px; /* khoảng cách giữa sản phẩm */
+  }
+
+  .slick-slide {
+    height: auto;
+  }
+
+  /* Card bên trong */
+  .product-card {
+    width: 100%;
+  }
+
+ .productList .slick-prev:before,
+.productList .slick-next:before {
+  content: none !important;
+}
 }

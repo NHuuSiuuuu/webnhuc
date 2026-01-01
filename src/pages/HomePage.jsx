@@ -2,6 +2,7 @@ import TopBar from "../components/layout/TopBar";
 import Header from "../components/layout/Header";
 import HeroSlide from "../components/home/HeroSlide";
 import CategoryList from "../components/home/CategoryList";
+import ProductList from "../components/home/ProductList";
 
 function HomePage() {
   return (
@@ -19,7 +20,7 @@ function HomePage() {
       <CategoryList />
 
       {/* ProductList */}
-      {/* <ProductList/> */}
+      <ProductList/>
     </>
   );
 }
