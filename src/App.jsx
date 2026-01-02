@@ -1,18 +1,8 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage";
-import NotFound from "./pages/NotFound";
-
+import AllRoute from "./components/AllRoute";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  return <AllRoute />;
 }
 
 export default App;
