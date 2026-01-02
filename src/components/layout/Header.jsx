@@ -2,13 +2,25 @@ import { ChevronDown, Menu, ShoppingBag, User, X } from "lucide-react";
 import Tippy from "@tippyjs/react/headless";
 import { useState } from "react";
 
-function Header() {
+function Header({active}) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <div className="bg-[#ffff] shadow-2xs ">
-        <div className="container mx-auto md:px-4 ">
-          <div className="flex justify-between py-[15px] md:flex">
+       <div
+      className={`
+        fixed z-50 top-0 left-1/2 w-full -translate-x-1/2
+        bg-white shadow-2xl
+        transition-transform duration-300 ease-out
+        ${active ? "fixed top-0 left-0 z-50" : "relative"}
+      `}
+    >
+      {/* className={`
+            container mx-auto h-full
+            transition-all duration-300
+            ${active ? "py-0" : "py-4"}
+          `}> */}
+        <div className={`container mx-auto md:px-4 `}>
+          <div className={`flex justify-between  md:flex transition-all duration-300 ${active? "py-0": "py-[15px]"}`}>
             {/* Logo */}
             <div className="flex-3 md:flex md:flex-1 justify-center items-center px-[15px]">
               <a href="" className="block">

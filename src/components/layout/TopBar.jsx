@@ -3,10 +3,10 @@ import { Search } from "lucide-react";
 function TopBar() {
   return (
     <div id="topbar">
-      <div className=" container px-4 mx-auto ">
-        <div className="text-center md:flex justify-center items-center ">
+      <div className="container px-4 mx-auto ">
+        <div className="items-center justify-center text-center md:flex ">
           {/* Liên hệ */}
-          <div className="hidden md:flex px-4 flex-1 tracking-wider ">
+          <div className="flex-1 hidden px-4 tracking-wider md:flex ">
             <ul>
               <li>
                 <span>
@@ -21,12 +21,12 @@ function TopBar() {
           </div>
 
           {/* Content */}
-          <div className="w-full  md:flex px-4 flex-1 text-center">
+          <div className="flex-1 w-full px-4 text-center md:flex">
             Các đơn hàng giá trị cao sẽ được vận chuyển bằng hộp
           </div>
 
           {/* Tìm kiếm */}
-          <div className="hidden md:flex px-4 flex-1">
+          <div className="flex-1 hidden px-4 md:flex">
             <form action="" className="relative">
               <input
                 type="text"

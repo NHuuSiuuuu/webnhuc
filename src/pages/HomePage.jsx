@@ -4,15 +4,32 @@ import HeroSlide from "../components/home/HeroSlide";
 import CategoryList from "../components/home/CategoryList";
 import ProductList from "../components/home/ProductList";
 import Footer from "../components/layout/Footer";
+import { useEffect, useState } from "react";
 
 function HomePage() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (Math.floor(scrollY) >= 60) {
+        setScrolled(true);
+        console.log("hahah");
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
   return (
     <>
       {/* Top Bar */}
-      <TopBar />
+      <TopBar hidden={scrolled} />
 
       {/* Header */}
-      <Header />
+      <Header active={scrolled} />
 
       {/* Hero Slide */}
       <HeroSlide />
@@ -21,10 +38,10 @@ function HomePage() {
       <CategoryList />
 
       {/* ProductList */}
-      <ProductList/>
+      <ProductList />
 
       {/* Footer */}
-      <Footer/>
+      <Footer />
     </>
   );
 }
