@@ -393,10 +393,12 @@ function ProductDetail() {
         </div>
         <div>
           <div className="text-center">
-            <h2 className="mt-[10px] mb-[50px]">Sản phâm liên quan</h2>
+            <h2 className="mt-[10px] mb-[50px] font-medium uppercase text-[28px]">
+              Sản phẩm liên quan
+            </h2>
           </div>
         </div>
-        <div className="h-dvh"></div>
+        {/* <div className="h-dvh"></div> */}
       </div>
     </div>
   );

@@ -170,6 +170,20 @@
   transition: width 0.4s ease;
   z-index: -1;
 }
+.w90 {
+@apply w-[95%]
+}
+.btn-border-reveal.cl::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #e6393a;
+  transition: width 0.4s ease;
+  z-index: -1;
+}
 
 .btn-border-reveal:hover::after {
   width: 100%;
