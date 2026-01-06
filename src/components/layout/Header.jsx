@@ -1,6 +1,7 @@
 import { ChevronDown, Menu, ShoppingBag, User, X } from "lucide-react";
 import Tippy from "@tippyjs/react/headless";
 import { useState } from "react";
+import { Link } from "react-router";
 
 function Header({ active }) {
   const [open, setOpen] = useState(false);
@@ -253,12 +254,14 @@ function Header({ active }) {
 
                 <tr className="">
                   <td className="">
-                    <button
-                      className="font-bold uppercase btn btn-border-reveal cl w90 "
-                      type="submit"
-                    >
-                      Xem giỏ hàng
-                    </button>
+                    <Link to="/cart">
+                      <button
+                        className="font-bold uppercase btn btn-border-reveal cl w90 "
+                        type="submit"
+                      >
+                        Xem giỏ hàng
+                      </button>
+                    </Link>
                   </td>
                   <td className="text-right">
                     <button
