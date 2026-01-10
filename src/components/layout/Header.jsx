@@ -186,7 +186,7 @@ function Header({ active }) {
       <div
         className={`${
           openCart ? "translate-x-0 " : "translate-x-full pointer-events-none"
-        } fixed bg-white w-[550px] z-50 transition-transform  duration-300 top-0 h-full right-0`}
+        } fixed bg-white md:w-[550px] z-50 transition-transform  duration-300 top-0 h-full right-0`}
       >
         {/* Giỏ hàng */}
         <div className="pt-[60px] px-[70px] pb-[250px] overflow-hidden">
@@ -198,16 +198,18 @@ function Header({ active }) {
             <table className="w-full">
               <tbody>
                 <tr className="border-b-[#bcbcbc] border-b-[1px] border-dotted">
-                  <td className="p-[10px] ">
-                    <a href="/">
-                      <img
-                        className="w-[70px] border-solid border-[#ededed] mr-[10px] object-cover overflow-hidden"
-                        src="https://cdn.hstatic.net/products/1000321269/k_ch_th__c_web_to_195fd56c3f7c4c9abf666f7401eb46e2_small.jpg"
-                        alt=""
-                      />
+                  <td className="p-[10px] aspect-[3/4]">
+                    <a href="/" className="block">
+                 <div className="aspect-[3/4] overflow-hidden border border-[#ededed]" >
+                        <img
+                          className="md:w-[70px]    w-[90px] border-solid border-[#ededed] md:mr-[10px] object-cover overflow-hidden"
+                          src="https://cdn.hstatic.net/products/1000321269/k_ch_th__c_web_to_195fd56c3f7c4c9abf666f7401eb46e2_small.jpg"
+                          alt=""
+                        />
+                 </div>
                     </a>
                   </td>
-                  <td className="p-[25px] relative">
+                  <td className="p-[10px] md:p-[25px] relative">
                     <a
                       href="/"
                       className="float-left w-full text-[13px] font-semibold uppercase text-[#a47b67]"
