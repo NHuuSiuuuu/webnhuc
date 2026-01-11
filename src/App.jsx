@@ -8,10 +8,11 @@ function App() {
     const res = await axios.get(
       `${import.meta.env.REACT_API_BACKEND}/api/product/products`
     );
-    console.log("res:", res);
+    console.log("res:", res.data);
+    return res.data;
   };
-  const query = useQuery({ queryKey: ["todos"], queryFn: fetchApi });
-  console.log("query: ", query);
+  // const query = useQuery({ queryKey: ["todos"], queryFn: fetchApi });
+  // console.log("query: ", query);
 
   // useEffect(() => {
   //   fetchApi();
