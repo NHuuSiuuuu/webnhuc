@@ -6,6 +6,7 @@ import Cart from "../components/products/Card";
 import LayoutDefaultAdmin from "@/components/admin/layout/LayoutDefault";
 import DashBoard from "@/pages/admin/DashBoard";
 import ProductAdmin from "@/pages/admin/product/ProductAdmin";
+import ProductCreateAdmin from "@/pages/admin/product/ProductCreateAdmin";
 
 export const routes = [
   {
@@ -42,6 +43,14 @@ export const routes = [
         path: "products",
         element: <ProductAdmin />,
       },
+      {
+        path: "product/create",
+        element: <ProductCreateAdmin />,
+      },
+      //       {
+      //   path: "products",
+      //   element: <ProductAdmin />,
+      // },
     ],
   },
 ];
