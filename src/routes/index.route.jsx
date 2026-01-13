@@ -3,6 +3,9 @@ import LayoutDefault from "../components/layout/LayoutDefault";
 import Collection from "../components/products/Collection";
 import ProductDetail from "../components/products/ProductDetail";
 import Cart from "../components/products/Card";
+import LayoutDefaultAdmin from "@/components/admin/layout/LayoutDefault";
+import DashBoard from "@/pages/admin/DashBoard";
+import ProductAdmin from "@/pages/admin/product/ProductAdmin";
 
 export const routes = [
   {
@@ -10,7 +13,7 @@ export const routes = [
     element: <LayoutDefault />,
     children: [
       {
-        path: "/",
+        index: true,
         element: <HomePage />,
       },
       {
@@ -24,6 +27,20 @@ export const routes = [
       {
         path: "product/:slug",
         element: <ProductDetail />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <LayoutDefaultAdmin />,
+    children: [
+      {
+        index: true,
+        element: <DashBoard />,
+      },
+      {
+        path: "products",
+        element: <ProductAdmin />,
       },
     ],
   },
