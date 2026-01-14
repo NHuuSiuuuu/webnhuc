@@ -1,8 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 function ProductAdmin() {
+  const queryClient = useQueryClient();
+  /* =======================
+    API danh sách product
+  =======================*/
   const fetchApi = async () => {
     const res = await axios.get(
       "http://localhost:3001/api/product/products?page=1"
@@ -10,10 +14,43 @@ function ProductAdmin() {
     return res.data;
   };
 
+  /* =======================
+    API xóa product
+  =======================*/
+  const deleteProduct = async (id) => {
+    const res = await axios.patch(
+      `http://localhost:3001/api/product/delete/${id}`
+    );
+    return res.data;
+  };
+
+  /* =======================
+    Load product
+  =======================*/
   const { data, isLoading, isError } = useQuery({
     queryKey: ["products"],
     queryFn: fetchApi,
   });
+
+  /* =======================
+    Mutation delete
+  =======================*/
+  const deleteMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["products"]);
+    },
+  });
+
+  /* =======================
+    Hàm xóa product
+  =======================*/
+  const handleRemoveProduct = (id) => {
+    if (confirm("Bạn có chắc muốn xóa!")) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Lỗi rồi</div>;
 
@@ -59,9 +96,20 @@ function ProductAdmin() {
                 ))}
               </td>
               <td className="border px-[20px]">
-                <button className="border mx-[5px] px-[10px]">Sửa</button>
+                <Link
+                  to={`/admin/product/update/${item._id}`}
+                  className="border mx-[5px] px-[10px]"
+                >
+                  Sửa
+                </Link>
                 <button className="border mx-[5px] px-[10px]">Chi tiết</button>
-                <button className="border mx-[5px] px-[10px]">Xóa</button>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveProduct(item._id)}
+                  className="border mx-[5px] px-[10px]"
+                >
+                  Xóa
+                </button>
               </td>
             </tr>
           ))}

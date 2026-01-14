@@ -7,6 +7,7 @@ import LayoutDefaultAdmin from "@/components/admin/layout/LayoutDefault";
 import DashBoard from "@/pages/admin/DashBoard";
 import ProductAdmin from "@/pages/admin/product/ProductAdmin";
 import ProductCreateAdmin from "@/pages/admin/product/ProductCreateAdmin";
+import ProductUpdateAdmin from "@/pages/admin/product/ProductUpdateAdmin";
 
 export const routes = [
   {
@@ -47,10 +48,10 @@ export const routes = [
         path: "product/create",
         element: <ProductCreateAdmin />,
       },
-      //       {
-      //   path: "products",
-      //   element: <ProductAdmin />,
-      // },
+      {
+        path: "product/update/:id",
+        element: <ProductUpdateAdmin />,
+      },
     ],
   },
 ];
