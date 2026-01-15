@@ -29,7 +29,7 @@ function Sidebar() {
 
         {/* Danh mục sản phẩm */}
         <NavLink
-          to="/admin/products-category/"
+          to="/admin/products-category"
           className={({ isActive }) =>
             isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
           }

@@ -8,6 +8,9 @@ import DashBoard from "@/pages/admin/DashBoard";
 import ProductAdmin from "@/pages/admin/product/ProductAdmin";
 import ProductCreateAdmin from "@/pages/admin/product/ProductCreateAdmin";
 import ProductUpdateAdmin from "@/pages/admin/product/ProductUpdateAdmin";
+import CategoryAdmin from "@/pages/admin/category-product/CategoryAdmin";
+import CategoryUpdateAdmin from "@/pages/admin/category-product/CategoryUpdateAdmin";
+import CategoryCreateAdmin from "@/pages/admin/category-product/CategoryCreateAdmin";
 
 export const routes = [
   {
@@ -51,6 +54,18 @@ export const routes = [
       {
         path: "product/update/:id",
         element: <ProductUpdateAdmin />,
+      },
+      {
+        path: "products-category",
+        element: <CategoryAdmin />,
+      },
+      {
+        path: "product-category/update/:id",
+        element: <CategoryUpdateAdmin />,
+      },
+      {
+        path: "product-category/create",
+        element: <CategoryCreateAdmin />,
       },
     ],
   },
