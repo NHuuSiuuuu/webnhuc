@@ -11,6 +11,7 @@ import ProductUpdateAdmin from "@/pages/admin/product/ProductUpdateAdmin";
 import CategoryAdmin from "@/pages/admin/category-product/CategoryAdmin";
 import CategoryUpdateAdmin from "@/pages/admin/category-product/CategoryUpdateAdmin";
 import CategoryCreateAdmin from "@/pages/admin/category-product/CategoryCreateAdmin";
+import CategoryDetail from "@/pages/admin/category-product/CategoryDetail";
 
 export const routes = [
   {
@@ -66,6 +67,10 @@ export const routes = [
       {
         path: "product-category/create",
         element: <CategoryCreateAdmin />,
+      },
+      {
+        path: "product-category/detail/:id",
+        element: <CategoryDetail />,
       },
     ],
   },

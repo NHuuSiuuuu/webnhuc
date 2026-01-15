@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 function CategoryAdmin() {
+  const queryClient = useQueryClient();
   const listCategory = async () => {
     const res = await axios.post(
       `http://localhost:3001/api/category-product/productCategories`
@@ -14,6 +15,29 @@ function CategoryAdmin() {
     queryFn: listCategory,
     queryKey: ["categories"],
   });
+
+  // API Xóa Danh  Mục SP
+  const deleteCategory = async (id) => {
+    const res = await axios.patch(
+      `http://localhost:3001/api/category-product/delete/${id}`
+    );
+
+    return res.data;
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCategory,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["categories"]);
+      alert("Xóa thành công!");
+    },
+  });
+
+  const handleRemoveProduct = (id) => {
+    if (confirm("Bạn có chắc muốn xóa!")) {
+      deleteMutation.mutate(id);
+    }
+  };
   if (isLoading) return <div>Loading ....</div>;
   if (isError) return <div>Lỗi rồi</div>;
   console.log(data);
@@ -59,12 +83,12 @@ function CategoryAdmin() {
               </td>
               <td>
                 <Link
-                  to={`/admin/product/update/${item._id}`}
+                  to={`/admin/product-category/update/${item._id}`}
                   className="border mx-[5px] px-[10px]"
                 >
                   Sửa
                 </Link>
-                <button className="border mx-[5px] px-[10px]">Chi tiết</button>
+                <Link to={`/admin/product-category/detail/${item._id}`} className="border mx-[5px] px-[10px]">Chi tiết</Link>
                 <button
                   type="button"
                   onClick={() => handleRemoveProduct(item._id)}
