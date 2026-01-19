@@ -1,8 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { useNavigate } from "react-router";
 
 function CategoryCreateAdmin() {
+  const navigate = useNavigate();
   /* =======================
     State lưu form
   =======================*/
@@ -12,6 +14,7 @@ function CategoryCreateAdmin() {
     status: "active",
     position: "",
     thumbnail: [],
+    parent_id: null,
   });
 
   // State preview ảnh
@@ -69,7 +72,7 @@ function CategoryCreateAdmin() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return res.data;
   };
@@ -91,11 +94,48 @@ function CategoryCreateAdmin() {
         position: "",
         thumbnail: null,
       });
+      navigate("http://localhost:5173/admin/products-category");
     },
     onError: (error) => {
-      console.log(error), alert("Tạo danh mục sản phẩm thất bại");
+      (console.log(error), alert("Tạo danh mục sản phẩm thất bại"));
     },
   });
+
+  /* =======================
+    Hàm fetch danh mục
+  =======================*/
+  const fetchCategoryTree = async () => {
+    const res = await axios.get(
+      "http://localhost:3001/api/category-product/tree",
+    );
+    return res.data.data;
+  };
+
+  /* =======================
+    Usequery
+  =======================*/
+  const { data: categoryTree = [] } = useQuery({
+    queryKey: ["category-tree"],
+    queryFn: fetchCategoryTree,
+  });
+
+  console.log(categoryTree);
+
+  // Hàm render option theo tree
+  const renderCategoryOptions = (categories, level = 0) => {
+    return categories.map((item) => (
+      <Fragment key={item._id}>
+        <option value={item._id}>
+          {"— ".repeat(level)} {/* Lặp chuỗi (-) đó level lần */}
+          {item.title}
+        </option>
+
+        {/* Nếu danh mục có children (độ dài length > 0)*/}
+        {item.children?.length > 0 &&
+          renderCategoryOptions(item.children, level + 1)}
+      </Fragment>
+    ));
+  };
 
   /* =======================
     Hàm submit form
@@ -109,6 +149,10 @@ function CategoryCreateAdmin() {
     form.append("status", formData.status);
     form.append("position", formData.position);
     form.append("thumbnail", formData.thumbnail);
+
+    if (formData.parent_id) {
+      form.append("parent_id", formData.parent_id);
+    }
 
     mutate(form);
   };
@@ -128,6 +172,17 @@ function CategoryCreateAdmin() {
           required
           className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
+        <h1>Danh mục cha</h1>
+        <select
+          name="parent_id"
+          value={formData.parent_id || ""}
+          onChange={handleOnchange}
+          className="w-full px-4 py-2 border rounded"
+        >
+          <option value="">-- Danh mục gốc --</option>
+          {renderCategoryOptions(categoryTree)}
+        </select>
+
         <h1>description</h1>
         <input
           name="description"

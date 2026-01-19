@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 function CategoryUpdateAdmin() {
@@ -24,7 +24,7 @@ function CategoryUpdateAdmin() {
   =======================*/
   const fetchData = async () => {
     const res = await axios.post(
-      `http://localhost:3001/api/category-product/detail/${id}`
+      `http://localhost:3001/api/category-product/detail/${id}`,
     );
     return res.data.productCategory;
   };
@@ -32,6 +32,37 @@ function CategoryUpdateAdmin() {
     queryFn: fetchData,
     queryKey: ["category", id],
   });
+  /* =======================
+    API cây danh mục
+  =======================*/
+  const fetchCategoriesTree = async () => {
+    const res = await axios.get(
+      "http://localhost:3001/api/category-product/tree",
+    );
+
+    return res.data.data;
+  };
+  /* =======================
+    useQuery
+  =======================*/
+  const { data: categoryTree = [] } = useQuery({
+    queryKey: ["category-tree"],
+    queryFn: fetchCategoriesTree,
+  });
+  console.log(categoryTree);
+
+  /* =======================
+    Hàm option tree
+  =======================*/
+  const renderCategoryOptions = (categories, level = 0) => {
+    return categories.map((item) => (
+      <Fragment key={item._id}>
+        <option value={item._id}>
+          {"-".repeat(level)} {item.title}
+        </option>
+      </Fragment>
+    ));
+  };
 
   /* =======================
     Set form khi có data
@@ -40,6 +71,7 @@ function CategoryUpdateAdmin() {
     if (data) {
       setFormData({
         title: data.title ?? "",
+        parent_id: data.parent_id ?? "",
         description: data.description ?? "",
         status: data.status ?? "",
         position: data.position ?? "",
@@ -126,7 +158,7 @@ function CategoryUpdateAdmin() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return res.data;
   };
@@ -154,6 +186,10 @@ function CategoryUpdateAdmin() {
     form.append("status", formData.status);
     form.append("position", formData.position);
 
+    if (formData.parent_id) {
+      form.append("parent_id", formData.parent_id);
+    }
+
     // Xóa ảnh trong cloud <Chưa làm>
     // form.append("oldThumbnail", JSON.stringify(formData.thumbnail));
 
@@ -178,6 +214,17 @@ function CategoryUpdateAdmin() {
           value={formData.title}
           className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
+        <h1>Danh mục cha</h1>
+        <select
+          name="parent_id"
+          onChange={handleOnchange}
+          value={formData.parent_id || ""}
+          className="w-full px-4 py-2 border rounded"
+        >
+          <option value="">-- Danh mục gốc --</option>
+          {renderCategoryOptions(categoryTree)}
+        </select>
+
         <h1>description</h1>
         <input
           name="description"

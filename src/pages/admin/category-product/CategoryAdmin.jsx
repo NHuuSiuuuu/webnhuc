@@ -6,7 +6,7 @@ function CategoryAdmin() {
   const queryClient = useQueryClient();
   const listCategory = async () => {
     const res = await axios.post(
-      `http://localhost:3001/api/category-product/productCategories`
+      `http://localhost:3001/api/category-product/productCategories`,
     );
     return res.data.productCategories;
   };
@@ -19,7 +19,7 @@ function CategoryAdmin() {
   // API Xóa Danh  Mục SP
   const deleteCategory = async (id) => {
     const res = await axios.patch(
-      `http://localhost:3001/api/category-product/delete/${id}`
+      `http://localhost:3001/api/category-product/delete/${id}`,
     );
 
     return res.data;
@@ -33,6 +33,12 @@ function CategoryAdmin() {
     },
   });
 
+  // lấy id tương ứng với tên danh mục
+  const categoryMap = {};
+  data.forEach((cat) => {
+    categoryMap[cat._id] = cat.title;
+  });
+
   const handleRemoveProduct = (id) => {
     if (confirm("Bạn có chắc muốn xóa!")) {
       deleteMutation.mutate(id);
@@ -40,67 +46,73 @@ function CategoryAdmin() {
   };
   if (isLoading) return <div>Loading ....</div>;
   if (isError) return <div>Lỗi rồi</div>;
-  console.log(data);
+  console.log("data", data);
   return (
     <div>
-      <h3>Trang danh mục sản phẩm</h3>
+      <h3 className="font-bold">Trang danh mục sản phẩm</h3>
       <Link
         className="border p-[5px] my-[10px] inline-block"
         to="/admin/product-category/create"
       >
-        Tạo mới sản phẩm
+        Tạo mới danh mục sản phẩm
       </Link>
-
-      <table className="border">
-        <thead className="border">
-          <tr>
-            <th className="border px-[20px]">Tiêu đề</th>
-            <th className="border px-[20px]">Chi tiết</th>
-            <th className="border px-[20px]">Sản phẩm nổi bật</th>
-            <th className="border px-[20px]">Giá</th>
-            <th className="border px-[20px]">Trạng thái</th>
-            <th className="border px-[20px]">Ảnh</th>
-            <th className="border px-[20px]">Hành động</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td className="border px-[20px]">{item.title}</td>
-              <td className="border px-[20px]">{item.description}</td>
-              <td className="border px-[20px]">
-                {item.featured == "0" ? "Không nổi bật" : "Nổi bật"}
-              </td>
-              <td className="border px-[20px]">{item?.position}</td>
-              <td className="border px-[20px]">
-                {item?.status == "active" ? "Hoạt động" : "Dừng hoạt dộng"}
-              </td>
-              <td className="border px-[20px]">
-                {item?.thumbnail?.map((i, idx) => (
-                  <img src={i} key={idx} className="h-[100px]" alt="" />
-                ))}
-              </td>
-              <td>
-                <Link
-                  to={`/admin/product-category/update/${item._id}`}
-                  className="border mx-[5px] px-[10px]"
-                >
-                  Sửa
-                </Link>
-                <Link to={`/admin/product-category/detail/${item._id}`} className="border mx-[5px] px-[10px]">Chi tiết</Link>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveProduct(item._id)}
-                  className="border mx-[5px] px-[10px]"
-                >
-                  Xóa
-                </button>
-              </td>
+      {data.length === 0 ? (
+        <div>
+          <h1>Không có danh mục nào! Hãy tạo mới danh mục sản phẩm!</h1>
+        </div>
+      ) : (
+        <table className="border">
+          <thead className="border">
+            <tr>
+              <th className="border px-[20px]">Tiêu đề</th>
+              <th className="border px-[20px]">Danh mục</th>
+              <th className="border px-[20px]">Chi tiết</th>
+              <th className="border px-[20px]">Vị trí danh mục</th>
+              <th className="border px-[20px]">Trạng thái</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={index}>
+                <td className="border px-[20px]">{item.title}</td>
+                <td className="border px-[20px]">
+                  {item.parent_id
+                    ? categoryMap[item.parent_id]
+                    : "Danh mục cha"}
+                </td>
+                <td className="border px-[20px]">{item.description}</td>
+
+                <td className="border px-[20px]">{item?.position}</td>
+                <td className="border px-[20px]">
+                  {item?.status == "active" ? "Hoạt động" : "Dừng hoạt dộng"}
+                </td>
+                <td>
+                  <Link
+                    to={`/admin/product-category/update/${item._id}`}
+                    className="border mx-[5px] px-[10px]"
+                  >
+                    Sửa
+                  </Link>
+                  <Link
+                    to={`/admin/product-category/detail/${item._id}`}
+                    className="border mx-[5px] px-[10px]"
+                  >
+                    Chi tiết
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveProduct(item._id)}
+                    className="border mx-[5px] px-[10px]"
+                  >
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
