@@ -14,7 +14,7 @@ function ProductAdmin() {
   =======================*/
   const fetchApi = async ({ queryKey }) => {
     // Lấy dữ liệu từ queryKey của ReactQuery ra để dùng
-    const [, sort, filter, statusFilter] = queryKey;
+    const [, page, sort, filter, statusFilter] = queryKey;
     let url = `http://localhost:3001/api/product/products?page=${page}`;
 
     // 2 thằng này dùng find để tìm bên database chứ không dùng hàm filter
@@ -28,10 +28,26 @@ function ProductAdmin() {
   };
 
   /* =======================
+    API categories
+  =======================*/
+  const fetchCategories = async () => {
+    const res = await axios.post(
+      `http://localhost:3001/api/category-product/productCategories`,
+    );
+    return res.data.productCategories;
+  };
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
+  console.log("categories", categories);
+
+  /* =======================
     Load product
   =======================*/
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["products", sort, filter, statusFilter],
+    queryKey: ["products", page, sort, filter, statusFilter],
     queryFn: fetchApi,
   });
 
@@ -84,6 +100,12 @@ function ProductAdmin() {
   };
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Lỗi rồi</div>;
+  // console.log("data", data);
+  const categoryMap = {};
+
+  categories.forEach((cat) => {
+    categoryMap[cat._id] = cat.title;
+  });
 
   return (
     <div>
@@ -176,6 +198,7 @@ function ProductAdmin() {
         <thead className="border">
           <tr>
             <th className="border px-[20px]">Tiêu đề</th>
+            <th className="border px-[20px]">Danh mục</th>
             <th className="border px-[20px]">Chi tiết</th>
             <th className="border px-[20px]">Sản phẩm nổi bật</th>
             <th className="border px-[20px]">Giá</th>
@@ -192,6 +215,11 @@ function ProductAdmin() {
           {data.products.map((item, index) => (
             <tr key={index}>
               <td className="border px-[20px]">{item.title}</td>
+              <td className="border px-[20px]">
+                {item.category_id
+                  ? categoryMap[item.category_id]
+                  : "Không có danh mục"}
+              </td>
               <td className="border px-[20px]">{item.description}</td>
               <td className="border px-[20px]">
                 {item.featured == "0" ? "Không nổi bật" : "Nổi bật"}
@@ -228,6 +256,8 @@ function ProductAdmin() {
           ))}
         </tbody>
       </table>
+
+      <button onClick={() => setPage(page + 1)}>next</button>
     </div>
   );
 }

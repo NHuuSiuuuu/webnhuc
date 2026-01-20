@@ -33,12 +33,7 @@ function CategoryAdmin() {
     },
   });
 
-  // lấy id tương ứng với tên danh mục
-  const categoryMap = {};
-  data.forEach((cat) => {
-    categoryMap[cat._id] = cat.title;
-  });
-
+  
   const handleRemoveProduct = (id) => {
     if (confirm("Bạn có chắc muốn xóa!")) {
       deleteMutation.mutate(id);
@@ -47,6 +42,11 @@ function CategoryAdmin() {
   if (isLoading) return <div>Loading ....</div>;
   if (isError) return <div>Lỗi rồi</div>;
   console.log("data", data);
+  // lấy id tương ứng với tên danh mục
+  const categoryMap = {};
+  data.forEach((cat) => {
+    categoryMap[cat._id] = cat.title;
+  });
   return (
     <div>
       <h3 className="font-bold">Trang danh mục sản phẩm</h3>

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 function ProductUpdateAdmin() {
@@ -19,7 +19,7 @@ function ProductUpdateAdmin() {
     stock: "",
     position: "",
     status: "active",
-
+    category_id: "",
     thumbnail: [], // Ảnh cũ (string hoặc {id, url})
     newThumbnail: [], // Ảnh mới (File)
   });
@@ -82,7 +82,7 @@ function ProductUpdateAdmin() {
   =======================*/
   const fetchData = async () => {
     const res = await axios.get(
-      `http://localhost:3001/api/product/detail/${id}`
+      `http://localhost:3001/api/product/detail/${id}`,
     );
     return res.data.product;
   };
@@ -90,6 +90,35 @@ function ProductUpdateAdmin() {
     queryKey: ["product", id],
     queryFn: fetchData,
   });
+
+  /* =======================
+    APi tree category
+  =======================*/
+  const fetchCategoriesTree = async () => {
+    const res = await axios.get(
+      "http://localhost:3001/api/category-product/tree",
+    );
+    return res.data.data;
+  };
+  const { data: categoriesTree } = useQuery({
+    queryKey: ["category-tree"],
+    queryFn: fetchCategoriesTree,
+  });
+  // console.log(categoriesTree);
+
+  // Render option category tree
+  const renderOptionCategory = (categories, level = 0) => {
+    return categories.map((item) => (
+      <Fragment key={item._id}>
+        <option value={item._id}>
+          {"-".repeat(level)} {item.title}
+        </option>
+        {item.children?.length > 0 &&
+          renderOptionCategory(item.children, level + 1)}
+      </Fragment>
+    ));
+  };
+
   /* =======================
     SET FORM KHI CÓ DATA
   =======================*/
@@ -104,7 +133,7 @@ function ProductUpdateAdmin() {
         stock: data.stock ?? "",
         position: data.position ?? "",
         status: data.status ?? "active",
-
+        category_id: data.category_id ?? null,
         thumbnail: data.thumbnail ?? [],
         newThumbnail: [],
       });
@@ -122,7 +151,7 @@ function ProductUpdateAdmin() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return res.data;
   };
@@ -156,6 +185,9 @@ function ProductUpdateAdmin() {
     form.append("stock", formData.stock);
     form.append("status", formData.status);
     form.append("position", formData.position);
+    if(formData.category_id){
+      form.append("category_id", formData.category_id)
+    }
 
     // Ảnh cũ
     form.append("oldThumbnail", JSON.stringify(formData.thumbnail));
@@ -186,6 +218,15 @@ function ProductUpdateAdmin() {
           required
           className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
+
+        <h1>Chọn danh mục</h1>
+        <select
+          name="category_id"
+          onChange={handleOnchange}
+          value={formData.category_id || ""}
+        >
+          {renderOptionCategory(categoriesTree)}
+        </select>
 
         {/* description */}
         <input

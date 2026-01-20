@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 // 1️⃣ useState – khai báo state
 // 2️⃣ useQueryClient – lấy client
@@ -23,6 +23,7 @@ function ProductCreateAdmin() {
     position: "",
     status: "active",
     thumbnail: [],
+    category_id: "",
   });
   console.log(formData);
 
@@ -84,11 +85,29 @@ function ProductCreateAdmin() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     console.log("res.data", res.data);
     return res.data;
   };
+
+  /* =======================
+    API tree danh mục sản phẩm
+  =======================*/
+  const fetchCategoryTree = async () => {
+    const res = await axios.get(
+      "http://localhost:3001/api/category-product/tree",
+    );
+    return res.data.data;
+  };
+
+  /* =======================
+    Load category tree
+  =======================*/
+  const { data: categoryTree = [] } = useQuery({
+    queryKey: ["category-tree"],
+    queryFn: fetchCategoryTree,
+  });
 
   /* =======================
     useMutation: thực hiện các tao tác POST PUT ....
@@ -140,6 +159,7 @@ function ProductCreateAdmin() {
     data.append("stock", formData.stock);
     data.append("status", formData.status);
     data.append("position", formData.position);
+    data.append("category_id", formData.category_id);
 
     // Nhiều ảnh thì phải lặp qua
     formData.thumbnail.forEach((file) => {
@@ -147,6 +167,22 @@ function ProductCreateAdmin() {
     });
     mutate(data);
     console.log("formData:", data);
+  };
+
+  // Hàm render option theo tree
+  const renderCategoryOptions = (categories, level = 0) => {
+    return categories.map((item) => (
+      <Fragment key={item._id}>
+        <option value={item._id}>
+          {"— ".repeat(level)} {/* Lặp chuỗi (-) đó level lần */}
+          {item.title}
+        </option>
+
+        {/* Nếu danh mục có children (độ dài length > 0)*/}
+        {item.children?.length > 0 &&
+          renderCategoryOptions(item.children, level + 1)}
+      </Fragment>
+    ));
   };
 
   return (
@@ -167,6 +203,18 @@ function ProductCreateAdmin() {
           required
           className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
         />
+
+        {/* Danh mục */}
+        <h1>Danh mục</h1>
+        <select
+          name="category_id"
+          value={formData.parent_id || ""}
+          onChange={handleOnChange}
+          className="w-full px-4 py-2 border rounded"
+        >
+          <option value="">-- Chọn danh mục --</option>
+          {renderCategoryOptions(categoryTree)}
+        </select>
 
         {/* description */}
         <input
