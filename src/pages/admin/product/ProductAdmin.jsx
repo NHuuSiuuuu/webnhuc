@@ -154,6 +154,8 @@ function ProductAdmin() {
           <option value="title:desc">Z - A</option>
           <option value="price:desc">Giá: Cao - Thấp</option>
           <option value="price:asc">Giá: Thấp - Cao</option>
+          <option value="position:asc">Vị trí: thấp - Cao</option>
+          <option value="position:desc">Vị trí: Cao - Thấp</option>
         </select>
       </div>
       <hr />
