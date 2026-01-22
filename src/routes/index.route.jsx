@@ -12,6 +12,12 @@ import CategoryAdmin from "@/pages/admin/category-product/CategoryAdmin";
 import CategoryUpdateAdmin from "@/pages/admin/category-product/CategoryUpdateAdmin";
 import CategoryCreateAdmin from "@/pages/admin/category-product/CategoryCreateAdmin";
 import CategoryDetail from "@/pages/admin/category-product/CategoryDetail";
+import Login from "@/pages/client/user/login";
+import Register from "@/pages/client/user/register";
+import Roles from "@/pages/admin/roles/Roles";
+import RoleCreate from "@/pages/admin/roles/RoleCreate";
+import RoleUpdate from "@/pages/admin/roles/RoleUpdate";
+import RoleDetail from "@/pages/admin/roles/RoleDetail";
 
 export const routes = [
   {
@@ -33,6 +39,14 @@ export const routes = [
       {
         path: "product/:slug",
         element: <ProductDetail />,
+      },
+      {
+        path: "login/",
+        element: <Login />,
+      },
+      {
+        path: "register/",
+        element: <Register />,
       },
     ],
   },
@@ -71,6 +85,22 @@ export const routes = [
       {
         path: "product-category/detail/:id",
         element: <CategoryDetail />,
+      },
+      {
+        path: "roles/",
+        element: <Roles />,
+      },
+      {
+        path: "roles/create",
+        element: <RoleCreate />,
+      },
+      {
+        path: "roles/update/:id",
+        element: <RoleUpdate />,
+      },
+      {
+        path: "roles/detail/:id",
+        element: <RoleDetail />,
       },
     ],
   },
