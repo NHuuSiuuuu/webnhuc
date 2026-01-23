@@ -39,7 +39,8 @@ function Sidebar() {
 
         {/* Nhóm quyền */}
         <NavLink
-          to="/admin/roles/"
+          to="/admin/roles"
+          end
           className={({ isActive }) =>
             isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
           }
@@ -49,7 +50,7 @@ function Sidebar() {
 
         {/*Phân quyền*/}
         <NavLink
-          to="/admin/roles/"
+          to="/admin/roles/permissions"
           className={({ isActive }) =>
             isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
           }
@@ -59,7 +60,7 @@ function Sidebar() {
 
         {/* Danh sách tài khoản */}
         <NavLink
-          to="/admin/roles/"
+          to="/admin/accounts/"
           className={({ isActive }) =>
             isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
           }
@@ -69,7 +70,7 @@ function Sidebar() {
 
         {/* Cài đặt chung*/}
         <NavLink
-          to="/admin/roles/"
+          to="/admin/setting/"
           className={({ isActive }) =>
             isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
           }

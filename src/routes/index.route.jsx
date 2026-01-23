@@ -18,6 +18,7 @@ import Roles from "@/pages/admin/roles/Roles";
 import RoleCreate from "@/pages/admin/roles/RoleCreate";
 import RoleUpdate from "@/pages/admin/roles/RoleUpdate";
 import RoleDetail from "@/pages/admin/roles/RoleDetail";
+import RolePermissions from "@/pages/admin/roles/RolePermissions";
 
 export const routes = [
   {
@@ -101,6 +102,10 @@ export const routes = [
       {
         path: "roles/detail/:id",
         element: <RoleDetail />,
+      },
+      {
+        path: "roles/permissions",
+        element: <RolePermissions />,
       },
     ],
   },
