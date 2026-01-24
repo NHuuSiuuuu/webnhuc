@@ -19,6 +19,10 @@ import RoleCreate from "@/pages/admin/roles/RoleCreate";
 import RoleUpdate from "@/pages/admin/roles/RoleUpdate";
 import RoleDetail from "@/pages/admin/roles/RoleDetail";
 import RolePermissions from "@/pages/admin/roles/RolePermissions";
+import AccountAdmin from "@/pages/admin/accounts/AccountAdmin";
+import AccountCreateAdmin from "@/pages/admin/accounts/AccountCreateAdmin";
+import AccountUpdateAdmin from "@/pages/admin/accounts/AccountUpdateAdmin";
+import AccountDetail from "@/pages/admin/accounts/AccountDetail";
 
 export const routes = [
   {
@@ -106,6 +110,22 @@ export const routes = [
       {
         path: "roles/permissions",
         element: <RolePermissions />,
+      },
+      {
+        path: "accounts",
+        element: <AccountAdmin />,
+      },
+      {
+        path: "accounts/create",
+        element: <AccountCreateAdmin />,
+      },
+      {
+        path: "accounts/update/:id",
+        element: <AccountUpdateAdmin />,
+      },
+      {
+        path: "accounts/detail/:id",
+        element: <AccountDetail />,
       },
     ],
   },
