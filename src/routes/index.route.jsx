@@ -23,6 +23,8 @@ import AccountAdmin from "@/pages/admin/accounts/AccountAdmin";
 import AccountCreateAdmin from "@/pages/admin/accounts/AccountCreateAdmin";
 import AccountUpdateAdmin from "@/pages/admin/accounts/AccountUpdateAdmin";
 import AccountDetail from "@/pages/admin/accounts/AccountDetail";
+import LoginAdmin from "@/pages/admin/auth/LoginAdmin";
+import ProtectedRoute from "@/components/admin/ProtectedRoute";
 
 export const routes = [
   {
@@ -56,76 +58,85 @@ export const routes = [
     ],
   },
   {
+    path: "/admin/login",
+    element: <LoginAdmin />,
+  },
+  {
     path: "/admin",
-    element: <LayoutDefaultAdmin />,
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <DashBoard />,
-      },
-      {
-        path: "products",
-        element: <ProductAdmin />,
-      },
-      {
-        path: "product/create",
-        element: <ProductCreateAdmin />,
-      },
-      {
-        path: "product/update/:id",
-        element: <ProductUpdateAdmin />,
-      },
-      {
-        path: "products-category",
-        element: <CategoryAdmin />,
-      },
-      {
-        path: "product-category/update/:id",
-        element: <CategoryUpdateAdmin />,
-      },
-      {
-        path: "product-category/create",
-        element: <CategoryCreateAdmin />,
-      },
-      {
-        path: "product-category/detail/:id",
-        element: <CategoryDetail />,
-      },
-      {
-        path: "roles/",
-        element: <Roles />,
-      },
-      {
-        path: "roles/create",
-        element: <RoleCreate />,
-      },
-      {
-        path: "roles/update/:id",
-        element: <RoleUpdate />,
-      },
-      {
-        path: "roles/detail/:id",
-        element: <RoleDetail />,
-      },
-      {
-        path: "roles/permissions",
-        element: <RolePermissions />,
-      },
-      {
-        path: "accounts",
-        element: <AccountAdmin />,
-      },
-      {
-        path: "accounts/create",
-        element: <AccountCreateAdmin />,
-      },
-      {
-        path: "accounts/update/:id",
-        element: <AccountUpdateAdmin />,
-      },
-      {
-        path: "accounts/detail/:id",
-        element: <AccountDetail />,
+        element: <LayoutDefaultAdmin />,
+        children: [
+          {
+            index: true,
+            element: <DashBoard />,
+          },
+          {
+            path: "products",
+            element: <ProductAdmin />,
+          },
+          {
+            path: "product/create",
+            element: <ProductCreateAdmin />,
+          },
+          {
+            path: "product/update/:id",
+            element: <ProductUpdateAdmin />,
+          },
+          {
+            path: "products-category",
+            element: <CategoryAdmin />,
+          },
+          {
+            path: "product-category/update/:id",
+            element: <CategoryUpdateAdmin />,
+          },
+          {
+            path: "product-category/create",
+            element: <CategoryCreateAdmin />,
+          },
+          {
+            path: "product-category/detail/:id",
+            element: <CategoryDetail />,
+          },
+          {
+            path: "roles/",
+            element: <Roles />,
+          },
+          {
+            path: "roles/create",
+            element: <RoleCreate />,
+          },
+          {
+            path: "roles/update/:id",
+            element: <RoleUpdate />,
+          },
+          {
+            path: "roles/detail/:id",
+            element: <RoleDetail />,
+          },
+          {
+            path: "roles/permissions",
+            element: <RolePermissions />,
+          },
+          {
+            path: "accounts",
+            element: <AccountAdmin />,
+          },
+          {
+            path: "accounts/create",
+            element: <AccountCreateAdmin />,
+          },
+          {
+            path: "accounts/update/:id",
+            element: <AccountUpdateAdmin />,
+          },
+          {
+            path: "accounts/detail/:id",
+            element: <AccountDetail />,
+          },
+        ],
       },
     ],
   },
