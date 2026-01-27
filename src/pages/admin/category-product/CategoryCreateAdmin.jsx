@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../../../utils/axios";
+
 import { Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 

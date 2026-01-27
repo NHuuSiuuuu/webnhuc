@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../../../utils/axios";
+
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -185,8 +186,8 @@ function ProductUpdateAdmin() {
     form.append("stock", formData.stock);
     form.append("status", formData.status);
     form.append("position", formData.position);
-    if(formData.category_id){
-      form.append("category_id", formData.category_id)
+    if (formData.category_id) {
+      form.append("category_id", formData.category_id);
     }
 
     // Ảnh cũ

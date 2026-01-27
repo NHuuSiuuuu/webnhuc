@@ -3,7 +3,8 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../../../utils/axios";
+
 import { Fragment, useEffect, useState } from "react";
 
 function RolePermissions() {
