@@ -208,6 +208,7 @@ function ProductAdmin() {
             <th className="border px-[20px]">Còn lại</th>
             <th className="border px-[20px]">Vị trí</th>
             <th className="border px-[20px]">Trạng thái</th>
+            <th className="border px-[20px]">Người sửa</th>
             <th className="border px-[20px]">Ảnh</th>
             <th className="border px-[20px]">Hành động</th>
           </tr>
@@ -233,6 +234,22 @@ function ProductAdmin() {
               <td className="border px-[20px]">
                 {item.status == "active" ? "Hoạt động" : "Dừng hoạt dộng"}
               </td>
+              <td className="border px-[20px]">
+                {item.updatedBy?.length > 0 ? (
+                  <div>
+                    {
+                      item.updatedBy[item.updatedBy.length - 1]?.account_id
+                        .fullName
+                    }
+                    {new Date(
+                      item.updatedBy[item.updatedBy.length - 1]?.updatedAt,
+                    ).toLocaleString("vi-VN")}
+                  </div>
+                ) : (
+                  <span>Chưa cập nhật</span>
+                )}
+              </td>
+
               <td className="border px-[20px]">
                 {item?.thumbnail?.map((item, index) => (
                   <img key={index} className="size-[50px] " src={item} alt="" />
