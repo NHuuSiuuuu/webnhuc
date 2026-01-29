@@ -25,7 +25,7 @@ function LoginAdmin() {
 
         // Set lại nếu những lần trước người đăng nhập lỗi
         setErrorMessage("");
-        console.log("hehehe");
+        console.log(data);
         navigate("/admin");
       } else if (data.status === "ERR") {
         setErrorMessage(data.message);

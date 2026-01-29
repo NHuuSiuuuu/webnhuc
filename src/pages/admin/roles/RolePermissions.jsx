@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "../../../utils/axios";
 
 import { Fragment, useEffect, useState } from "react";
@@ -20,6 +16,21 @@ function RolePermissions() {
       group: "Sản phẩm",
       prefix: "product",
       actions: ["view", "create", "update", "delete"],
+    },
+    {
+      group: "Tài khoản",
+      prefix: "account",
+      actions: ["view", "create", "update", "delete"],
+    },
+    {
+      group: "Nhóm quyền",
+      prefix: "role",
+      actions: ["view", "create", "update", "delete"],
+    },
+    {
+      group: "Phân quyền",
+      prefix: "permission",
+      actions: [ "update"],
     },
   ];
 
