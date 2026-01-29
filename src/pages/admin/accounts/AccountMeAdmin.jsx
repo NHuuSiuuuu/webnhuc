@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "../../utils/axios";
+import axios from "../../../utils/axios";
 
-function DashBoard() {
+function AccountMeAdmin() {
   const fetchGetMe = async () => {
     const res = await axios.get("http://localhost:3001/api/account/getMe");
     return res.data.data;
@@ -29,4 +29,4 @@ function DashBoard() {
   );
 }
 
-export default DashBoard;
+export default AccountMeAdmin;

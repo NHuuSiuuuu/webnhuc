@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import Logout from "./auth/logout";
+import Logout from "../auth/logout";
 
 function Sidebar() {
   return (
@@ -62,11 +62,22 @@ function Sidebar() {
         {/* Danh sách tài khoản */}
         <NavLink
           to="/admin/accounts/"
+          end
           className={({ isActive }) =>
             isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
           }
         >
           Danh sách tài khoản
+        </NavLink>
+
+        {/* Cài đặt chung*/}
+        <NavLink
+          to="/admin/accounts/me"
+          className={({ isActive }) =>
+            isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
+          }
+        >
+          Tài khoản
         </NavLink>
 
         {/* Cài đặt chung*/}

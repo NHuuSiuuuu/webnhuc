@@ -25,6 +25,7 @@ import AccountUpdateAdmin from "@/pages/admin/accounts/AccountUpdateAdmin";
 import AccountDetail from "@/pages/admin/accounts/AccountDetail";
 import LoginAdmin from "@/pages/admin/auth/LoginAdmin";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
+import AccountMeAdmin from "@/pages/admin/accounts/AccountMeAdmin";
 
 export const routes = [
   {
@@ -123,6 +124,10 @@ export const routes = [
           {
             path: "accounts",
             element: <AccountAdmin />,
+          },
+          {
+            path: "accounts/me",
+            element: <AccountMeAdmin />,
           },
           {
             path: "accounts/create",

@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "../../utils/axios";
+import axios from "../../../utils/axios";
+import { Link } from "react-router";
+import Logout from "../auth/Logout";
 
-function DashBoard() {
+function Header() {
   const fetchGetMe = async () => {
     const res = await axios.get("http://localhost:3001/api/account/getMe");
     return res.data.data;
@@ -18,15 +20,13 @@ function DashBoard() {
 
   return (
     <div>
-      {" "}
-      <h1> Trang chủ</h1>
-      <h1>{data.fullName}</h1>
-      {data.email}
-      {data.role_id.title}
-      {data.role_id.description}
+      <Link className="border border-b-black" to="">
+        {data.fullName}
+      </Link>
+      <Logout />
       <h1></h1>
     </div>
   );
 }
 
-export default DashBoard;
+export default Header;
