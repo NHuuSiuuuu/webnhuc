@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import Logout from "./auth/logout";
 
 function Sidebar() {
   return (
@@ -77,6 +78,8 @@ function Sidebar() {
         >
           Cài đặt chung
         </NavLink>
+
+        <Logout />
       </nav>
     </aside>
   );

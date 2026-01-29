@@ -208,6 +208,7 @@ function ProductAdmin() {
             <th className="border px-[20px]">Còn lại</th>
             <th className="border px-[20px]">Vị trí</th>
             <th className="border px-[20px]">Trạng thái</th>
+            <th className="border px-[20px]">Người Tạo</th>
             <th className="border px-[20px]">Người sửa</th>
             <th className="border px-[20px]">Ảnh</th>
             <th className="border px-[20px]">Hành động</th>
@@ -234,6 +235,11 @@ function ProductAdmin() {
               <td className="border px-[20px]">
                 {item.status == "active" ? "Hoạt động" : "Dừng hoạt dộng"}
               </td>
+              <td className="border px-[20px]">
+                {item.createBy.account_id.fullName}
+                {new Date(item.createBy.createdAt).toLocaleString("vi-VN")}
+              </td>
+
               <td className="border px-[20px]">
                 {item.updatedBy?.length > 0 ? (
                   <div>
