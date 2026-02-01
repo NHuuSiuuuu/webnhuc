@@ -10,6 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.1.0",
+    "@fortawesome/free-brands-svg-icons": "^7.1.0",
+    "@fortawesome/free-regular-svg-icons": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.1",
     "@radix-ui/react-tabs": "^1.1.13",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.16",
@@ -21,12 +26,16 @@
     "lucide": "^0.562.0",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
+    "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.0",
     "react-router": "^7.11.0",
     "react-router-dom": "^7.12.0",
     "react-slick": "^0.31.0",
+    "react-toastify": "^11.0.5",
+    "recharts": "^3.7.0",
     "slick-carousel": "^1.8.1",
     "sonner": "^2.0.7",
+    "sweetalert2": "^11.26.17",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18"
   },

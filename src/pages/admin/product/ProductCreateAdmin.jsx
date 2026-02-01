@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "../../../utils/axios";
 
+import { toast } from "react-toastify";
 import { Fragment, useState } from "react";
+import { Slide } from "react-toastify";
+import { useNavigate } from "react-router";
+import { faArrowDown, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // 1️⃣ useState – khai báo state
 // 2️⃣ useQueryClient – lấy client
@@ -11,6 +16,23 @@ import { Fragment, useState } from "react";
 // 6️⃣ handleSubmit
 
 function ProductCreateAdmin() {
+  const navigate = useNavigate();
+  const fnSuccess = () => {
+    toast.success("Tạo sản phẩm thành công!");
+  };
+  const fnError = () =>
+    toast.error("Tạo sản phẩm thất bại!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Slide,
+    });
+
   /* =======================
     State lưu form
   =======================*/
@@ -105,7 +127,7 @@ function ProductCreateAdmin() {
   /* =======================
     Load category tree
   =======================*/
-  const { data: categoryTree = [] } = useQuery({
+  const { data: categoryTree = [], isLoading: loadingCategories } = useQuery({
     queryKey: ["category-tree"],
     queryFn: fetchCategoryTree,
   });
@@ -118,7 +140,8 @@ function ProductCreateAdmin() {
     mutationFn: createProduct,
 
     onSuccess: () => {
-      alert("Tạo sản phẩm thành công!");
+      fnSuccess();
+      navigate("/admin/products");
 
       // refetch lại danh sách sản phẩm
       queryClient.invalidateQueries(["products"]); // products tên api
@@ -139,7 +162,7 @@ function ProductCreateAdmin() {
 
     onError: (error) => {
       console.error(error);
-      alert("Tạo sản phẩm thất bại!");
+      fnError();
     },
   });
 
@@ -196,152 +219,356 @@ function ProductCreateAdmin() {
         onSubmit={handleSubmit}
         className="p-6 space-y-4 bg-white rounded-lg shadow"
       >
-        {/* title */}
-        <input
-          name="title"
-          placeholder="Tiêu đề"
-          onChange={handleOnChange}
-          required
-          className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-        />
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          {/* Left Column */}
+          <div className="space-y-6">
+            {/* Title */}
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Tên sản phẩm <span className="text-red-500">*</span>
+              </label>
+              <input
+                name="title"
+                placeholder="Ví dụ: iPhone 15 Pro Max 256GB"
+                onChange={handleOnChange}
+                value={formData.title}
+                required
+                className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
 
-        {/* Danh mục */}
-        <h1>Danh mục</h1>
-        <select
-          name="category_id"
-          value={formData.parent_id || ""}
-          onChange={handleOnChange}
-          className="w-full px-4 py-2 border rounded"
-        >
-          <option value="">-- Chọn danh mục --</option>
-          {renderCategoryOptions(categoryTree)}
-        </select>
-
-        {/* description */}
-        <input
-          name="description"
-          placeholder="Mô tả"
-          onChange={handleOnChange}
-          className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-        />
-
-        {/* featured */}
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="featured"
-              onChange={handleOnChange}
-              value="1"
-            />
-            <span>Nổi bật</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="featured"
-              value="0"
-              onChange={handleOnChange}
-              defaultChecked
-            />
-            <span>Không nổi bật</span>
-          </label>
-        </div>
-
-        {/* price */}
-        <input
-          type="number"
-          name="price"
-          placeholder="Giá"
-          onChange={handleOnChange}
-          className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-        />
-
-        {/* discount */}
-        <input
-          type="number"
-          name="discountPercentage"
-          placeholder="Giảm giá (%)"
-          onChange={handleOnChange}
-          className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-        />
-
-        {/* stock */}
-        <input
-          type="number"
-          name="stock"
-          placeholder="Số lượng"
-          onChange={handleOnChange}
-          className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-        />
-
-        {/* position */}
-        <input
-          type="number"
-          name="position"
-          placeholder="Vị trí"
-          onChange={handleOnChange}
-          className="w-full px-4 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
-        />
-
-        {/* status */}
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="status"
-              value="active"
-              onChange={handleOnChange}
-              defaultChecked
-            />
-            <span>Hoạt động</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="status"
-              onChange={handleOnChange}
-              value="inactive"
-            />
-            <span>Không hoạt động</span>
-          </label>
-        </div>
-
-        {/* image */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          multiple // cho phép chọn nhiều ảnh
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100"
-        />
-        {/* Preview ảnh */}
-        {formData.thumbnail.length > 0 && (
-          <div className="grid grid-cols-5 gap-2">
-            {formData.thumbnail.map((thumb, index) => (
-              <div key={index}>
-                <img
-                  className="object-cover w-full border rounded"
-                  src={URL.createObjectURL(thumb)}
-                  alt="preview"
-                />
-                <button onClick={() => handleRemoveThumb(index)}>Xóa</button>{" "}
-                {/* Dựa vào index để xóa */}
+            {/* Category */}
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Danh mục sản phẩm
+              </label>
+              <div className="relative">
+                <select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleOnChange}
+                  className="w-full px-4 py-3 transition bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">-- Chọn danh mục --</option>
+                  {loadingCategories ? (
+                    <option value="" disabled>
+                      Đang tải danh mục...
+                    </option>
+                  ) : (
+                    renderCategoryOptions(categoryTree)
+                  )}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
               </div>
-            ))}
-          </div>
-        )}
+         
+            </div>
 
-        {/* submit */}
-        <button
-          type="submit"
-          disabled={isPending}
-          className="w-full py-2 font-semibold text-white transition bg-blue-600 rounded hover:bg-blue-700"
-        >
-          {isPending ? "Đang tạo ..." : "Tạo mới"}
-        </button>
-        {isError && <h1>Có lỗi xảy ra khi tạo sản phẩm</h1>}
+            {/* Description */}
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Mô tả sản phẩm
+              </label>
+              <textarea
+                name="description"
+                placeholder="Mô tả chi tiết về sản phẩm..."
+                onChange={handleOnChange}
+                value={formData.description}
+                rows="4"
+                className="w-full px-4 py-3 transition border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Price & Discount */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Giá bán <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    name="price"
+                    placeholder="0"
+                    onChange={handleOnChange}
+                    value={formData.price}
+                    required
+                    min="0"
+                    className="w-full px-4 py-3 pl-10 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <span className="absolute left-3 top-3.5 text-gray-500">
+                    ₫
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Giảm giá (%)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    name="discountPercentage"
+                    placeholder="0"
+                    onChange={handleOnChange}
+                    value={formData.discountPercentage}
+                    min="0"
+                    max="100"
+                    className="w-full px-4 py-3 pr-10 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <span className="absolute right-3 top-3.5 text-gray-500">
+                    %
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Stock & Position */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Số lượng tồn kho
+                </label>
+                <input
+                  type="number"
+                  name="stock"
+                  placeholder="0"
+                  onChange={handleOnChange}
+                  value={formData.stock}
+                  min="0"
+                  className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Vị trí hiển thị
+                </label>
+                <input
+                  type="number"
+                  name="position"
+                  placeholder="0"
+                  onChange={handleOnChange}
+                  value={formData.position}
+                  className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Featured Status */}
+            <div className="p-5 rounded-lg bg-gray-50">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">
+                Trạng thái nổi bật
+              </h3>
+              <div className="space-y-3">
+                <label className="flex items-center p-3 transition bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50">
+                  <input
+                    type="radio"
+                    name="featured"
+                    onChange={handleOnChange}
+                    value="1"
+                    checked={formData.featured === "1"}
+                    className="w-5 h-5 text-blue-600 focus:ring-blue-500"
+                  />
+                  <div className="ml-3">
+                    <span className="font-medium text-gray-800">
+                      Sản phẩm nổi bật
+                    </span>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Hiển thị ở vị trí ưu tiên trên trang chủ
+                    </p>
+                  </div>
+                </label>
+                <label className="flex items-center p-3 transition bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50">
+                  <input
+                    type="radio"
+                    name="featured"
+                    value="0"
+                    onChange={handleOnChange}
+                    checked={formData.featured === "0"}
+                    className="w-5 h-5 text-blue-600 focus:ring-blue-500"
+                  />
+                  <div className="ml-3">
+                    <span className="font-medium text-gray-800">
+                      Sản phẩm thường
+                    </span>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Hiển thị bình thường trong danh mục
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Product Status */}
+            <div className="p-5 rounded-lg bg-gray-50">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">
+                Trạng thái sản phẩm
+              </h3>
+              <div className="space-y-3">
+                <label className="flex items-center p-3 transition bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="active"
+                    onChange={handleOnChange}
+                    checked={formData.status === "active"}
+                    className="w-5 h-5 text-green-600 focus:ring-green-500"
+                  />
+                  <div className="ml-3">
+                    <span className="font-medium text-gray-800">Hiển thị</span>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Sản phẩm đang bán và hiển thị
+                    </p>
+                  </div>
+                </label>
+                <label className="flex items-center p-3 transition bg-white border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50">
+                  <input
+                    type="radio"
+                    name="status"
+                    onChange={handleOnChange}
+                    value="inactive"
+                    checked={formData.status === "inactive"}
+                    className="w-5 h-5 text-red-600 focus:ring-red-500"
+                  />
+                  <div className="ml-3">
+                    <span className="font-medium text-gray-800">Ẩn</span>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Sản phẩm ngừng bán hoặc ẩn
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Image Upload */}
+            <div className="p-5 rounded-lg bg-gray-50">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">
+                Hình ảnh sản phẩm
+              </h3>
+              <div className="space-y-4">
+                <div className="p-6 text-center transition border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-400">
+                  <input
+                    type="file"
+                    id="file-upload"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    multiple
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="flex flex-col items-center cursor-pointer"
+                  >
+                    <div className="flex items-center justify-center w-12 h-12 mb-3 bg-blue-100 rounded-full">
+                      <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                    <span className="font-medium text-gray-700">
+                      Tải ảnh lên
+                    </span>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Kéo thả hoặc chọn file
+                    </p>
+                    <p className="mt-1 text-xs text-gray-400">
+                      PNG, JPG, GIF tối đa 10MB
+                    </p>
+                  </label>
+                </div>
+
+                {/* Image Preview */}
+                {formData.thumbnail.length > 0 && (
+                  <div>
+                    <h4 className="mb-3 font-medium text-gray-700">
+                      Ảnh đã chọn ({formData.thumbnail.length})
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                      {formData.thumbnail.map((thumb, index) => (
+                        <div
+                          key={index}
+                          className="relative overflow-hidden border border-gray-200 rounded-lg group"
+                        >
+                          <img
+                            className="object-cover w-full h-32"
+                            src={URL.createObjectURL(thumb)}
+                            alt={`preview-${index}`}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveThumb(index)}
+                            className="absolute flex items-center justify-center w-8 h-8 text-white transition-opacity bg-red-500 rounded-full opacity-0 top-2 right-2 group-hover:opacity-100 hover:bg-red-600"
+                          >
+                            <FontAwesomeIcon icon={faX} />
+                          </button>
+                          <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent">
+                            <p className="text-xs text-white truncate">
+                              {thumb.name}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col justify-end gap-4 pt-6 border-t border-gray-200 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData({
+                    title: "",
+                    description: "",
+                    featured: "0",
+                    price: "",
+                    discountPercentage: "",
+                    stock: "",
+                    position: "",
+                    status: "active",
+                    thumbnail: [],
+                    category_id: "",
+                  });
+                }}
+                className="px-6 py-3 font-medium text-gray-700 transition border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Xóa form
+              </button>
+              <button type="submit" disabled={isPending}>
+                {isPending ? (
+                  <>Đang tạo sản phẩm...</>
+                ) : (
+                  <div className="relative inline-flex items-center justify-center h-12 px-6 overflow-hidden font-medium duration-500 rounded-md group bg-gradient-to-r from-blue-600 to-blue-800 text-neutral-200">
+                    <div class="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
+                      Thêm sản phẩm
+                    </div>
+                    <div class="absolute translate-x-[150%] opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">
+                      <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
+
+      <div></div>
     </div>
   );
 }

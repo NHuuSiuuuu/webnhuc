@@ -3,7 +3,7 @@ import Logout from "../auth/logout";
 
 function Sidebar() {
   return (
-    <aside className="w-64 p-5 text-white bg-black">
+    <aside className="p-5 text-white bg-black ">
       <h2 className="mb-6 text-xl font-bold">ADMIN</h2>
 
       <nav className="flex flex-col gap-3">

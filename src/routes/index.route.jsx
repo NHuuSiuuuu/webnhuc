@@ -26,6 +26,7 @@ import AccountDetail from "@/pages/admin/accounts/AccountDetail";
 import LoginAdmin from "@/pages/admin/auth/LoginAdmin";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
 import AccountMeAdmin from "@/pages/admin/accounts/AccountMeAdmin";
+import ProductDetailAdmin from "@/pages/admin/product/ProductDetailAdmin";
 
 export const routes = [
   {
@@ -84,6 +85,10 @@ export const routes = [
           {
             path: "product/update/:id",
             element: <ProductUpdateAdmin />,
+          },
+          {
+            path: "product/detail/:id",
+            element: <ProductDetailAdmin />,
           },
           {
             path: "products-category",
