@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { ZoomIn } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Link } from "react-router";
 
 function ProductList() {
   const fetchApi = async () => {
@@ -81,30 +82,59 @@ function ProductList() {
       </div>
       <Slider {...settings}>
         {data.products.map((item) => (
-          <a key={item.id} href="">
-            <div className="px-2 mb-8 product-card">
-              <div className="aspect-[3/4] overflow-hidden relative group">
-                <img
-                  className="absolute inset-0 object-cover w-full h-full"
-                  src="https://product.hstatic.net/1000321269/product/d___n_m_i_0b79d4ad39cb4043bb940ac4150a6283_1024x1024.jpg"
-                  alt=""
-                />
+          <Link key={item.id} to={`/products/${item.slug}`}>
+            {/* Sản phâm 1 */}
+            <div className="px-[15px]  overflow-hidden ">
+              <div className="relative overflow-hidden product-img group aspect-[3/4]">
                 {/* icon */}
-                <ZoomIn className="opacity-0 size-[30px] absolute transition-opacity duration-300 ease-in-out -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 group-hover:opacity-100 z-10" />
-
-                {/* Ảnh hover */}
-                <img
-                  className="absolute inset-0 object-cover w-full h-full transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-                  src="https://scontent.fhph6-1.fna.fbcdn.net/v/t39.30808-6/606026947_858526316908097_515062926806784402_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_eui2=AeFuvnno_aFd-dq5ZhMCYosKgt0xTua6B5WC3TFO5roHlRrm1ehfPfUd5eBUJb_N5-yOqCI43PtiCeFCoZBPQZ8Q&_nc_ohc=MXZm0Z_wpBoQ7kNvwFDhPof&_nc_oc=Adnry7PuPyNGGNAhQxVXzpkYOFyBJG13tBqLYxEFWh8-QiLUqrAnBJuARbCY_xbqa08QJRIbYoikGTxdFOJWwa9t&_nc_zt=23&_nc_ht=scontent.fhph6-1.fna&_nc_gid=P2TxYt-HEOabB29p0h9qdQ&oh=00_AfqtEmOAaXl7LIUZS7BpvRy4AyyOzCH_-1WLdozpNzK6_w&oe=695C4F8F"
-                  alt=""
+                <ZoomIn
+                  onClick={() => {
+                    setOpendialog(true);
+                    setSelectedProduct(product); // product sau có API mới có
+                  }}
+                  className="opacity-0 size-[30px] absolute transition-opacity duration-300 ease-in-out -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 group-hover:opacity-100 z-10"
                 />
+                <p to={`products/:slug`} className="">
+                  <div className="absolute z-10 product-sale right-[10px] top-[10px] text-[12px] px-[15px] py-[10px] font-bold leading-1 text-[#f94c43] bg-white">
+                    {item.discountPercentage}%
+                  </div>
+                  <img
+                    className="absolute inset-0 object-cover w-full h-full"
+                    src={item.thumbnail[0]}
+                    alt=""
+                  />
+
+                  <img
+                    className="absolute inset-0 object-cover w-full h-full transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
+                    src={item.thumbnail[1]}
+                    alt=""
+                  />
+                </p>
               </div>
-              <div className="mt-3 text-center">
-                <h3 className="text-[13px]">{item.title}</h3>
-                <p className="mt-1">{item.price} d</p>
+              <div className="product-detail pt-2.5 ">
+                <h3>
+                  <a
+                    // có thể viết là: truncate = overflow-hidden + whitespace-nowrap (không cho xuống dòng) + text-overflow: ellopsis (Hiện ...) : Combo luôn đi chung nhau
+                    className="text-[14px] font-medium leading-1.2 overflow-hidden whitespace-nowrap block text-ellipsis"
+                    href="/products/tsun-windbreaker-jacket-black"
+                    title="TSUN Áo Khoác Dù Đen Phối Kim Loại - Windbreaker Jacket - Black"
+                  >
+                    {item.title}
+                  </a>
+                </h3>
+                <div>
+                  {/* Giá đã giảm */}
+                  <span className="text-[14px] text-[#f94c43] font-medium leading-1">
+                    239.000d
+                  </span>
+                  {/* Giá gốc */}
+                  <span className="ml-2.5 text-[13px] text-[#939393] font-medium leading-1">
+                    {item.price}
+                  </span>
+                </div>
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </Slider>
     </section>

@@ -6,12 +6,6 @@ import Footer from "../components/layout/Footer";
 function HomePage() {
   return (
     <>
-      {/* Top Bar */}
-      {/* <TopBar hidden={scrolled} /> */}
-
-      {/* Header */}
-      {/* <Header active={scrolled} /> */}
-
       {/* Hero Slide */}
       <HeroSlide />
 
@@ -20,9 +14,6 @@ function HomePage() {
 
       {/* ProductList */}
       <ProductList />
-
-      {/* Footer */}
-      <Footer />
     </>
   );
 }

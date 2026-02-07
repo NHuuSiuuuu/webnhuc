@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAngleRight,
   faArrowLeft,
   faArrowsRotate,
   faBoxArchive,
@@ -362,8 +361,25 @@ function ProductDetailAdmin() {
                   </div>
                 </div>
 
-                {/* Stock */}
+                {/* Size and Stock */}
                 <div className="mb-6">
+                  <h3 className="mb-3 text-sm font-semibold text-gray-700">
+                    Size
+                  </h3>
+
+                  <div className="flex gap-3">
+                    {product.sizes.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between px-3 py-2 border rounded-lg bg-gray-50"
+                      >
+                        <span className="font-medium text-gray-700">
+                          {item.name} còn {item.stock ?? 0} SP
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
                   <h3 className="mb-2 text-sm font-medium text-gray-700">
                     Tồn kho
                   </h3>

@@ -1,8 +1,8 @@
 import HomePage from "../pages/HomePage";
 import LayoutDefault from "../components/layout/LayoutDefault";
-import Collection from "../components/products/Collection";
+import Collection from "../components/products/Products";
 import ProductDetail from "../components/products/ProductDetail";
-import Cart from "../components/products/Card";
+import Cart from "../components/products/Cart";
 import LayoutDefaultAdmin from "@/components/admin/layout/LayoutDefault";
 import DashBoard from "@/pages/admin/DashBoard";
 import ProductAdmin from "@/pages/admin/product/ProductAdmin";
@@ -38,7 +38,7 @@ export const routes = [
         element: <HomePage />,
       },
       {
-        path: "collection/:slug",
+        path: "/products",
         element: <Collection />,
       },
       {
@@ -46,7 +46,7 @@ export const routes = [
         element: <Cart />,
       },
       {
-        path: "product/:slug",
+        path: "products/:slug",
         element: <ProductDetail />,
       },
       {

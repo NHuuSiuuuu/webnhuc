@@ -10,11 +10,11 @@ function TopBar() {
             <ul>
               <li>
                 <span>
-                  <a href="">tsunsg@gmail.com</a>
+                  <a href="">nhuu@gmail.com</a>
                 </span>
                 <span className="h-9">|</span>
                 <span>
-                  <a href="">Hotline: 093 407 6342</a>
+                  <a href="">Hotline: 012 456 789</a>
                 </span>
               </li>
             </ul>

@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer>
+    <div>
       {/* main footer */}
       <div className="bg-[#232323] py-10">
         {/* grid-cols-[repeat(auto-fit,minmax(220px,1fr))] */}
@@ -93,12 +93,14 @@ function Footer() {
       </div>
 
       {/* bottom footer */}
-      <div className="bg-black bottomFooter" >
+      <div className="bg-black bottomFooter">
         <div className="container mx-auto text-center">
-            <p class="text-[#9f9f9f] text-[14px] py-5 block ">Copyright © 2026 <a href="">nhuu</a></p>
+          <p class="text-[#9f9f9f] text-[14px] py-5 block ">
+            Copyright © 2026 <a href="">nhuu</a>
+          </p>
         </div>
       </div>
-    </footer>
+    </div>
   );
 }
 

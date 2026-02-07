@@ -29,8 +29,9 @@ function Header({ active }) {
           >
             {/* Logo */}
             <div className="flex-3 md:flex md:flex-1 justify-center items-center px-[15px]">
-              <a href="" className="block">
-                <img src="./logo.png" alt="" className="mx-auto size-20" />
+              <a href="/" className="block text-[40px]">
+                {/* <img src="./logo.png" alt="" className="mx-auto size-20" /> */}
+                NHUU
               </a>
             </div>
 

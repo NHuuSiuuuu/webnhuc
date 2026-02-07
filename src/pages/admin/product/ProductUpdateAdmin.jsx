@@ -29,6 +29,12 @@ function ProductUpdateAdmin() {
     position: "",
     status: "active",
     category_id: "",
+    sizes: [
+      { name: "S", stock: "" },
+      { name: "M", stock: "" },
+      { name: "L", stock: "" },
+      { name: "XL", stock: "" },
+    ],
     thumbnail: [], // Ảnh cũ (string hoặc {id, url})
     newThumbnail: [], // Ảnh mới (File)
   });
@@ -42,6 +48,21 @@ function ProductUpdateAdmin() {
       ...prev,
       [name]: type == "number" ? Number(value) : value, // input kiểu num nhưng nhập vào nó là string vào đổi sang num để mongo hiểu
     }));
+  };
+
+  const handleSizeChange = (index, value) => {
+    setFormData((prev) => {
+      const newSizes = [...prev.sizes];
+
+      newSizes[index] = {
+        ...newSizes[index],
+        stock: value,
+      };
+      return {
+        ...prev,
+        sizes: newSizes,
+      };
+    });
   };
 
   /* =======================
@@ -145,6 +166,7 @@ function ProductUpdateAdmin() {
         category_id: data.category_id ?? null,
         thumbnail: data.thumbnail ?? [],
         newThumbnail: [],
+        sizes: data.sizes,
       });
     }
   }, [data]);
@@ -202,8 +224,7 @@ function ProductUpdateAdmin() {
       form.append("category_id", formData.category_id);
     }
 
-    // Ảnh cũ
-    form.append("oldThumbnail", JSON.stringify(formData.thumbnail));
+    form.append("sizes", JSON.stringify(formData.sizes));
 
     // Ảnh mới
     formData.newThumbnail.forEach((thumb) => form.append("thumbnail", thumb));
@@ -247,7 +268,7 @@ function ProductUpdateAdmin() {
         </div>
       </div>
     );
-  console.log("data:", formData);
+  console.log(" form data:", formData);
 
   return (
     <div className="w-full p-6 mx-auto wg-gray-1060">
@@ -384,36 +405,52 @@ function ProductUpdateAdmin() {
                   </div>
                 </div>
               </div>
+
               {/* Stock & Position */}
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* Sizes */}
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700">
-                    Số lượng tồn kho
+                  <label className="block mb-3 text-sm font-medium text-gray-700">
+                    Size và Số lượng
                   </label>
-                  <input
-                    type="number"
-                    name="stock"
-                    placeholder="0"
-                    onChange={handleOnchange}
-                    value={formData.stock}
-                    min="0"
-                    className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  <div className="space-y-3">
+                    {formData?.sizes?.map((item, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <span className="w-10 text-sm font-semibold text-gray-600">
+                          {item.name}
+                        </span>
+                        <input
+                          type="number"
+                          placeholder="0"
+                          min="0"
+                          value={item.stock}
+                          onChange={(e) =>
+                            handleSizeChange(index, e.target.value)
+                          }
+                          className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
+                {/* Position */}
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-700">
+                  <label className="block mb-3 text-sm font-medium text-gray-700">
                     Vị trí hiển thị
                   </label>
+
                   <input
                     type="number"
                     name="position"
                     placeholder="0"
-                    onChange={handleOnchange}
                     value={formData.position}
-                    className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    // onChange={handleOnChange}
+                    className="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2"></div>
             </div>
 
             {/* Right Column */}

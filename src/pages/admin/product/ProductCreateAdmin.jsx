@@ -20,6 +20,7 @@ function ProductCreateAdmin() {
   const fnSuccess = () => {
     toast.success("Tạo sản phẩm thành công!");
   };
+
   const fnError = () =>
     toast.error("Tạo sản phẩm thất bại!", {
       position: "top-right",
@@ -47,6 +48,12 @@ function ProductCreateAdmin() {
     status: "active",
     thumbnail: [],
     category_id: "",
+    sizes: [
+      { name: "S", stock: "" },
+      { name: "M", stock: "" },
+      { name: "L", stock: "" },
+      { name: "XL", stock: "" },
+    ],
   });
   console.log(formData);
 
@@ -69,6 +76,23 @@ function ProductCreateAdmin() {
     }));
   };
 
+  const handleSizeChange = (index, value) => {
+    setFormData((prev) => {
+      // copy lại mảng sizes cũ
+      const newSizes = [...prev.sizes];
+
+      // Sửa stock của size lại vị trí index
+      newSizes[index] = {
+        ...newSizes[index],
+        stock: Number(value), // stock này trong sizes
+      };
+      // Trả về formData mới
+      return {
+        ...prev,
+        sizes: newSizes,
+      };
+    });
+  };
   /* =======================
     Hàm xử lý file
   =======================*/
@@ -184,13 +208,17 @@ function ProductCreateAdmin() {
     data.append("status", formData.status);
     data.append("position", formData.position);
     data.append("category_id", formData.category_id);
+    // data.append("sizes", formData.sizes);
 
-    // Nhiều ảnh thì phải lặp qua
+    // Thằng này là obj lên phải chuyển nó sang json
+    data.append("sizes", JSON.stringify(formData.sizes));
+
+    // Nhiều ảnh thì phải lặp qua - thằng này dạng arr chỉ có phần tử thôi
     formData.thumbnail.forEach((file) => {
       data.append("thumbnail", file);
     });
     mutate(data);
-    console.log("formData:", data);
+    // console.log("formData:", data);
   };
 
   // Hàm render option theo tree
@@ -274,7 +302,6 @@ function ProductCreateAdmin() {
                   </svg>
                 </div>
               </div>
-         
             </div>
 
             {/* Description */}
@@ -338,31 +365,45 @@ function ProductCreateAdmin() {
 
             {/* Stock & Position */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {/* Sizes */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
-                  Số lượng tồn kho
+                <label className="block mb-3 text-sm font-medium text-gray-700">
+                  Size và Số lượng
                 </label>
-                <input
-                  type="number"
-                  name="stock"
-                  placeholder="0"
-                  onChange={handleOnChange}
-                  value={formData.stock}
-                  min="0"
-                  className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                <div className="space-y-3">
+                  {formData.sizes.map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <span className="w-10 text-sm font-semibold text-gray-600">
+                        {item.name}
+                      </span>
+                      <input
+                        type="number"
+                        placeholder="0"
+                        min="0"
+                        value={item.stock}
+                        onChange={(e) =>
+                          handleSizeChange(index, e.target.value)
+                        }
+                        className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Position */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
+                <label className="block mb-3 text-sm font-medium text-gray-700">
                   Vị trí hiển thị
                 </label>
+
                 <input
                   type="number"
                   name="position"
                   placeholder="0"
-                  onChange={handleOnChange}
                   value={formData.position}
-                  className="w-full px-4 py-3 transition border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onChange={handleOnChange}
+                  className="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>

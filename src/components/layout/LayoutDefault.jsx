@@ -3,8 +3,22 @@ import Header from "./Header";
 import Footer from "./Footer";
 import TopBar from "./TopBar";
 import { useEffect, useState } from "react";
+import { Slide, ToastContainer } from "react-toastify";
 
 function LayoutDefault() {
+  <ToastContainer
+    position="top-right"
+    autoClose={3000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick={false}
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light"
+    transition={Slide}
+  />;
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
