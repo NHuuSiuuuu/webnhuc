@@ -27,6 +27,11 @@ import LoginAdmin from "@/pages/admin/auth/LoginAdmin";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
 import AccountMeAdmin from "@/pages/admin/accounts/AccountMeAdmin";
 import ProductDetailAdmin from "@/pages/admin/product/ProductDetailAdmin";
+import Checkout from "@/pages/client/Checkouts";
+import ShippingMethod from "@/pages/admin/shipping_method/ShippingMethod";
+import ShippingMethodCreate from "@/pages/admin/shipping_method/ShippingMethodCreate";
+import ShippingMethodDetail from "@/pages/admin/shipping_method/ShippingMethodDetail";
+import ShippingMethodUpdate from "@/pages/admin/shipping_method/ShippingMethodUpdate";
 
 export const routes = [
   {
@@ -58,6 +63,10 @@ export const routes = [
         element: <Register />,
       },
     ],
+  },
+  {
+    path: "checkouts/:cart_id",
+    element: <Checkout />,
   },
   {
     path: "/admin/login",
@@ -145,6 +154,22 @@ export const routes = [
           {
             path: "accounts/detail/:id",
             element: <AccountDetail />,
+          },
+          {
+            path: "shipping-method",
+            element: <ShippingMethod />,
+          },
+          {
+            path: "shipping-method/create",
+            element: <ShippingMethodCreate />,
+          },
+          {
+            path: "shipping-method/detail/:id",
+            element: <ShippingMethodDetail />,
+          },
+          {
+            path: "shipping-method/update/:id",
+            element: <ShippingMethodUpdate />,
           },
         ],
       },

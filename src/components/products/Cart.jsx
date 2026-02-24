@@ -272,12 +272,12 @@ function Cart() {
                         </button>
                       </Link>
 
-                      <button
-                        className="flex-1 font-bold uppercase btn btn-border-reveal "
-                        type="submit"
+                      <Link
+                        to={`/checkouts/${cart_id}`}
+                        className="items-center justify-center flex-1 inline-block font-bold uppercase btn btn-border-reveal "
                       >
                         Thanh toán
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>

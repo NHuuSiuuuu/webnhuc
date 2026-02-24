@@ -71,7 +71,7 @@ function ProductList() {
   };
 
   return (
-    <section className="container mx-auto mt-30 productList section-container">
+    <section className="mx-auto  mt-30 productList section-container">
       <div className="mx-auto ">
         <a
           className="block text-center text-[24px] text-[#a47b67] font-bold uppercase py-8"

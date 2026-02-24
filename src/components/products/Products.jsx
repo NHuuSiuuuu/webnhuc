@@ -59,7 +59,7 @@ function Products() {
   if (isError) return <div>Lỗi rồi</div>;
   console.log(selectedProduct);
   return (
-    <div className="container relative mx-auto bg-white ">
+    <div className="relative mx-auto bg-white section-container ">
       <div className="mb-[15px]">
         <h1 className="text-center my-[15px] font-bold text-[20px] md:hidden">
           Collection

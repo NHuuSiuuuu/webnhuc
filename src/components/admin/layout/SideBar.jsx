@@ -3,7 +3,7 @@ import Logout from "../auth/logout";
 
 function Sidebar() {
   return (
-    <aside className="p-5 text-white bg-black ">
+    <aside className="hidden p-5 text-white bg-black md:block ">
       <h2 className="mb-6 text-xl font-bold">ADMIN</h2>
 
       <nav className="flex flex-col gap-3">
@@ -36,6 +36,17 @@ function Sidebar() {
           }
         >
           Danh mục sản phẩm
+        </NavLink>
+
+        {/* Phương thức vận chuyển */}
+        <NavLink
+          to="/admin/shipping-method"
+          end
+          className={({ isActive }) =>
+            isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
+          }
+        >
+          Phương thức vận chuyển
         </NavLink>
 
         {/* Nhóm quyền */}
