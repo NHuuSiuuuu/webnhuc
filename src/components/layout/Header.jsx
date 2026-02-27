@@ -50,9 +50,9 @@ function Header({ active }) {
                     render={(attrs) => (
                       <div className="box" tabIndex="-1" {...attrs}>
                         <ul className="flex flex-col bg-[#ffff] outline-1 outline-amber-50">
-                          <li className="border-b-[1px] border-[#cccccc]">
+                          {/* <li className="border-b-[1px] border-[#cccccc]">
                             <a className="clearanceSale">Áo thun 179k</a>
-                          </li>
+                          </li> */}
                           <li className="border-b-[1px] border-[#cccccc]">
                             <a className="clearanceSale">Áo khoác</a>
                           </li>
@@ -61,6 +61,11 @@ function Header({ active }) {
                           </li>
                           <li className="border-b-[1px] border-[#cccccc]">
                             <a className="clearanceSale">Váy</a>
+                          </li>
+                          <li className="border-b-[1px] border-[#cccccc]">
+                            <Link to="/tracking" className="clearanceSale">
+                              Tra cứu đơn hàng
+                            </Link>
                           </li>
                         </ul>
                       </div>
@@ -79,7 +84,7 @@ function Header({ active }) {
                   <li class="inline-block py-5">
                     <a>ALL</a>
                   </li>
-                  <li class="inline-block py-5">
+                  {/* <li class="inline-block py-5">
                     <a>Áo nữ</a>
                   </li>
                   <li class="inline-block py-5">
@@ -87,9 +92,11 @@ function Header({ active }) {
                   </li>
                   <li class="inline-block py-5">
                     <a>Set Nữ</a>
-                  </li>
+                  </li> */}
                   <li class="inline-block py-5">
-                    <a>Bikibi</a>
+                    <Link to="/tracking" className="">
+                      Tra cứu đơn hàng
+                    </Link>
                   </li>
                   <li className="inline-block py-5 group">
                     <a className="inline-flex items-center ">
@@ -201,13 +208,13 @@ function Header({ active }) {
                 <tr className="border-b-[#bcbcbc] border-b-[1px] border-dotted">
                   <td className="p-[10px] aspect-[3/4]">
                     <a href="/" className="block">
-                 <div className="aspect-[3/4] overflow-hidden border border-[#ededed]" >
+                      <div className="aspect-[3/4] overflow-hidden border border-[#ededed]">
                         <img
                           className="md:w-[70px]    w-[90px] border-solid border-[#ededed] md:mr-[10px] object-cover overflow-hidden"
                           src="https://cdn.hstatic.net/products/1000321269/k_ch_th__c_web_to_195fd56c3f7c4c9abf666f7401eb46e2_small.jpg"
                           alt=""
                         />
-                 </div>
+                      </div>
                     </a>
                   </td>
                   <td className="p-[10px] md:p-[25px] relative">

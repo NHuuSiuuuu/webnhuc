@@ -4,13 +4,17 @@ import {
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
+import { faCreditCard, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+
+// Trong component Checkout
 
 function Checkout() {
+  const navigate = useNavigate();
   const [selectedProvinceCode, setSelectedProvinceCode] = useState("");
   const [selectedDistrictCode, setSelectedDistrictCode] = useState("");
   const [selectedWardCode, setSelectedWardCode] = useState("");
@@ -18,12 +22,17 @@ function Checkout() {
   const [selectedProvinceName, setSelectedProvinceName] = useState("");
   const [selectedDistrictName, setSelectedDistrictName] = useState("");
   const [selectedWardName, setSelectedWardName] = useState("");
+
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState("");
   const cart_id = localStorage.getItem("cart_id");
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     phone: "",
     address: "",
+    shippingMethod: "",
+    paymentMethod: "",
   });
 
   const fetchCart = async () => {
@@ -40,6 +49,26 @@ function Checkout() {
     queryKey: ["cart", cart_id],
     queryFn: fetchCart,
     enabled: !!cart_id, // chỉ gội api khi tồn tại cart_id
+  });
+
+  // Gửi data lên db
+  const {
+    mutate,
+    isError: errorCreateOrder,
+    isPending,
+  } = useMutation({
+    mutationFn: async (payload) => {
+      return await axios.post(
+        `http://localhost:3001/api/order/create`,
+        payload,
+      );
+    },
+    onSuccess: (res) => {
+      console.log(res.data.order._id);
+      // navigate(`orders/success/${res.data.order._id}`);
+
+      navigate(`/orders/success/${res.data.order._id}`);
+    },
   });
 
   // Lấy tỉnh
@@ -121,18 +150,26 @@ function Checkout() {
       email: form.email,
       phone: form.phone,
       note: form.note,
-      addRess: {
+      address: {
         detail: form.detail,
         ward: selectedWardName,
         district: selectedDistrictName,
         province: selectedProvinceName,
       },
+      shippingMethod: selectedShippingMethod,
+      paymentMethod: paymentMethod,
     },
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate(payload);
   };
   // console.log("cart", carts);
 
   console.log(selectedDistrictCode);
   console.log("form", payload);
+  console.log("paymentMethod", paymentMethod);
   console.log("shippingMethod", shippingMethod);
   return (
     <div className="mx-auto h-[1000px] w-[70%]">
@@ -188,7 +225,7 @@ function Checkout() {
                 placeholder="Họ và tên"
                 className="w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
               />
-              <label className="text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
+              <label className="text-[#333333] pointer-events-none font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
                 Họ và tên
               </label>
             </div>
@@ -199,9 +236,9 @@ function Checkout() {
                   type="text"
                   placeholder="Email"
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
+                  className="z-50 w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
                 />
-                <label className="text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
+                <label className=" pointer-events-none z-10 text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
                   Email
                 </label>
               </div>
@@ -213,7 +250,7 @@ function Checkout() {
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   className="w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
                 />
-                <label className="text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
+                <label className=" pointer-events-none text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
                   Số điện thoại
                 </label>
               </div>
@@ -226,7 +263,7 @@ function Checkout() {
                 placeholder="Ghi chú"
                 className="w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
               />
-              <label className="text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
+              <label className=" pointer-events-none text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
                 Ghi chú
               </label>
             </div>
@@ -358,7 +395,7 @@ function Checkout() {
                 placeholder="Chi tiết"
                 className="w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
               />
-              <label className="text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
+              <label className=" pointer-events-none text-[#333333] font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
                 Chi tiết
               </label>
             </div>
@@ -397,29 +434,40 @@ function Checkout() {
             {shippingMethod.map((item) => (
               <div
                 key={item.code}
-                
-                className="flex items-center justify-between hover:bg-gray-400 border mb-[10px] border-[#d9d9d9] rounded-[4px] px-4 py-3"
+                className={` flex items-center justify-between  p-4 mb-3 border-2 rounded-lg transition-all duration-200  cursor-pointer group
+                          ${
+                            selectedShippingMethod === item.code
+                              ? "border-blue-500 bg-blue-50" // Khi được chọn
+                              : "border-gray-200 bg-white hover:border-blue-400 " // Khi hover (không chọn)
+                          }`}
+                onClick={() => setSelectedShippingMethod(item.code)}
               >
-                <div className="flex items-center space-x-3">
-                  {/* <FontAwesomeIcon
-                    icon={faHandHolding}
-                    className="text-gray-600"
-                  /> */}
+                {/* Left side */}
+                <div className="flex items-center space-x-4">
+                  {/* Info */}
                   <div>
-                    <p className="text-[14px] font-medium text-gray-800">
+                    <p
+                      className={`text-sm font-medium transition-colors duration-200`}
+                    >
                       {item?.name}
                     </p>
-                    <p className="text-[12px] text-gray-500">
+                    <p className="text-xs text-gray-500">
                       {item?.deliveryTime}
                     </p>
                   </div>
                 </div>
+
+                {/* Right side - Price */}
                 <div className="text-right">
-                  <p className="text-[14px] font-medium text-gray-800">
+                  <p
+                    className={`text-sm font-semibold transition-colors duration-200`}
+                  >
                     {formatPrice(item?.fee)}
                   </p>
-                  <p className="text-[12px] text-gray-500">
-                    Miễn phí từ {formatPrice(item?.freeThreshold)}
+                  <p className="text-xs text-green-600">
+                    {item?.freeThreshold
+                      ? `Free từ ${formatPrice(item?.freeThreshold)}`
+                      : "Có phí"}
                   </p>
                 </div>
               </div>
@@ -427,6 +475,78 @@ function Checkout() {
             {/* )} */}
 
             {/* Phương thức thanh toán */}
+            <div className="mt-8">
+              <h2 className="mb-4 text-lg font-semibold text-gray-900">
+                Phương thức thanh toán
+              </h2>
+
+              <div className="space-y-3">
+                <div className="flex items-center p-3 border border-gray-200 rounded-lg">
+                  <input
+                    type="radio"
+                    id="cod"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === "cod"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-4 h-4 text-blue-600"
+                  />
+                  <label
+                    htmlFor="cod"
+                    className="flex items-center ml-3 cursor-pointer"
+                  >
+                    <FontAwesomeIcon
+                      icon={faMoneyBill}
+                      className="mr-2 text-gray-600"
+                    />
+                    <span className="text-sm">
+                      Thanh toán khi nhận hàng (COD)
+                    </span>
+                  </label>
+                </div>
+
+                <div className="flex items-center p-3 border border-gray-200 rounded-lg">
+                  <input
+                    type="radio"
+                    id="vnpay"
+                    name="paymentMethod"
+                    value="vnpay"
+                    checked={paymentMethod === "vnpay"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-4 h-4 text-blue-600"
+                  />
+                  <label
+                    htmlFor="vnpay"
+                    className="flex items-center ml-3 cursor-pointer"
+                  >
+                    <FontAwesomeIcon
+                      icon={faCreditCard}
+                      className="mr-2 text-gray-600"
+                    />
+                    <span className="text-sm">Thanh toán qua VNPAY</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            {/* Hiển thị thêm thông tin nếu chọn VNPAY */}
+            {paymentMethod === "vnpay" && (
+              <div className="p-4 mt-3 text-sm text-blue-800 rounded-lg bg-blue-50">
+                <p className="flex items-center">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Bạn sẽ được chuyển đến cổng thanh toán VNPAY sau khi đặt hàng
+                </p>
+              </div>
+            )}
 
             <div className="flex space-x-4  my-[15px]">
               <button className="flex items-center justify-center px-6 py-3 text-gray-700 transition-all duration-200 border border-gray-300 rounded-md hover:border-gray-400 hover:shadow-sm">
@@ -445,7 +565,10 @@ function Checkout() {
                 </svg>
                 Giỏ hàng
               </button>
-              <button className="flex items-center justify-center px-8 py-3 font-medium text-white transition-all duration-200 bg-[#333333] rounded-md  hover:shadow-lg">
+              <button
+                onClick={handleSubmit}
+                className="flex items-center justify-center px-8 py-3 font-medium text-white transition-all duration-200 bg-[#333333] rounded-md  hover:shadow-lg"
+              >
                 Hoàn tất đơn hàng
               </button>
             </div>

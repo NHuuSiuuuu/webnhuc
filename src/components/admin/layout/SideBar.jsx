@@ -49,6 +49,17 @@ function Sidebar() {
           Phương thức vận chuyển
         </NavLink>
 
+        {/* Quản lý đơn hàng */}
+        <NavLink
+          to="/admin/orders"
+          end
+          className={({ isActive }) =>
+            isActive ? "text-yellow-400 font-bold" : "hover:text-yellow-400"
+          }
+        >
+          Quản lý đơn hàng
+        </NavLink>
+
         {/* Nhóm quyền */}
         <NavLink
           to="/admin/roles"

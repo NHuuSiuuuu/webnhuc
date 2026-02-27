@@ -32,6 +32,10 @@ import ShippingMethod from "@/pages/admin/shipping_method/ShippingMethod";
 import ShippingMethodCreate from "@/pages/admin/shipping_method/ShippingMethodCreate";
 import ShippingMethodDetail from "@/pages/admin/shipping_method/ShippingMethodDetail";
 import ShippingMethodUpdate from "@/pages/admin/shipping_method/ShippingMethodUpdate";
+import Orders from "@/pages/admin/orders/order";
+import OrderSuccess from "@/pages/client/orders/OrderSuccess";
+import OrderDetail from "@/pages/client/orders/OrderDetail";
+import OrderTracking from "@/pages/client/tracking/Tracking";
 
 export const routes = [
   {
@@ -50,6 +54,7 @@ export const routes = [
         path: "cart/",
         element: <Cart />,
       },
+
       {
         path: "products/:slug",
         element: <ProductDetail />,
@@ -62,12 +67,25 @@ export const routes = [
         path: "register/",
         element: <Register />,
       },
+      {
+        path: "tracking",
+        element: <OrderTracking />,
+      },
     ],
   },
   {
     path: "checkouts/:cart_id",
     element: <Checkout />,
   },
+  {
+    path: "orders/success/:id",
+    element: <OrderSuccess />,
+  },
+  {
+    path: "orders/detail/:id",
+    element: <OrderDetail />,
+  },
+
   {
     path: "/admin/login",
     element: <LoginAdmin />,
@@ -170,6 +188,10 @@ export const routes = [
           {
             path: "shipping-method/update/:id",
             element: <ShippingMethodUpdate />,
+          },
+          {
+            path: "orders",
+            element: <Orders />,
           },
         ],
       },
