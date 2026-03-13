@@ -80,7 +80,7 @@ function Cart() {
   });
   if (isLoading) return <div>Đang loading ...</div>;
   if (isError) return <div>lỗi</div>;
-  console.log(data);
+  console.log();
 
   return (
     <>
@@ -105,13 +105,14 @@ function Cart() {
               Giỏ hàng của bạn
             </h1>
             <p className="mb-2.5 text-[14px] text-[#a47b67] text-center leading-[21px]">
-              Có <strong>2 sản phẩm</strong> trong giỏ hàng
+              Có <strong>{data?.products.length} sản phẩm</strong> trong giỏ
+              hàng
             </p>
           </div>
 
           {/* Cart Container */}
           <div className="px-[15px]">
-            <form action="/cart">
+            <div>
               {/* table cart */}
               <div>
                 <table className="w-full">
@@ -220,7 +221,7 @@ function Cart() {
                               }
                               title="Xóa sản phẩm này"
                             >
-                              <Trash2 className="text-[#FF0000] size-[50px] cursor-p" />
+                              <Trash2 className="text-[#FF0000] md:size-[50px] cursor-p" />
                             </p>
                           </td>
                         </tr>
@@ -232,14 +233,6 @@ function Cart() {
 
               {/* Thanh toán */}
               <div className=" md:flex mt-[40px]">
-                <div className="flex-1 ">
-                  <textarea
-                    name=""
-                    id="note"
-                    placeholder="Ghi chú"
-                    className="bg-[#ededed] focus:ring-0 w-full h-[130px] outline-none border-solid border-[1px] border-transparent text-[#a47b67] text-[15px] resize-none p-[20px] font-medium"
-                  ></textarea>
-                </div>
                 <div className="flex-1 px-[15px] text-right">
                   <p className="text-[16px] leading-[21px] text-[#a47b67] mt-[20px] font-medium mb-[40px] ">
                     Tổng tiền:{" "}
@@ -260,10 +253,7 @@ function Cart() {
                   </p>
                   <div>
                     <div className="md:flex md:w-[70%] justify-between md:float-right gap-[10px]">
-                      <Link
-                        to="/cart"
-                        className="flex-1 block mb-[10px] md:mb-0"
-                      >
+                      <Link to="/" className="flex-1 block mb-[10px] md:mb-0">
                         <button
                           className="font-bold uppercase btn btn-border-reveal cl "
                           type="submit"
@@ -274,7 +264,7 @@ function Cart() {
 
                       <Link
                         to={`/checkouts/${cart_id}`}
-                        className="items-center justify-center flex-1 inline-block font-bold uppercase btn btn-border-reveal "
+                        className="items-center justify-center flex-1 inline-block font-bold text-center uppercase btn btn-border-reveal "
                       >
                         Thanh toán
                       </Link>
@@ -282,9 +272,8 @@ function Cart() {
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
-          <div className="h-dvh"></div>
         </div>
       </div>
     </>

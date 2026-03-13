@@ -25,6 +25,8 @@ function Checkout() {
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [selectedShippingMethod, setSelectedShippingMethod] = useState("");
+  const [fee, setFee] = useState(null);
+  const [freeThreshold, setFreeThreshold] = useState(null);
   const cart_id = localStorage.getItem("cart_id");
   const [form, setForm] = useState({
     fullName: "",
@@ -64,19 +66,14 @@ function Checkout() {
       );
     },
     onSuccess: (res) => {
-      console.log(res.data.order._id);
-      // navigate(`orders/success/${res.data.order._id}`);
+      console.log(res.data.payment);
+      if (res.data.payment === "vnpay") {
+        window.location.href = res.data.vnpayResponse;
+      } else {
+        navigate(`http://localhost:5173/orders/success/${res.data.order._id}`);
+      }
 
-      navigate(`/orders/success/${res.data.order._id}`);
-    },
-  });
-
-  // Lấy tỉnh
-  const { data: provinces = [] } = useQuery({
-    queryKey: ["provinces"],
-    queryFn: async () => {
-      const { data } = await axios.get(`https://provinces.open-api.vn/api/p/`);
-      return data;
+      // navigate(`/orders/success/${res.data.order._id}`);
     },
   });
 
@@ -87,6 +84,15 @@ function Checkout() {
         `http://localhost:3001/api/shipping-method/index`,
       );
       return data.data;
+    },
+  });
+
+  // Lấy tỉnh
+  const { data: provinces = [] } = useQuery({
+    queryKey: ["provinces"],
+    queryFn: async () => {
+      const { data } = await axios.get(`https://provinces.open-api.vn/api/p/`);
+      return data;
     },
   });
   useEffect(() => {
@@ -141,6 +147,37 @@ function Checkout() {
       if (ward) setSelectedWardName(ward.name);
     }
   }, [selectedWardCode, wards]);
+
+  const provisionalPrice = carts?.products?.reduce((acc, curr) => {
+    return (
+      Number(acc) +
+      calculateDiscountedPrice(
+        curr.product_id.price,
+        curr.product_id.discountPercentage,
+      ) *
+        curr.quantity
+    );
+  }, 0);
+
+  useEffect(() => {
+    if (!selectedShippingMethod) return;
+
+    const method = shippingMethod.find(
+      (item) => item.code === selectedShippingMethod,
+    );
+    if (!method) return;
+
+    if (
+      method.freeThreshold != null &&
+      provisionalPrice >= method.freeThreshold
+    ) {
+      setFee(0);
+    } else {
+      setFee(method.fee);
+    }
+    console.log("method", method);
+  }, [selectedShippingMethod, provisionalPrice, shippingMethod]);
+
   if (isLoading) return <div>Đang loading ...</div>;
   if (isError) return <div>lỗi</div>;
   const payload = {
@@ -161,62 +198,64 @@ function Checkout() {
     },
   };
 
+  const handleClickShippingMethod = (item) => {
+    setSelectedShippingMethod(item.code);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate(payload);
   };
   // console.log("cart", carts);
 
-  console.log(selectedDistrictCode);
+  // console.log(selectedDistrictCode);
   console.log("form", payload);
-  console.log("paymentMethod", paymentMethod);
+  // console.log("paymentMethod", paymentMethod);
   console.log("shippingMethod", shippingMethod);
+  // console.log("feee", fee);
+  // console.log("provisionalPrice", selectedShippingMethod);
   return (
     <div className="mx-auto h-[1000px] w-[70%]">
-      <div className="grid grid-cols-2">
-        <div className="pt-[56px] pr-[66px]">
-          {/* Logo */}
-          <div className="flex-3 md:flex md:flex-1 justify-start items-center px-[15px]">
-            <a href="/" className="block text-[40px]">
-              NHUU
-            </a>
-          </div>
+      <div className="flex-3 md:flex md:flex-1 my-[20px] border-b border-[#e6e6e6] border-solid justify-start items-center px-[15px]">
+      {/* Logo */}
+        <Link to="/" className="block text-[40px]">
+          NHUU
+        </Link>
+      </div>
 
-          <div>
-            <ul>
-              <li className="inline-block">
-                <Link className="text-[#338dbc]" to="/cart">
-                  Giỏ hàng
-                </Link>
-              </li>
-              <li className="inline-block mx-[10px]">
-                <FontAwesomeIcon
-                  className="text-[#999999] text-[10px]"
-                  icon={faChevronRight}
-                />
-              </li>
-              <li className="text-black inline-block text-[12px]">
-                Thông tin giao hàng
-              </li>
-              <li className="py-[16px] text-[#4d4d4d] text-[12px] font-medium">
-                <h2 className="text-[18px] text-[#333333]">
-                  Thông tin giao hàng
-                </h2>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-[#737373] text-[14px] inline-block">
-              Bạn đã có tài khoản?
-            </p>
-            <Link
-              className="text-[#338dbc] text-[14px] inline-block mx-[6px]"
-              to="account/login"
-            >
-              Đăng nhập
+      <div>
+        <ul>
+          <li className="inline-block">
+            <Link className="text-[#338dbc]" to="/cart">
+              Giỏ hàng
             </Link>
-
+          </li>
+          <li className="inline-block mx-[10px]">
+            <FontAwesomeIcon
+              className="text-[#999999] text-[10px]"
+              icon={faChevronRight}
+            />
+          </li>
+          <li className="text-black inline-block text-[12px]">
+            Thông tin giao hàng
+          </li>
+          <li className="py-[16px] text-[#4d4d4d] text-[12px] font-medium">
+            <h2 className="text-[18px] text-[#333333]">Thông tin giao hàng</h2>
+          </li>
+        </ul>
+        <p className="text-[#737373] text-[14px] inline-block">
+          Bạn đã có tài khoản?
+        </p>
+        <Link
+          className="text-[#338dbc] text-[14px] inline-block mx-[6px]"
+          to="account/login"
+        >
+          Đăng nhập
+        </Link>
+      </div>
+      <div className="grid lg:grid-cols-2">
+        <div className="lg:pt-[56px] lg:pr-[66px] order-2 lg:order-1">
+          <div>
             {/* Form fields */}
             <div className="relative shadow-2xs my-[15px] shadow-2xs">
               <input
@@ -440,7 +479,9 @@ function Checkout() {
                               ? "border-blue-500 bg-blue-50" // Khi được chọn
                               : "border-gray-200 bg-white hover:border-blue-400 " // Khi hover (không chọn)
                           }`}
-                onClick={() => setSelectedShippingMethod(item.code)}
+                onClick={() => {
+                  handleClickShippingMethod(item);
+                }}
               >
                 {/* Left side */}
                 <div className="flex items-center space-x-4">
@@ -575,7 +616,7 @@ function Checkout() {
           </div>
         </div>
 
-        <div className="pt-[56px] pl-[44px] bg-[#fafafa]">
+        <div className="lg:pt-[56px] lg:pl-[44px] lg:order-2 lg:bg-[#fafafa]">
           {/* Sản phẩm */}
           <div className="mt-[50px]">
             <table className="w-full">
@@ -589,11 +630,11 @@ function Checkout() {
                       key={item.product_id._id}
                       className="border-b-[#bcbcbc] border-b-[1px] border-dotted"
                     >
-                      <td className="p-[10px] aspect-[3/4]">
+                      <td className="p-[10px] w-[100px]">
                         <a href="/" className="block">
                           <div className="aspect-[3/4] overflow-hidden border border-[#ededed]">
                             <img
-                              className="md:w-[70px]    w-[90px] border-solid border-[#ededed] md:mr-[10px] object-cover overflow-hidden"
+                              className="md:w-full md:h-full    w-[90px] border-solid border-[#ededed] md:mr-[10px] object-cover overflow-hidden"
                               src={item.product_id?.thumbnail[0]}
                               alt={item.product_id?.title}
                             />
@@ -658,26 +699,14 @@ function Checkout() {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Tạm tính</span>
                   <span className="font-medium text-gray-800">
-                    {" "}
-                    {formatPrice(
-                      carts?.products?.reduce((acc, curr) => {
-                        return (
-                          Number(acc) +
-                          calculateDiscountedPrice(
-                            curr.product_id.price,
-                            curr.product_id.discountPercentage,
-                          ) *
-                            curr.quantity
-                        );
-                      }, 0),
-                    )}
+                    {formatPrice(provisionalPrice)}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Phí vận chuyển</span>
                   <span className="font-medium text-gray-800">
-                    {formatPrice(35000)}
+                    {formatPrice(fee)}
                   </span>
                 </div>
 
@@ -693,18 +722,7 @@ function Checkout() {
                     </span>
                     <div className="text-right">
                       <div className="text-2xl font-bold text-amber-700">
-                        {formatPrice(
-                          carts?.products?.reduce((acc, curr) => {
-                            return (
-                              Number(acc) +
-                              calculateDiscountedPrice(
-                                curr.product_id.price,
-                                curr.product_id.discountPercentage,
-                              ) *
-                                curr.quantity
-                            );
-                          }, 0),
-                        )}
+                        {formatPrice(provisionalPrice + fee)}
                       </div>
                       <div className="text-xs text-gray-500">
                         Đã bao gồm VAT

@@ -12,13 +12,7 @@ import { formatPrice, calculateDiscountedPrice } from "../../utils/price";
 function Header({ active }) {
   const [open, setOpen] = useState(false);
   const [openCart, setOpenCart] = useState(false);
-
-  // Đảm bảo luôn có cart_id ngay khi Header được mount
-  let cart_id = localStorage.getItem("cart_id");
-  if (!cart_id) {
-    cart_id = crypto.randomUUID();
-    localStorage.setItem("cart_id", cart_id);
-  }
+  const cart_id = localStorage.getItem("cart_id");
   const queryClient = useQueryClient();
   const [errorQuantitySize, setErrorQuantitySize] = useState(false);
 
@@ -43,6 +37,20 @@ function Header({ active }) {
     },
   });
 
+  const updateProductInCartMutation = useMutation({
+    mutationFn: (payload) => {
+      return axios.post(`http://localhost:3001/api/cart/update`, payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart", cart_id]);
+      console.log("Cập nhật số lượng thành công!");
+    },
+
+    onError: (error) => {
+      console.error("Cập nhật thất bại", error);
+    },
+  });
+
   const handleDeleteProduct = (product_id, size_id) => {
     deleteProductInCartMutation.mutate({
       cart_id: cart_id,
@@ -51,7 +59,25 @@ function Header({ active }) {
     });
   };
 
-  // console.log(cart_id);
+  const handleUpdateQuantity = (
+    product_id,
+    size_id,
+    quantity,
+    quantitySize,
+  ) => {
+    if (quantity > quantitySize) {
+      toast.error("Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này");
+      return;
+    }
+
+    updateProductInCartMutation.mutate({
+      cart_id: cart_id,
+      product_id: product_id,
+      size_id: size_id,
+      quantity: quantity,
+    });
+  };
+  console.log(cart_id);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["cart", cart_id],
     queryFn: fetchCart,
@@ -59,7 +85,7 @@ function Header({ active }) {
   });
   if (isLoading) return <div>Đang loading ...</div>;
   if (isError) return <div>lỗi</div>;
-  // console.log(data);
+  console.log(data);
   return (
     <div>
       <div
@@ -177,7 +203,7 @@ function Header({ active }) {
                       className="size-8 pr-[10px]"
                     />
                     <div className="absolute top-0 right-0">
-                      <span className="font-bold">{data?.products.length}</span>
+                      <span className="font-bold">1</span>
                     </div>
                   </div>
                 </span>
@@ -267,82 +293,153 @@ function Header({ active }) {
         } fixed bg-white md:w-[550px] z-50 transition-transform  duration-300 top-0 h-full right-0`}
       >
         {/* Giỏ hàng */}
-        <div className="pt-[60px] px-[40px] md:px-[70px] pb-[250px] overflow-hidden">
+        <div className="pt-[60px] px-[70px] pb-[250px] overflow-hidden">
           <p className="text-[14px] uppercase mt-[3px] text-[#a47b67] font-medium leading-[21px]">
             Giỏ hàng
           </p>
           {/* Sản phẩm */}
+          <div className="mt-[50px]">
+            <table className="w-full">
+              <tbody>
+                <tr className="border-b-[#bcbcbc] border-b-[1px] border-dotted">
+                  <td className="p-[10px] aspect-[3/4]">
+                    <a href="/" className="block">
+                      <div className="aspect-[3/4] overflow-hidden border border-[#ededed]">
+                        <img
+                          className="md:w-[70px]    w-[90px] border-solid border-[#ededed] md:mr-[10px] object-cover overflow-hidden"
+                          src="https://cdn.hstatic.net/products/1000321269/k_ch_th__c_web_to_195fd56c3f7c4c9abf666f7401eb46e2_small.jpg"
+                          alt=""
+                        />
+                      </div>
+                    </a>
+                  </td>
+                  <td className="p-[10px] md:p-[25px] relative">
+                    <a
+                      href="/"
+                      className="float-left w-full text-[13px] font-semibold uppercase text-[#a47b67]"
+                    >
+                      TSUN Áo Ngực Hiệu Ứng Da Đính Tag Kim Loại - Triangle
+                      Leather-effect Bra
+                    </a>
+                    {/* Size */}
+                    <span className="text-[12px] float-end w-full mt-[5px] mb-3 uppercase">
+                      S
+                    </span>
+                    {/* Số lượng */}
+                    <span className="float-left w-auto bg-[#ededed] text-center px-3 py-[6px] text-[12px] mr-3 inline-block">
+                      1
+                    </span>
+                    {/* Giá */}
+                    <span className="block float-left text-center leading-[26px] text-[#a47b67] font-medium opacity-70">
+                      299,000d
+                    </span>
+                    {/* Nút xóa sản phẩm trong giỏ hàng */}
+                    <span
+                      onClick={() => deleteCart()}
+                      className="  text-[#a47b67] font-medium absolute right-[10px]"
+                    >
+                      <X />
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <span className="float-left w-full border-t-[#000000] my-[10px] border-t-[2px]"></span>
+
+            {/* Tổng tiền */}
+            <table className="w-full">
+              <tbody>
+                <tr className="">
+                  <td className="py-[10px] pr-2.5 text-[14px] text-[#a47b67] uppercase ">
+                    Tổng tiền:
+                  </td>
+                  <td className="py-[10px] pl-2.5 text-[14px] text-right text-[#a47b67] uppercase block ">
+                    700,000d
+                  </td>
+                </tr>
+
+                <tr className="">
+                  <td className="">
+                    <Link to="/cart">
+                      <button
+                        className="font-bold uppercase btn btn-border-reveal cl w90 "
+                        type="submit"
+                      >
+                        Xem giỏ hàng
+                      </button>
+                    </Link>
+                  </td>
+                  <td className="text-right">
+                    <button
+                      className="font-bold uppercase btn btn-border-reveal w90"
+                      type="submit"
+                    >
+                      Thanh toán
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <>
             <div id="layout-cart">
               <div className="container mx-auto ">
                 {/* Cart Container */}
                 <div className="px-[15px]">
-                  <div>
-                    {data?.products?.length === 0 || !data?.products ? (
-                      <div className="flex flex-col items-center justify-center gap-4 py-16">
-                        <ShoppingBag
-                          className="text-[#a47b67] opacity-30"
-                          size={48}
-                        />
-                        <p className="text-[13px] md:text-[15px] uppercase text-[#a47b67]  tracking-widest">
-                          Giỏ hàng trống
-                        </p>
-                        <Link
-                          to="/products"
-                          className="mt-2 text-[12px] md:text-[13px] uppercase font-semibold border border-[#a47b67] text-[#a47b67] px-6 py-2 hover:bg-[#a47b67] hover:text-white transition-colors"
-                          onClick={() => setOpenCart(false)}
-                        >
-                          Mua sắm ngay
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col w-full overflow-hidden">
-                        {/* Danh sách sản phẩm */}
-                        <div className="flex flex-col divide-y divide-dashed divide-[#bcbcbc] overflow-y-auto max-h-[60vh]">
+                  <form action="/cart">
+                    {/* table cart */}
+                    <div>
+                      <table className="w-full">
+                        <tbody>
                           {data?.products?.map((item) => {
                             const size = item.product_id?.sizes.find(
                               (s) => s._id === item.size_id,
                             );
                             return (
-                              <div
-                                key={item?.product_id?._id}
-                                className="flex items-start w-full min-w-0 gap-2 py-3 md:gap-3"
+                              <tr
+                                key={item._id}
+                                className=" border-b-[#ededed] my-[10px] border-dotted border-b-[1px] "
                               >
-                                {/* Ảnh sản phẩm */}
-                                <Link
-                                  to={`/products/${item?.product_id?.slug}`}
-                                  className="shrink-0"
-                                >
-                                  <div className="w-[50px] md:w-[65px] aspect-[3/4] overflow-hidden border border-[#ededed]">
+                                {/* Ảnh */}
+                                <td>
+                                  <Link
+                                    to={`/products/${item?.product_id?.slug}`}
+                                  >
                                     <img
-                                      className="object-cover w-full h-full"
+                                      className="max-w-[100px]"
                                       src={item?.product_id?.thumbnail[0]}
                                       alt={item?.product_id?.title}
                                     />
-                                  </div>
-                                </Link>
-
-                                {/* Thông tin sản phẩm */}
-                                <div className="flex flex-col flex-1 min-w-0 gap-1 overflow-hidden">
+                                  </Link>
+                                </td>
+                                {/* Tên sản phẩm giá ... */}
+                                <td className="py-[20px] pl-[15px]">
                                   <Link
                                     to={`/products/${item?.product_id?.slug}`}
-                                    className="block text-[12px] md:text-[14px] font-semibold uppercase text-[#a47b67] leading-tight break-words line-clamp-2"
                                   >
-                                    {item?.product_id?.title}
+                                    <h3 className="mb-[5px] text-[16px] font-bold inline text-left text-[#a47b67]">
+                                      {item?.product_id?.title}
+                                    </h3>
                                   </Link>
+                                  <p className="mb-[5px] text-left text-[#a47b67] leading-[21px]">
+                                    {formatPrice(
+                                      calculateDiscountedPrice(
+                                        item?.product_id?.price,
+                                        item?.product_id?.discountPercentage,
+                                      ),
+                                    )}
+                                  </p>
+                                  <p className="mb-[5px] text-left text-[#a47b67] leading-[21px] uppercase">
+                                    {size?.name} {size?.stock}
+                                  </p>
 
-                                  {size?.name && (
-                                    <span className="text-[11px] md:text-[13px] uppercase text-gray-400 truncate">
-                                      Size: {size?.name}
-                                    </span>
-                                  )}
+                                  <div className="flex items-center justify-between">
+                                    <div className="quantity-area quantity-cart">
+                                      {item.quantity}
+                                    </div>
 
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className="shrink-0 bg-[#ededed] px-2 py-0.5 text-[11px] md:text-[13px] text-center">
-                                      x{item.quantity}
-                                    </span>
-                                    <span className="text-[12px] md:text-[14px] text-[#a47b67] font-medium truncate">
+                                    <p className="font-medium text-left text-[16px] leading-[21px] text-[#a47b67]">
                                       {formatPrice(
                                         item?.quantity *
                                           calculateDiscountedPrice(
@@ -351,40 +448,26 @@ function Header({ active }) {
                                               ?.discountPercentage,
                                           ),
                                       )}
-                                    </span>
+                                    </p>
                                   </div>
-                                </div>
-
-                                {/* Nút xóa */}
-                                <button
-                                  onClick={() =>
-                                    handleDeleteProduct(
-                                      item?.product_id._id,
-                                      item?.size_id,
-                                    )
-                                  }
-                                  className=" p-1 text-[#a47b67] hover:opacity-60 transition-opacity"
-                                >
-                                  <X size={16} />
-                                </button>
-                              </div>
+                                </td>
+                              </tr>
                             );
                           })}
-                        </div>
+                        </tbody>
+                      </table>
+                    </div>
 
-                        {/* Divider */}
-                        <div className="w-full mt-2 mb-3 border-t-2 border-black" />
-
-                        {/* Tổng tiền */}
-                        <div className="flex items-center justify-between w-full min-w-0 py-1">
-                          <span className="text-[13px] md:text-[15px] uppercase text-[#a47b67] shrink-0">
-                            Tổng tiền:
-                          </span>
-                          <span className="text-[13px] md:text-[15px] uppercase text-[#a47b67] font-semibold ml-2 truncate text-right">
+                    {/* Thanh toán */}
+                    <div className=" md:flex mt-[40px]">
+                      <div className="flex-1 px-[15px] text-right">
+                        <p className="text-[16px] leading-[21px] text-[#a47b67] mt-[20px] font-medium mb-[40px] ">
+                          Tổng tiền:{" "}
+                          <b className="font-bold text-[30px] ml-[7px]">
                             {formatPrice(
                               data?.products?.reduce((acc, curr) => {
                                 return (
-                                  acc +
+                                  Number(acc) +
                                   calculateDiscountedPrice(
                                     curr.product_id.price,
                                     curr.product_id.discountPercentage,
@@ -393,41 +476,37 @@ function Header({ active }) {
                                 );
                               }, 0),
                             )}
-                          </span>
-                        </div>
-
-                        {/* Nút hành động */}
-                        <div className="flex flex-col w-full gap-2 mt-3">
-                          <Link
-                            to={`/checkouts/${cart_id}`}
-                            className="block w-full text-center font-bold uppercase text-[12px] md:text-[14px] bg-[#94292a] text-white py-2.5 md:py-3 px-4 hover:opacity-80 transition-opacity"
-                            onClick={() => setOpenCart(false)}
-                          >
-                            Thanh toán
-                          </Link>
-                          <Link
-                            to="/cart"
-                            className="block w-full"
-                            onClick={() => setOpenCart(false)}
-                          >
-                            <button className="w-full font-bold uppercase text-[12px] md:text-[14px] border border-[#a47b67] text-[#a47b67] py-2.5 md:py-3 hover:bg-[#a47b67] hover:text-white transition-colors">
-                              Xem giỏ hàng
-                            </button>
-                          </Link>
+                          </b>
+                        </p>
+                        <div>
+                          <div className="md:flex md:w-[70%] justify-between md:float-right gap-[10px]">
+                            <Link
+                              to={`/checkouts/${cart_id}`}
+                              className="items-center justify-center flex-1 inline-block font-bold text-center uppercase btn btn-border-reveal "
+                            >
+                              Thanh toán
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
           </>
         </div>
 
-        <div className="absolute top-0 mt-[20px] md:mt-[50px] right-0 pr-[20px] md:pr-[70px]">
+        <div className="absolute top-0 mt-[50px] right-0 pr-[70px]">
           <X onClick={() => setOpenCart(false)} className="size-8" />
         </div>
       </div>
+      <div
+        onClick={() => setOpenCart(false)}
+        className={`fixed z-40 inset-0 bg-black/50  transition-opacity  duration-300 ${
+          openCart ? "opacity-100 visible" : "opacity-0 invisible" // open ? "opacity-100 " : "hidden": có thể viết như này. Nưng sẽ mất
+        }`}
+      />
     </div>
   );
 }

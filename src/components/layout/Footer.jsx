@@ -1,101 +1,122 @@
+import { useState } from "react";
+import {
+  faChevronDown,
+  faChevronUp,
+  faEnvelope,
+  faLocationDot,
+  faPhone,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 function Footer() {
+  const [open, setOpen] = useState(null);
+
   return (
     <div>
       {/* main footer */}
-      <div className="bg-[#232323] py-10">
-        {/* grid-cols-[repeat(auto-fit,minmax(220px,1fr))] */}
-        <div className="mx-auto container grid gap-2 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-          <div className="footer-content1">
-            <div className="footerTitle">
-              <h4>hộ kinh doanh Nhuu</h4>
-            </div>
-            <div className="footerContent mb-[20px]">
-              <p>
-                Giấy chứng nhận ĐKKD số 41O8035777 do UBND Bình Thạnh cấp lần
-                đầu ngày 28/02/2018
-                <br />
-                Địa chỉ:350 Điện Biên Phủ, phường 17, Hồ Chí Minh
-                <br />
-                Email: tsunsg@gmail.com
-                <br />
-                Hotline: 093 407 6342
-              </p>
-            </div>
-            <div className="logoFooter">
-              <a href="">
-                <img
-                  className="object-cover max-w-[230px]"
-                  src="https://file.hstatic.net/1000321269/file/hexcmkulyhczmakrdo-i8c6l8vaiyqtm4w_003a610e882947d9a02d2766cc1ef8f5.png"
-                  alt=""
-                />
-              </a>
-            </div>
+      <div className="bg-[#232323] mt-[100px] py-4 md:py-10 px-[30px]">
+        <div className="container grid grid-cols-1 gap-4 mx-auto md:grid-cols-3">
+          {/* logo */}
+          <div className="">
+            <a href="">
+              <img
+                className="object-cover w-0 md:w-[230px]"
+                src="https://file.hstatic.net/1000321269/file/hexcmkulyhczmakrdo-i8c6l8vaiyqtm4w_003a610e882947d9a02d2766cc1ef8f5.png"
+                alt=""
+              />
+            </a>
           </div>
-          <div className="footer-content2">
-            <div className="footerTitle">
-              <h4>Liên kết</h4>
+
+          {/* liên kết */}
+          <div>
+            <div
+              className="flex items-center justify-between cursor-pointer md:cursor-default"
+              onClick={() => setOpen(open === 1 ? null : 1)}
+            >
+              <h4
+                className={`font-medium md:text-[20px] md:text-white  text-[14px] ${open === 1 ? " text-white" : "text-[#9f9f9f]"} uppercase`}
+              >
+                Liên kết
+              </h4>
+              <span className="text-white md:hidden">
+                {open === 1 ? (
+                  <FontAwesomeIcon icon={faChevronUp} />
+                ) : (
+                  <FontAwesomeIcon icon={faChevronDown} />
+                )}
+              </span>
             </div>
-            <div className="footerContent">
-              <ul>
-                <li>
-                  <p>Chính sách bảo mật</p>
-                </li>
-                <li>
-                  <p>Hướng dẫn mua hàng</p>
-                </li>
-                <li>
-                  <p>Hướng dẫn thanh toán</p>
-                </li>
-                <li>
-                  <p>Chính sách đổi trả</p>
-                </li>
-                <li>
-                  <p>Chính sách vận chuyển</p>
-                </li>
-                <li>
-                  <p>Chính sách kiểm hàng</p>
-                </li>
+
+            <div
+              className={`overflow-hidden transition-all
+                ${open === 1 ? "max-h-[300px]" : "max-h-0 md:max-h-full"}
+              `}
+            >
+              <ul className="mt-3 text-[#9f9f9f] md:text-[14px]">
+                <li>Chính sách bảo mật</li>
+                <li>Hướng dẫn mua hàng</li>
+                <li>Hướng dẫn thanh toán</li>
+                <li>Chính sách đổi trả</li>
+                <li>Chính sách vận chuyển</li>
+                <li>Chính sách kiểm hàng</li>
               </ul>
             </div>
           </div>
 
-          <div className="footer-content3">
-            <div className="footerTitle">
-              <h4>thông tin liên hệ</h4>
+          {/* thông tin liên hệ */}
+          <div>
+            <div
+              className="flex items-center justify-between cursor-pointer md:cursor-default"
+              onClick={() => setOpen(open === 2 ? null : 2)}
+            >
+              <h4
+                className={`font-medium md:text-[20px] md:text-white text-[14px] ${open === 2 ? " text-white" : "text-[#9f9f9f]"} uppercase`}
+              >
+                Thông tin liên hệ
+              </h4>
+              <span className="text-white md:hidden">
+                {open === 2 ? (
+                  <FontAwesomeIcon icon={faChevronUp} />
+                ) : (
+                  <FontAwesomeIcon icon={faChevronDown} />
+                )}
+              </span>
             </div>
-            <div className="footerContent">
-              <ul>
-                <li>
-                  <p>* Floor B1, Vincom center Đồng Khởi, Q.1, Tp.HCM</p>
-                </li>
-                <li>
+
+            <div
+              className={`overflow-hidden transition-all
+                ${open === 2 ? "max-h-[300px]" : "max-h-0 md:max-h-full"}
+              `}
+            >
+              <ul className="mt-3 text-[#9f9f9f] space-y-3">
+                <li className="flex gap-4 md:text-[14px]">
+                  <FontAwesomeIcon icon={faLocationDot} />
                   <p>
-                    * 26 Trần Quang Diệu, Q.3, Tp.HCM
-                    https://www.facebook.com/TSUN.SG
+                    * Địa chỉ abc 1 <br />
+                    * Địa chỉ abc 2 <br />
+                    https://www.facebook.com
                   </p>
                 </li>
-                <li>
-                  <p>093 407 6342</p>
+
+                <li className="flex gap-4">
+                  <FontAwesomeIcon icon={faPhone} />
+                  <p>9999999999</p>
                 </li>
-                <li>
-                  <p>tsunsg@gmail.com</p>
+
+                <li className="flex gap-4">
+                  <FontAwesomeIcon icon={faEnvelope} />
+                  <p>Admin@gmail.com</p>
                 </li>
               </ul>
             </div>
-          </div>
-          <div className="footer-content3">
-            <div className="footerTitle">
-              <h4>thông tin liên hệ</h4>
-            </div>
-            <div className="footerContent"></div>
           </div>
         </div>
       </div>
 
       {/* bottom footer */}
-      <div className="bg-black bottomFooter">
+      <div className="bg-black">
         <div className="container mx-auto text-center">
-          <p class="text-[#9f9f9f] text-[14px] py-5 block ">
+          <p className="text-[#9f9f9f] text-[14px] py-5">
             Copyright © 2026 <a href="">nhuu</a>
           </p>
         </div>

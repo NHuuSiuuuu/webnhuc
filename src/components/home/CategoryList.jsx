@@ -1,9 +1,11 @@
 function CategoryList() {
   return (
     //   {/* Category List */}
-    //   {/* <div className="absolute bottom-0 -translate-x-1/2 translate-y-1/2 left-1/2 section-container"> */}
+    // <div className="   w-[94%] sm:w-11/12  max-w-6xl -translate-x-1/2 
+    // -translate-y-[50%] flex-row justify-between gap-2 bg-white px-2 sm:px-3 md:px-4 py-[15px] mx-auto">
 
-    <div className="absolute z-40 py-[15px] bg-white flex flex-row justify-between gap-2 mx-auto -translate-x-1/2 -translate-y-[50%] section-container left-1/2 ">
+    <div className="absolute z-30 w-[94%] sm:w-[90%] md:w-[84%] lg:w-[75%] p-[15px] bg-white shadow-xl flex flex-row justify-between gap-2 mx-auto -translate-x-1/2 -translate-y-[50%]
+      left-1/2 ">
       <div className="relative overflow-hidden group">
         <a href="" className="block">
           <img

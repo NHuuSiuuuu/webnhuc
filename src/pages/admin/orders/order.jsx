@@ -13,7 +13,7 @@ import {
   faPrint,
   faSync,
 } from "@fortawesome/free-solid-svg-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 function Orders() {
@@ -21,6 +21,8 @@ function Orders() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+
+  const queryClient = useQueryClient();
 
   const {
     data: orders = [],
@@ -33,39 +35,74 @@ function Orders() {
       return data;
     },
   });
+
+  // Api hủy đơn hàng
+  const { mutate: adminCancelOrder } = useMutation({
+    mutationFn: async (id) =>
+      await axios.post(`http://localhost:3001/api/order/admin-cancel`, {
+        id: id,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["orders"]);
+    },
+  });
+
+  // Api thay đổi trạng thái đơn hàng
+  const { mutate: updateStatusOrder } = useMutation({
+    mutationFn: async (data) =>
+      await axios.post(
+        `http://localhost:3001/api/order/admin-update-order-status`,
+        data,
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["orders"]);
+    },
+  });
+
+  // Api thay đổi trạng thái đơn hàng
+  const { mutate: refundOrder } = useMutation({
+    mutationFn: async (id) =>
+      await axios.post(
+        `http://localhost:3001/api/order/admin-refund-order`,
+        id,
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["orders"]);
+    },
+  });
   console.log(orders);
 
-  const statusColors = {
-    pending: {
-      bg: "bg-yellow-100",
-      text: "text-yellow-800",
-      label: "Chờ xác nhận",
-    },
-    confirmed: {
-      bg: "bg-blue-100",
-      text: "text-blue-800",
-      label: "Đã xác nhận",
-    },
-    shipping: {
-      bg: "bg-purple-100",
-      text: "text-purple-800",
-      label: "Đang giao",
-    },
-    delivered: { bg: "bg-green-100", text: "text-green-800", label: "Đã giao" },
-    cancelled: { bg: "bg-red-100", text: "text-red-800", label: "Đã hủy" },
+  // Bảng cho phép chuyển tiếp trạng thái
+  const allowedTransitions = {
+    pending: ["confirmed", "cancelled"],
+    confirmed: ["shipping", "cancelled"],
+    shipping: ["completed"],
+    completed: [],
+    cancelled: [],
+  };
+  const statusLabel = {
+    pending: "Chờ xác nhận",
+    confirmed: "Xác nhận",
+    shipping: "Đang giao",
+    completed: "Hoàn thành",
+    cancelled: "Hủy đơn",
+  };
+  const handleChangeStatusOrder = (e, id) => {
+    if (e.target.value === "cancelled") {
+      console.log(e.target.value);
+      adminCancelOrder(id);
+    }
+    const payload = {
+      id: id,
+      newOrderStatus: e.target.value,
+    };
+    updateStatusOrder(payload);
+    console.log(payload);
   };
 
-  const paymentStatusColors = {
-    paid: {
-      bg: "bg-green-100",
-      text: "text-green-800",
-      label: "Đã thanh toán",
-    },
-    unpaid: {
-      bg: "bg-red-100",
-      text: "text-red-800",
-      label: "Chưa thanh toán",
-    },
+  const handleRefundOrder = (id) => {
+    console.log(id);
+    refundOrder({ id });
   };
 
   return (
@@ -220,75 +257,89 @@ function Orders() {
                   </td>
 
                   {/* Trạng thái đơn hàng */}
+
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span
+                    <div
                       className={`
-                            inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
-                              ${order.orderStatus === "pending" && "bg-yellow-100 text-yellow-800"}
-                              ${order.orderStatus === "confirmed" && "bg-blue-100 text-blue-800"}
-                              ${order.orderStatus === "shipping" && "bg-purple-100 text-purple-800"}
-                              ${order.orderStatus === "delivered" && "bg-green-100 text-green-800"}
-                              ${order.orderStatus === "cancelled" && "bg-red-100 text-red-800"}
-                              `}
+                      inline-flex items-center px-3 py-1.5 border-l-4 text-sm font-semibold
+                      ${order.orderStatus === "pending" ? "text-amber-800 border-amber-400 bg-amber-50/30" : ""}
+                      ${order.orderStatus === "confirmed" ? "text-[#8b6f5f] border-[#a47b67] bg-[#f5ede6]/30" : ""}
+                      ${order.orderStatus === "shipping" ? "text-purple-800 border-purple-400 bg-purple-50/30" : ""}
+                      ${order.orderStatus === "completed" ? "text-emerald-800 border-emerald-400 bg-emerald-50/30" : ""}
+                      ${order.orderStatus === "cancelled" ? "text-rose-800 border-rose-400 bg-rose-50/30" : ""}
+                    `}
                     >
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full mr-1.5
-                          ${order.orderStatus === "pending" && "bg-yellow-500"}
-                          ${order.orderStatus === "confirmed" && "bg-blue-500"}
-                          ${order.orderStatus === "shipping" && "bg-purple-500"}
-                          ${order.orderStatus === "delivered" && "bg-green-500"}
-                          ${order.orderStatus === "cancelled" && "bg-red-500"}
-                        `}
-                      ></span>
                       {order.orderStatus === "pending" && "Chờ xác nhận"}
                       {order.orderStatus === "confirmed" && "Đã xác nhận"}
                       {order.orderStatus === "shipping" && "Đang giao"}
-                      {order.orderStatus === "delivered" && "Đã giao"}
+                      {order.orderStatus === "completed" && "Đã giao"}
                       {order.orderStatus === "cancelled" && "Đã hủy"}
-                    </span>
+                    </div>
                   </td>
-
                   {/* Thanh toán */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`
-                inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
-                ${order.paymentMethod === "COD" ? "bg-orange-100 text-orange-800" : "bg-green-100 text-green-800"}
-              `}
+                      className={` px-2.5 py-1 rounded-full text-xs font-medium ${order.paymentMethod === "cod" ? "bg-orange-100 text-orange-800" : "bg-green-100 text-green-800"} `}
                     >
-                      {order.paymentMethod === "COD"
-                        ? "💵 COD"
-                        : "💳 Chuyển khoản"}
+                      {order.paymentMethod === "cod" ? "COD" : "Chuyển khoản"}
                     </span>
                     <p className="mt-1 text-xs text-gray-500">
-                      {order.paymentStatus === "paid"
-                        ? "Đã thanh toán"
-                        : "Chưa thanh toán"}
+                      {order.paymentStatus === "paid" && "Đã thanh toán"}
+                      {order.paymentStatus === "unpaid" && "Chưa thanh toán"}
+                      {order.paymentStatus === "refund_pending" &&
+                        "Chờ hoàn tiền"}
+                      {order.paymentStatus === "refunded" &&
+                        "Đã hoàn tiền hoàn tiền"}
+                      {order.paymentStatus === "failed" && "Lỗi khi thanh toán"}
                     </p>
+                    {order.paymentStatus === "refund_pending" && (
+                      <button
+                        onClick={() => handleRefundOrder(order._id)}
+                        className="border"
+                      >
+                        Hoàn tiền
+                      </button>
+                    )}
                   </td>
 
                   {/* Thao tác */}
-                  <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                    <div className="flex items-center gap-3">
-                      <button
-                        className="text-blue-600 transition-colors hover:text-blue-900"
-                        title="Xem chi tiết"
-                      >
-                        <FontAwesomeIcon icon={faEye} className="w-4 h-4" />
-                      </button>
-                      <button
-                        className="text-green-600 transition-colors hover:text-green-900"
-                        title="Sửa"
-                      >
-                        <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
-                      </button>
-                      <button
-                        className="text-red-600 transition-colors hover:text-red-900"
-                        title="Xóa"
-                      >
-                        <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                      </button>
-                    </div>
+                  {/* Trạng thái đơn hàng */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <select
+                      onChange={(e) => handleChangeStatusOrder(e, order._id)}
+                      value={order.orderStatus}
+                      className={`
+                          px-4 py-2.5 border-2 border-gray-200 rounded-lg  
+                          text-sm font-semibold outline-none cursor-pointer 
+                          ${order.orderStatus === "pending" ? "text-amber-800" : ""}
+                          ${order.orderStatus === "confirmed" ? "text-[#8b6f5f]" : ""}
+                          ${order.orderStatus === "shipping" ? "text-purple-800" : ""}
+                          ${order.orderStatus === "completed" ? "text-emerald-800" : ""}
+                          ${order.orderStatus === "cancelled" ? "text-rose-800" : ""}
+                        `}
+                    >
+                      {[
+                        "pending",
+                        "confirmed",
+                        "shipping",
+                        "completed",
+                        "cancelled",
+                      ].map((status) => (
+                        <option
+                          key={status}
+                          value={status}
+                          disabled={
+                            status !== order.orderStatus &&
+                            !allowedTransitions[order.orderStatus]?.includes(
+                              status,
+                            )
+                          }
+                          className="disabled:text-gray-400"
+                        >
+                          {statusLabel[status]}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                 </tr>
               ))}

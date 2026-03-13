@@ -24,11 +24,10 @@ function OrderSuccess() {
       return data;
     },
   });
-  console.log(data);
-
+  console.log(data?.order.paymentMethod);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[rgb(250,248,246)]">
       <div
         className={`max-w-2xl mx-auto px-6 py-20 transition-all duration-1000 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
       >
@@ -38,7 +37,7 @@ function OrderSuccess() {
             <FontAwesomeIcon className="text-[24px]" icon={faCheck} />
           </div>
 
-          <h1 className="mb-4 text-3xl font-light tracking-tight text-black letter-space">
+          <h1 className="mb-4 text-3xl font-light tracking-tight text-[#8b6f5f] letter-space">
             Đơn Hàng Đã Được Xác Nhận
           </h1>
 
@@ -83,7 +82,7 @@ function OrderSuccess() {
                   </div>
                   <div className="flex flex-col justify-between flex-1 min-w-0">
                     <div>
-                      <h3 className="mb-1 text-base font-light tracking-tight text-black">
+                      <h3 className="mb-1 text-base font-light tracking-tight text-[#8b6f5f]">
                         {product.product_id.title}
                       </h3>
                       <p className="text-xs tracking-wide text-gray-600">
@@ -91,10 +90,10 @@ function OrderSuccess() {
                       </p>
                     </div>
                     <div className="flex items-end justify-between text-sm">
-                      <span className="text-gray-600">
+                      <span className="text-[#8b6f5f]">
                         SL: {product.quantity}
                       </span>
-                      <span className="font-light text-black">
+                      <span className="font-light text-[#8b6f5f]">
                         {formatPrice(product.price * product.quantity)}
                       </span>
                     </div>
@@ -114,7 +113,7 @@ function OrderSuccess() {
             <p className="mb-6 text-xs tracking-widest text-gray-600 uppercase">
               Khách Hàng
             </p>
-            <p className="mb-2 font-light text-black">
+            <p className="mb-2 font-light text-[#8b6f5f]">
               {data?.order.customer.fullName}
             </p>
             <p className="font-light text-gray-700">
@@ -146,38 +145,37 @@ function OrderSuccess() {
           <div className="max-w-sm ml-auto space-y-4 text-sm">
             <div className="flex justify-between font-light">
               <span className="text-gray-700">Tạm tính</span>
-              <span className="text-black">
+              <span className="text-[#8b6f5f]">
                 {formatPrice(data?.order.totalPrice)}
               </span>
             </div>
 
             <div className="flex justify-between font-light">
               <span className="text-gray-700">Phí vận chuyển</span>
-              <span className="text-black">
+              <span className="text-[#8b6f5f]">
                 {formatPrice(data?.order.shippingFee)}
               </span>
             </div>
 
-              <div className="flex justify-between font-light">
-                <span className="text-gray-700">Giảm giá</span>
-                <span className="text-black">
-                  {/* -{formatPrice(order.discount)} */}
-                  {formatPrice(0)}
-                </span>
-              </div>
+            <div className="flex justify-between font-light">
+              <span className="text-gray-700">Giảm giá</span>
+              <span className="text-[#8b6f5f]">
+                {/* -{formatPrice(order.discount)} */}
+                {formatPrice(0)}
+              </span>
+            </div>
 
             <div className="flex justify-between pt-4 border-t border-gray-900">
-              <span className="text-xs tracking-widest text-black uppercase">
+              <span className="text-xs tracking-widest text-[#8b6f5f] uppercase">
                 Tổng Cộng
               </span>
-              <span className="text-lg font-light text-black">
+              <span className="text-lg font-light text-[#8b6f5f]">
                 {formatPrice(data?.order.finalPrice)}
               </span>
             </div>
           </div>
         </div>
 
-        {/* PAYMENT METHOD */}
         {/* PAYMENT METHOD */}
         <div className="pb-16 mb-16 text-center border-b border-gray-200">
           <p className="mb-6 text-xs tracking-[0.25em] text-gray-500 uppercase">
@@ -201,17 +199,28 @@ function OrderSuccess() {
                 />
               </svg>
             </div>
-
+            {data?.paymentMethod}
             {/* TEXT */}
-            <div className="text-left">
-              <p className="text-base font-light tracking-wide text-black">
-                Thanh toán khi nhận hàng
-              </p>
+            {data?.order.paymentMethod === "cod" ? (
+              <div className="text-left">
+                <p className="text-base font-light tracking-wide text-[#8b6f5f]">
+                  Thanh toán khi nhận hàng
+                </p>
 
-              <p className="mt-1 text-xs text-gray-500">
-                Vui lòng chuẩn bị số tiền chính xác khi nhận hàng
-              </p>
-            </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  Vui lòng chuẩn bị số tiền chính xác khi nhận hàng
+                </p>
+              </div>
+            ) : (
+              <div className="text-left">
+                <p className="text-base font-light tracking-wide text-[#8b6f5f]">
+                  Thanh toán VNPay
+                </p>
+                {data?.order.paymentStatus === "paid" && (
+                  <p className="mt-1 text-xs text-gray-500">Đã thanh toán</p>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -225,7 +234,7 @@ function OrderSuccess() {
           </Link>
 
           <Link
-            to="/user/orders"
+            to={`http://localhost:5173/orders/detail/${id}`}
             className="py-4 text-xs font-medium tracking-widest text-center text-white uppercase transition-all duration-300 bg-black hover:bg-gray-800"
           >
             Theo Dõi Đơn Hàng

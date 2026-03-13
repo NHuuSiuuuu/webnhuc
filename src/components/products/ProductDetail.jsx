@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { useParams } from "react-router";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "../../utils/axios";
 import { formatPrice, calculateDiscountedPrice } from "../../utils/price";
 import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
@@ -31,6 +31,8 @@ function ProductDetail() {
     queryKey: ["product-detail", slug],
     queryFn: fetchProductDetail,
   });
+
+  const queryClient = useQueryClient();
 
   let cartId = localStorage.getItem("cart_id");
   if (!cartId) {
@@ -76,6 +78,8 @@ function ProductDetail() {
     alert("Sản phẩm đã được thêm vào giỏ hàng!");
     console.log(payload);
     await axios.post(`http://localhost:3001/api/cart/create`, payload);
+    // Cập nhật lại dữ liệu giỏ hàng cho Header và cart drawer
+    queryClient.invalidateQueries(["cart", cartId]);
   };
 
   var settings = {
@@ -256,7 +260,7 @@ function ProductDetail() {
                         type="radio"
                         name="size"
                         className="absolute w-0 h-0 opacity-0"
-                        disabled={size.stock === null}
+                        disabled={size.stock === null || size.stock === 0}
                         onClick={() => {
                           setErrorQuantitySize(false);
                           setErrorSize(false);
@@ -292,14 +296,9 @@ function ProductDetail() {
                   </span>
                 )}
               </div>
-              <button
-                onClick={() => handleAddToCart(product._id)}
-                className="w-full font-bold uppercase btn btn-border-reveal"
-              >
-                Thêm vào giỏ
-              </button>
+
               {/* Form */}
-              <form action="" className="my-2.5 w-full md:float-left">
+              <div className="my-2.5 w-full items-start gap-6 md:flex ">
                 <div className="w-[134px] md:float-left mb-[15px] quantity-area">
                   <input
                     className=" qty-btn"
@@ -325,7 +324,13 @@ function ProductDetail() {
                     onClick={() => handleOnClickSize(quantity)}
                   />
                 </div>
-                <div className="md:pl-[15px] md:float-left ">
+                <div className="md:flex-1">
+                  <button
+                    onClick={() => handleAddToCart(product._id)}
+                    className="font-bold uppercase w-ful1 btn btn-border-reveal"
+                  >
+                    Thêm vào giỏ
+                  </button>
                   {/* Khi còn sản phẩm */}
                   <button
                     className="font-bold uppercase w-full btn btn-border-reveal mt-[15px]"
@@ -334,7 +339,7 @@ function ProductDetail() {
                     Mua ngay
                   </button>
                 </div>
-              </form>
+              </div>
 
               {/* Tab Product */}
               <div>

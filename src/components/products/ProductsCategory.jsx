@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import {
   ArrowDown,
@@ -14,22 +14,37 @@ import { Link } from "react-router";
 import Slider from "react-slick";
 import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
 import Pagination from "../layout/Pagination";
+import FilterSort from "./FilterSort";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleXmark,
+  faMagnifyingGlass,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 
-function Products() {
+// import Tippy from "@tippyjs/react";
+import HeadlessTippy from "@tippyjs/react/headless";
+import "tippy.js/dist/tippy.css"; // optional
+import useDebounce from "@/hooks/useDebounce.hook";
+// import { formatPrice,calculateDiscountedPrice } from "../../utils/price";
+
+function ProductsCategory({ category_id, title_breadcrumb }) {
   const [opened, setOpened] = useState(false);
   const [indexThumb, setIndexThumb] = useState(0);
   const [openDialog, setOpendialog] = useState(false);
   const [selectedSize, setSelectedSize] = useState(null);
   const [errorSize, setErrorSize] = useState(false);
   const [errorQuantitySize, setErrorQuantitySize] = useState(false);
+
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
   const [page, setPage] = useState(1);
   // Sản phẩm được chọn khi zoom in
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
-
-  const queryClient = useQueryClient();
+  const [searchValue, setSearchValue] = useState("");
+  const [showResult, setShowResult] = useState(true);
+  const debounceValue = useDebounce(searchValue, 500);
 
   let cartId = localStorage.getItem("cart_id");
   if (!cartId) {
@@ -48,8 +63,24 @@ function Products() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
 
+  const {
+    data: searchData,
+    isLoading: searchLoading,
+    isError: searchError,
+  } = useQuery({
+    queryKey: ["searchProducts", debounceValue],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3001/api/product/search?keyword=${debounceValue}`,
+      );
+      return data;
+    },
+
+    enabled: debounceValue.trim() !== "", // Điều kiện dể query chạy
+  });
+
   const fetchListProducts = async () => {
-    let url = `http://localhost:3001/api/product?page=${page}`;
+    let url = `http://localhost:3001/api/product/category/${category_id}?page=${page}`;
 
     if (sort) url += `&sort=${sort}`;
     if (filter) url += `&filter=featured:${filter}`;
@@ -57,6 +88,7 @@ function Products() {
     const res = await axios.get(url);
     return res.data;
   };
+  // console.log("filter", filter);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["products", page, sort, filter],
     queryFn: fetchListProducts,
@@ -70,18 +102,11 @@ function Products() {
       return;
     }
   };
-  const { mutate } = useMutation({
-    mutationFn: async (payload) => {
-      return await axios.post(`http://localhost:3001/api/cart/create`, payload);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["cart", cartId]);
-      alert("Sản phẩm đã được thêm vào giỏ hàng!");
-    },
-  });
+
   const handleAddToCart = async (productId) => {
     if (!selectedSize) {
       setErrorSize(true);
+      return;
     }
     const payload = {
       cart_id: cartId,
@@ -89,9 +114,19 @@ function Products() {
       quantity: quantity,
       size_id: selectedSize?._id,
     };
+    alert("Sản phẩm đã được thêm vào giỏ hàng!");
     console.log("payload", payload);
-    mutate(payload);
+    await axios.post(`http://localhost:3001/api/cart/create`, payload);
   };
+
+  const handleSearchValue = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleHideResult = () => {
+    setShowResult(false);
+  };
+  // console.log(searchValue);
   const totalPage = data?.totalPage || 0;
   if (isLoading)
     return (
@@ -130,138 +165,156 @@ function Products() {
         </div>
       </div>
     );
+  console.log(searchData);
   return (
     <div>
+      <HeadlessTippy
+        appendTo={() => document.body}
+        interactive
+        visible={showResult && debounceValue.trim() !== ""}
+        onClickOutside={handleHideResult}
+        placement="bottom"
+        // offset={[0, 0]} // Dịch tooltip 10px sang phải, 5px xuống
+        render={(attrs) =>
+          searchData?.products.length === 0 ? (
+            <div
+              className="bg-white w-[90vw] rounded-md shadow-md overflow-hidden"
+              tabIndex="-1"
+              {...attrs}
+            >
+              <div className="flex flex-col items-center justify-center gap-2 px-6 py-2 text-center">
+                <p className="text-[13px] font-medium text-[#333]">
+                  Không tìm thấy sản phẩm
+                </p>
+                <p className="text-[11px] text-[#999]">
+                  Thử tìm với từ khóa khác nhé
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="bg-[#fff] md:hidden overflow-scroll max-h-[50vh] rounded-md shadow-md "
+              tabIndex="-1"
+              {...attrs}
+            >
+              {searchData?.products.map((item) => (
+                <div className="flex items-start border-b-[1px] border-dotted border-[#dfe0e1] gap-3  p-[10px]">
+                  <Link
+                    key={item.slug}
+                    to={`/products/${item.slug}`}
+                    className="shrink-0"
+                  >
+                    <img
+                      alt={item.title}
+                      src={item.thumbnail[1]}
+                      className="object-cover w-[50px]  h-[70px]"
+                    />
+                  </Link>
+                  <div className="flex-1">
+                    <Link
+                      className="text-[#a47b67] text-[12px] font-medium mb-[4px] whitespace-pre-line block"
+                      to={`/products/${item.slug}`}
+                    >
+                      {item.title}
+                    </Link>
+                    <div>
+                      <p className="inline-block text-[12px] text-[#a47b67] font-normal">
+                        {formatPrice(item.price)}
+                      </p>
+                      <p className="inline ml-[5px] text-[11px] text-[#797979] line-through">
+                        {formatPrice(
+                          calculateDiscountedPrice(
+                            item.price,
+                            item.discountPercentage,
+                          ),
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+      >
+        <div className="md:hidden m-[5px] relative bg-[#f5f5f5] ">
+          <div className="flex w-[90%] items-center justify-between">
+            <input
+              onChange={(e) => handleSearchValue(e)}
+              type="text"
+              value={searchValue}
+              onFocus={() => setShowResult(true)}
+              placeholder="Tìm kiếm sản phẩm..."
+              spellCheck={false} // tắt gạch chân lỗi chính tả
+              className=" h-[30px] px-[5px]  text-[#333333] outline-none text-[12px]  "
+            />
+            <div>
+              {!!searchValue && !searchLoading && (
+                <button
+                  className="clear"
+                  onClick={() => {
+                    setShowResult(false);
+                    setSearchValue("");
+                  }}
+                >
+                  <FontAwesomeIcon
+                    className="text-[#d7d7d7] text-[14px]"
+                    icon={faCircleXmark}
+                  />
+                </button>
+              )}
+              {searchLoading && (
+                <FontAwesomeIcon
+                  className={`text-[14px] text-[#d7d7d7] animate-spin`}
+                  icon={faSpinner}
+                />
+              )}
+            </div>
+          </div>
+
+          <button className="absolute w-[10%] right-0 -translate-y-1/2 top-1/2">
+            <FontAwesomeIcon
+              className="text-[15px] text-[#d7d7d7] "
+              icon={faMagnifyingGlass}
+            />
+          </button>
+        </div>
+      </HeadlessTippy>
+
       {/* Breadcrumb: Hiển thị đường dẫn phân cấp của trang hiện tại  */}
       <div className="w-full mx-auto sm:px-4 md:px-16 xl:px-18 text-[13px] text-[#333333] h-[40px] bg-[#f1f1f1] mb-[40px] flex items-center px-4">
         <ul className="flex gap-2 ">
           <li>
-            <Link to="/">Trang chủ</Link>
+            <Link className="text-[10px] md:text-[14px]" to="/">
+              Trang chủ
+            </Link>
           </li>
           <li>›</li>
           <li>
-            <Link to="">Danh mục</Link>
+            <Link className="text-[10px] md:text-[14px]" to="">
+              Danh mục
+            </Link>
           </li>
           <li>›</li>
           <li>
-            <Link to="">Tất cả sản phẩm</Link>
+            <Link className="text-[10px] md:text-[14px]" to="">
+              {title_breadcrumb}
+            </Link>
           </li>
         </ul>
       </div>
-      <div className="container relative mx-auto lg:[50%]  xl:w-[90%] bg-white ">
-        <div className="mb-[15px]">
-          <h1 className="text-center my-[15px] font-bold text-[20px] md:text-[27px] ">
-            Tất cả sản phẩm
-          </h1>
-          <div className="mx-[15px]">
-            {/* collection title */}
-            <div className="flex justify-between">
-              {/* heading collection */}
-              <div
-                onClick={() => setOpened(true)}
-                className=" flex items-center md:col-span-3  md:text-[14px]  cursor-pointer "
-              >
-                {" "}
-                <i>
-                  <SlidersHorizontal className="size-[16px] md:size-[20px] mr-2.5 text-[#A47B67]" />
-                </i>
-                <p className="text-[12px] font-bold md:text-[14px]  text-[#A47B67]">
-                  Bộ lọc
-                </p>
-              </div>
-
-              {/* Filter */}
-              <div className=" text-[12px] flex items-center justify-end md:col-span-3 md:text-[14px] ">
-                <div>
-                  <div className="relative flex items-center">
-                    {/* Icon */}
-                    <ArrowDownAZ className="absolute left-3 size-3 md:size-4 text-[#A47B67] pointer-events-none" />
-
-                    {/* Select */}
-                    <select
-                      id="sort-by"
-                      name="sort-by"
-                      defaultValue="title:asc"
-                      onChange={(e) => {
-                        setSort(e.target.value);
-                      }}
-                      //   appearance-none tắt css mặc định của option - tắt mũi tên
-                      className=" text-[12px]  appearance-none pl-10 pr-8 py-1  md:text-[14px] text-[#A47B67] border border-[#cccc] rounded bg-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#A47B67]"
-                    >
-                      <option value="price:asc">Giá: Tăng dần</option>
-                      <option value="price:desc">Giá: Giảm dần</option>
-                      <option value="title:asc">Tên: A-Z</option>
-                      <option value="title:desc">Tên: Z-A</option>
-                      <option value="createdAt:asc">Cũ nhất</option>
-                      <option value="createdAt:desc">Mới nhất</option>
-                      <option value="/">Bán chạy nhất</option>
-                    </select>
-
-                    {/* Arrow dropdown */}
-                    <ArrowDown className="absolute right-3 size-4 text-[#cccc] pointer-events-none" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Lớp phủ */}
-          <div
-            onClick={() => setOpened(false)}
-            className={`${
-              opened ? "opacity-100 visible" : "opacity-0 invisible"
-            } fixed inset-0 z-50 bg-black/50 transition-opacity duration-300 ease-in-out`}
-          ></div>
-
-          {/* Menu */}
-          <div
-            className={`${
-              opened ? "translate-x-0 " : "-translate-x-full "
-            } fixed top-0 left-0 z-50 h-dvh w-[80vw] max-w-[400px] p-3.5 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[14px] font-bold uppercase p-2.5">
-                {" "}
-                Danh mục sản phẩm
-              </span>
-              <X
-                onClick={() => setOpened(false)}
-                className="text-[#88888888] px-[10px] size-[50px] cursor-pointer"
-              />
-            </div>
-            <ul>
-              <li>
-                <a
-                  className="text-[#A47B67] text-[14px] py-[5px] px-2.5 py-[#5px] font-medium inline-block"
-                  href=""
-                >
-                  Sản phẩm khuyến mãi
-                </a>
-              </li>
-              <li>
-                <p
-                  onClick={() => {
-                    setOpened(false);
-                    setFilter("1")();
-                  }}
-                  className="text-[#A47B67] text-[14px] py-[5px] px-2.5 py-[#5px] font-medium inline-block"
-                >
-                  Sản phẩm nổi bật
-                </p>
-              </li>
-              <li>
-                <a
-                  className="text-[#A47B67] text-[14px] py-[5px]  px-2.5 py-[#5px] font-medium inline-block "
-                  href=""
-                >
-                  Tất cả sản phẩm
-                </a>
-              </li>
-              <hr className="mx-2.5 border-[#88888888]" />
-            </ul>
-          </div>
-        </div>
+      {/* <div className="relative mx-auto bg-white section-container "> */}
+      <div className="relative w-full px-3 mx-auto bg-white sm:px-4 md:px-16 xl:px-18">
+        <FilterSort
+          opened={opened}
+          setOpened={setOpened}
+          filter={filter}
+          setFilter={setFilter}
+          sort={sort}
+          setSort={setSort}
+        />
         {/* content product list */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-y-3.5">
+        <div className="grid grid-cols-2 md:grid-cols-4  gap-y-3.5">
           {/* Sản phâm 1 */}
 
           {data?.products.map((item, index) => (
@@ -373,7 +426,7 @@ function Products() {
             onClick={() => setOpendialog(false)}
             className="absolute top-0 right-0 text-black transition-all duration-300 translate-x-0 bg-white cursor-pointe1 hover:bg-black hover:text-white"
           >
-            <XIcon className="block w-[30px] h-[30px]  " />
+            <XIcon className="block   w-[30px] h-[30px]  " />
           </div>
 
           <div className="grid grid-cols-12 p-[16px]">
@@ -393,9 +446,9 @@ function Products() {
                     <div
                       key={index}
                       onClick={() => setIndexThumb(index)}
-                      className="lg:px-1"
+                      className="px-2"
                     >
-                      <img className="w-full " src={item} alt={item.title} />
+                      <img className="w-full border" src={item} alt="" />
                     </div>
                   ))}
                 </Slider>
@@ -435,7 +488,7 @@ function Products() {
                   <div className="font-bold text-black text-[14px] my-3">
                     CHỌN SIZE:
                   </div>
-                  <div className="flex gap-3 lg:gap-[20px] my-[12px]">
+                  <div className="flex gap-[20px] my-[12px]">
                     {/* Thằng nào soldout sẽ không click được */}
                     {selectedProduct?.sizes?.map((size, idx) => (
                       <label
@@ -491,7 +544,7 @@ function Products() {
                     )}
                   </div>
                 </div>
-                <div className="flex my-2.5 flex-col lg:flex-row gap-[20px]">
+                <div className="flex my-2.5 gap-[20px]">
                   <div className="flex-1 quantity-area">
                     <input
                       className=" qty-btn"
@@ -521,7 +574,7 @@ function Products() {
                     {/* Khi còn sản phẩm */}
                     <button
                       onClick={() => handleAddToCart(selectedProduct._id)}
-                      className="font-bold text-center uppercase md:inline-block btn btn-border-reveal"
+                      className="inline-block font-bold text-center uppercase btn btn-border-reveal"
                     >
                       Thêm vào giỏ
                     </button>
@@ -540,11 +593,10 @@ function Products() {
             </div>
           </div>
         </div>
-
         <Pagination page={page} totalPage={totalPage} setPage={setPage} />
       </div>
     </div>
   );
 }
 
-export default Products;
+export default ProductsCategory;

@@ -21,11 +21,11 @@ function LoginAdmin() {
     onSuccess: (data) => {
       if (data.status === "OK") {
         localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        // localStorage.setItem("refresh_token", data.refresh_token);
 
         // Set lại nếu những lần trước người đăng nhập lỗi
         setErrorMessage("");
-        console.log(data);
+        console.log("hehehe");
         navigate("/admin");
       } else if (data.status === "ERR") {
         setErrorMessage(data.message);
@@ -56,8 +56,12 @@ function LoginAdmin() {
   return (
     <div className="flex justify-center min-h-screen bg-gray-100">
       <div className="w-[400px] bg-white p-6 rounded-lg shadow">
-        <h1 className="mb-1 text-2xl font-semibold text-center">Xin chào!</h1>
-        <h2 className="mb-4 text-lg text-center">Đăng nhập bằng tài khoản</h2>
+        <h1 className="mb-1 text-2xl font-semibold text-center">
+          Xin chào ADMIN!
+        </h1>
+        <h2 className="mb-4 text-lg text-center">
+          Đăng nhập bằng tài khoản Admin
+        </h2>
 
         <hr className="mb-4" />
         {errorMessage && <div className="text-[#f00]">{errorMessage} !</div>}
@@ -93,18 +97,6 @@ function LoginAdmin() {
             {isPending ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>
-
-        <button className="block mx-auto mt-4 text-sm text-blue-500 hover:underline">
-          Quên mật khẩu?
-        </button>
-
-        <Link
-          to="http://localhost:5173/register"
-          type="button"
-          className="py-2 text-white transition bg-blue-500 rounded hover:bg-blue-600"
-        >
-          Đăng ký
-        </Link>
       </div>
     </div>
   );

@@ -25,9 +25,8 @@ function ProductAdmin() {
   /* =======================
     API danh sách product
   =======================*/
-  const fetchApi = async ({ queryKey }) => {
+  const fetchApi = async () => {
     // Lấy dữ liệu từ queryKey của ReactQuery ra để dùng
-    const [, page, sort, filter, statusFilter] = queryKey;
     let url = `http://localhost:3001/api/product/products?page=${page}`;
 
     // 2 thằng này dùng find để tìm bên database chứ không dùng hàm filter

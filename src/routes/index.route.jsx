@@ -36,6 +36,9 @@ import Orders from "@/pages/admin/orders/order";
 import OrderSuccess from "@/pages/client/orders/OrderSuccess";
 import OrderDetail from "@/pages/client/orders/OrderDetail";
 import OrderTracking from "@/pages/client/tracking/Tracking";
+import OrderDetailPage from "@/pages/admin/orders/OrderDetailAdmin";
+import AdminOrderDetail from "@/pages/admin/orders/OrderDetailAdmin";
+import ProducstNew from "@/pages/client/products/ProductsNew";
 
 export const routes = [
   {
@@ -49,6 +52,10 @@ export const routes = [
       {
         path: "/products",
         element: <Collection />,
+      },
+      {
+        path: "/products/san-pham-moi",
+        element: <ProducstNew />,
       },
       {
         path: "cart/",
@@ -192,6 +199,10 @@ export const routes = [
           {
             path: "orders",
             element: <Orders />,
+          },
+          {
+            path: "order/:id",
+            element: <AdminOrderDetail />,
           },
         ],
       },

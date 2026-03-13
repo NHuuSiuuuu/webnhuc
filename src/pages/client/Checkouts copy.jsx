@@ -150,3 +150,66 @@
 // // | completed | hoàn thành   |
 // // | cancelled | huỷ          |
 
+{
+  "cart_id": "98f463a5-fee9-4000-938c-e95415519baa",
+  "customer": {
+    "fullName": "Nguyen Van A",
+    "email": "a@gmail.com",
+    "phone": "0987654321",
+    "note": "Giao buoi sang",
+    "address": {
+      "detail": "123 Tran Hung Dao",
+      "ward": "Xã Nhân Lý",
+      "district": "Huyện Chi Lăng",
+      "province": "Tỉnh Lạng Sơn"
+    }
+    ,
+  "paymentMethod": "cod",
+  "shippingMethod": "standard"
+    
+  }
+}
+const paymentMethod = customer.paymentMethod;
+
+if (paymentMethod === "vnpay") {
+
+  const vnpay = new VNPay({
+    tmnCode: "IXC3X9T7",
+    secureSecret: "W2AUFNXCL9S6JFD001FR42MKSENMHO6K",
+    vnpayHost: "https://sandbox.vnpayment.vn",
+    testMode: true,
+    hashAlgorithm: "SHA512",
+    loggerFn: ignoreLogger,
+  });
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const paymentUrl = await vnpay.buildPaymentUrl({
+
+    vnp_Amount: finalPrice * 100,
+
+    vnp_IpAddr: "127.0.0.1",
+
+    vnp_TxnRef: order._id.toString(),
+
+    vnp_OrderInfo: `Thanh toán đơn ${order._id}`,
+
+    vnp_ReturnUrl:
+      "http://localhost:3001/api/check-payment-vnpay",
+
+    vnp_Locale: VnpLocale.VN,
+
+    vnp_CreateDate: dateFormat(new Date()),
+
+    vnp_ExpireDate: dateFormat(tomorrow),
+
+  });
+
+  return {
+    status: "OK",
+    payment: "vnpay",
+    paymentUrl,
+    orderId: order._id,
+  };
+}

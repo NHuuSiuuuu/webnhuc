@@ -72,20 +72,20 @@ function OrderTracking() {
         <div className="pt-24 pb-16 text-center">
           {/* Icon */}
           <div className="relative inline-block mb-12">
-            <div className="absolute inset-0 bg-[#a47b67] opacity-10 rounded-full blur-2xl animate-pulse"></div>
+            <div className="absolute inset-0 bg-[#a47b67] opacity-10 rounded-full blur-2xl "></div>
             <div className="relative w-24 h-24 border-2 border-[#a47b67] rounded-full flex items-center justify-center bg-white shadow-sm">
               <Search className="w-10 h-10 text-[#a47b67]" strokeWidth={1.5} />
             </div>
             <div className="absolute -top-2 -right-2">
-              <Sparkles className="w-5 h-5 text-[#d4a574] animate-pulse" />
+              <Sparkles className="w-5 h-5 text-[#d4a574] " />
             </div>
           </div>
 
-          <h1 className="text-5xl font-light tracking-[-0.02em] mb-6 text-[#2d2520]">
+          <h1 className="text-5xl  tracking-[-0.02em] mb-6 text-[#2d2520]">
             Tra cứu đơn hàng
           </h1>
 
-          <p className="text-[#6b5446] leading-loose max-w-lg mx-auto font-light text-base">
+          <p className="text-[#6b5446] leading-loose max-w-lg mx-auto  text-base">
             Theo dõi hành trình của đơn hàng
             <br />
             Nhập thông tin để kiểm tra trạng thái
@@ -101,7 +101,7 @@ function OrderTracking() {
             <div className="p-12">
               {/* Order ID Input */}
               <div className="mb-10">
-                <label className="block text-[10px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-6 font-semibold">
+                <label className="block text-[14px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-6 font-semibold">
                   Mã đơn hàng
                 </label>
                 <div className="relative">
@@ -112,7 +112,7 @@ function OrderTracking() {
                     onFocus={() => setFocusedInput("orderId")}
                     onBlur={() => setFocusedInput(null)}
                     placeholder="Nhập mã đơn hàng của bạn"
-                    className="w-full px-0 py-5 border-0 border-b-2 border-[#e8dfd7] focus:border-[#a47b67] outline-none transition-all duration-500 text-lg font-light text-[#2d2520] bg-transparent placeholder:text-[#c4b5a7] tracking-wide"
+                    className="w-full px-0 py-5 border-0 border-b-2 border-[#e8dfd7] focus:border-[#a47b67] outline-none transition-all duration-500 text-lg  text-[#2d2520] bg-transparent placeholder:text-[#c4b5a7] tracking-wide"
                   />
                   <div
                     className={`absolute bottom-0 left-0 h-[2px] bg-[#a47b67] transition-all duration-500 ${focusedInput === "orderId" ? "w-full" : "w-0"}`}
@@ -126,7 +126,7 @@ function OrderTracking() {
                   <div className="w-full border-t border-[#e8dfd7]"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-white px-8 text-[10px] text-[#8b6f5f] uppercase tracking-[0.3em] font-medium">
+                  <span className="bg-white px-8 text-[14px] text-[#8b6f5f] uppercase tracking-[0.3em] font-medium">
                     Hoặc tra cứu bằng
                   </span>
                 </div>
@@ -134,7 +134,7 @@ function OrderTracking() {
 
               {/* Phone Input */}
               <div className="mb-12">
-                <label className="block text-[10px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-6 font-semibold">
+                <label className="block text-[14px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-6 font-semibold">
                   Số điện thoại
                 </label>
                 <div className="relative">
@@ -145,7 +145,7 @@ function OrderTracking() {
                     onFocus={() => setFocusedInput("phone")}
                     onBlur={() => setFocusedInput(null)}
                     placeholder="Nhập số điện thoại đặt hàng"
-                    className="w-full px-0 py-5 border-0 border-b-2 border-[#e8dfd7] focus:border-[#a47b67] outline-none transition-all duration-500 text-lg font-light text-[#2d2520] bg-transparent placeholder:text-[#c4b5a7] tracking-wide"
+                    className="w-full px-0 py-5 border-0 border-b-2 border-[#e8dfd7] focus:border-[#a47b67] outline-none transition-all duration-500 text-lg  text-[#2d2520] bg-transparent placeholder:text-[#c4b5a7] tracking-wide"
                   />
                   <div
                     className={`absolute bottom-0 left-0 h-[2px] bg-[#a47b67] transition-all duration-500 ${focusedInput === "phone" ? "w-full" : "w-0"}`}
@@ -183,9 +183,9 @@ function OrderTracking() {
         {searchResult && (
           <div>
             <div className="mb-16 text-center">
-              <div className="inline-flex items-center gap-3 px-6 py-3 border-2 border-emerald-200 bg-emerald-50 text-emerald-900">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                <span className="text-[10px] uppercase tracking-[0.25em] font-semibold">
+              <div className="inline-flex items-center gap-3 px-6 py-3 border-2 border-emerald-500 bg-emerald-50 text-emerald-900">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 "></div>
+                <span className="text-[14px] uppercase tracking-[0.25em] font-semibold">
                   Tìm thấy {searchResult.length} đơn hàng
                 </span>
               </div>
@@ -194,7 +194,7 @@ function OrderTracking() {
             <div className="max-w-3xl mx-auto space-y-6">
               {searchResult.map((order, index) => (
                 <div
-                  key={order._id}
+                  key={index}
                   className="bg-white border-2 border-[#e8dfd7] hover:border-[#a47b67] hover:shadow-xl 
                   transition-all duration-500 group cursor-pointer overflow-hidden"
                 >
@@ -202,7 +202,7 @@ function OrderTracking() {
                     {/* Order Header */}
                     <div className="flex items-start justify-between mb-8 pb-8 border-b border-[#f5ede6]">
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-3 font-semibold">
+                        <p className="text-[14px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-3 font-semibold">
                           Đơn hàng
                         </p>
                         <p className="font-mono text-sm text-[#2d2520] tracking-wide font-medium">
@@ -211,7 +211,7 @@ function OrderTracking() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-[10px] uppercase tracking-[0.25em] font-semibold`}
+                          className={`text-[14px] uppercase tracking-[0.25em] font-semibold`}
                         >
                           {/* .at(-1) láy phần tử cuối*/}
                           {getStatusText(order?.orderTimeLine.at(-1)?.status)}
@@ -222,28 +222,28 @@ function OrderTracking() {
                     {/* Chi tiết đơn hàng*/}
                     <div className="grid grid-cols-3 gap-8 mb-8">
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-[#8b6f5f] mb-3 font-semibold">
+                        <p className="text-[14px] uppercase tracking-[0.2em] text-[#8b6f5f] mb-3 font-semibold">
                           Ngày đặt
                         </p>
-                        <p className="font-light text-[#2d2520] tracking-wide">
+                        <p className=" text-[#2d2520] tracking-wide">
                           {new Date(order.createdAt).toLocaleDateString()}
                           <br />
                           {new Date(order.createdAt).toLocaleTimeString()}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-[#8b6f5f] mb-3 font-semibold">
+                        <p className="text-[14px] uppercase tracking-[0.2em] text-[#8b6f5f] mb-3 font-semibold">
                           Sản phẩm
                         </p>
-                        <p className="font-light text-[#2d2520] tracking-wide">
+                        <p className=" text-[#2d2520] tracking-wide">
                           {order.totalQuantity} sp
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-[#8b6f5f] mb-3 font-semibold">
+                        <p className="text-[14px] uppercase tracking-[0.2em] text-[#8b6f5f] mb-3 font-semibold">
                           Tổng tiền
                         </p>
-                        <p className="font-light text-[#2d2520] tracking-wide">
+                        <p className=" text-[#2d2520] tracking-wide">
                           {formatPrice(order.finalPrice)}
                         </p>
                       </div>
@@ -274,10 +274,10 @@ function OrderTracking() {
         {/* Hỗ trợ */}
         <div className="py-24 border-t-2 border-[#e8dfd7]">
           <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-[10px] uppercase tracking-[0.3em] text-[#8b6f5f] mb-8 font-semibold">
+            <h3 className="text-[14px] uppercase tracking-[0.3em] text-[#8b6f5f] mb-8 font-semibold">
               Hỗ trợ khách hàng
             </h3>
-            <p className="text-[#6b5446] mb-12 font-light leading-loose text-lg">
+            <p className="text-[#6b5446] mb-12  leading-loose text-lg">
               Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn
               <br />
               trong việc tra cứu và theo dõi đơn hàng
@@ -308,10 +308,10 @@ function OrderTracking() {
             <div className="w-12 h-12 mx-auto mb-6 border-2 border-[#a47b67] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
               <Package className="w-6 h-6 text-[#a47b67]" strokeWidth={1.5} />
             </div>
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-4 font-semibold">
+            <h4 className="text-[14px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-4 font-semibold">
               Theo dõi realtime
             </h4>
-            <p className="text-xs text-[#6b5446] font-light leading-relaxed">
+            <p className="text-[13px] text-[#6b5446]  leading-relaxed">
               Cập nhật trạng thái
               <br />
               liên tục
@@ -322,10 +322,10 @@ function OrderTracking() {
             <div className="w-12 h-12 mx-auto mb-6 text-3xl transition-transform duration-500 group-hover:scale-110">
               📦
             </div>
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-4 font-semibold">
+            <h4 className="text-[14px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-4 font-semibold">
               Giao hàng express
             </h4>
-            <p className="text-xs text-[#6b5446] font-light leading-relaxed">
+            <p className="text-[13px] text-[#6b5446]  leading-relaxed">
               Nhanh chóng
               <br />
               trong 3-5 ngày
@@ -336,10 +336,10 @@ function OrderTracking() {
             <div className="w-12 h-12 mx-auto mb-6 text-3xl transition-transform duration-500 group-hover:scale-110">
               💳
             </div>
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-4 font-semibold">
+            <h4 className="text-[14px] uppercase tracking-[0.25em] text-[#8b6f5f] mb-4 font-semibold">
               Thanh toán linh hoạt
             </h4>
-            <p className="text-xs text-[#6b5446] font-light leading-relaxed">
+            <p className="text-[13px] text-[#6b5446]  leading-relaxed">
               COD hoặc
               <br />
               chuyển khoản
