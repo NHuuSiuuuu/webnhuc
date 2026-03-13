@@ -473,7 +473,7 @@ function Checkout() {
               </div>
             ) : ( */}
 
-            {shippingMethod.map((item) => (
+            {shippingMethod?.map((item) => (
               <div
                 key={item.code}
                 className={` flex items-center justify-between  p-4 mb-3 border-2 rounded-lg transition-all duration-200  cursor-pointer group
