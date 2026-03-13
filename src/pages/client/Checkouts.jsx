@@ -84,7 +84,7 @@ function Checkout() {
     queryKey: ["shippingMethod"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_BACKEND}/api/shipping-method/index`,
+        `${import.meta.env.VITE_API_BACKEND}/shipping-method/index`,
       );
       return data.data;
     },
