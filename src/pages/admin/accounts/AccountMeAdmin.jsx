@@ -3,7 +3,7 @@ import axios from "../../../utils/axios";
 
 function AccountMeAdmin() {
   const fetchGetMe = async () => {
-    const res = await axios.get("http://localhost:3001/api/account/getMe");
+    const res = await axios.get(`${import.meta.env.VITE_API_BACKEND}/account/getMe`);
     return res.data.data;
   };
 

@@ -10,12 +10,12 @@ function AccountDetail() {
   const { id } = useParams();
   const fetchDetail = async () => {
     const res = await axios.get(
-      `http://localhost:3001/api/account/detail/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/account/detail/${id}`,
     );
     return res.data.data;
   };
   const fetchRoles = async () => {
-    const res = await axios.get("http://localhost:3001/api/roles/index");
+    const res = await axios.get(`${import.meta.env.VITE_API_BACKEND}/roles/index`);
     return res.data.data;
   };
 

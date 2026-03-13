@@ -8,7 +8,7 @@ function CategoryDetail() {
   const { id } = useParams();
   const fetchData = async () => {
     const res = await axios.post(
-      `http://localhost:3001/api/category-product/detail/${id}`
+      `${import.meta.env.VITE_API_BACKEND}/category-product/detail/${id}`,
     );
     return res.data.productCategory;
   };

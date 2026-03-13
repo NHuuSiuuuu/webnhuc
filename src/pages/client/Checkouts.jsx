@@ -38,9 +38,12 @@ function Checkout() {
   });
 
   const fetchCart = async () => {
-    const res = await axios.post(`http://localhost:3001/api/cart/get`, {
-      cart_id,
-    });
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_BACKEND}/cart/get`,
+      {
+        cart_id,
+      },
+    );
     return res.data.cart;
   };
   const {
@@ -217,7 +220,7 @@ function Checkout() {
   return (
     <div className="mx-auto h-[1000px] w-[70%]">
       <div className="flex-3 md:flex md:flex-1 my-[20px] border-b border-[#e6e6e6] border-solid justify-start items-center px-[15px]">
-      {/* Logo */}
+        {/* Logo */}
         <Link to="/" className="block text-[40px]">
           NHUU
         </Link>

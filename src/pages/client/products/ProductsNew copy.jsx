@@ -39,7 +39,9 @@ function ProductList() {
   }, []);
 
   const fetchApi = async () => {
-    const res = await axios.get(`http://localhost:3001/api/product?limit=20`);
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BACKEND}/product?limit=20`,
+    );
     return res.data;
   };
   // data: dữ liệu api

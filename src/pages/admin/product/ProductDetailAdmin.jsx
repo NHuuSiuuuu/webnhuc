@@ -26,7 +26,7 @@ function ProductDetailAdmin() {
   =======================*/
   const fetchProductDetail = async () => {
     const res = await axios.get(
-      `http://localhost:3001/api/product/detail/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/product/detail/${id}`,
     );
     return res.data.product;
   };
@@ -45,7 +45,7 @@ function ProductDetailAdmin() {
   =======================*/
   const fetchCategories = async () => {
     const res = await axios.post(
-      `http://localhost:3001/api/category-product/productCategories`,
+      `${import.meta.env.VITE_API_BACKEND}/category-product/productCategories`,
     );
     return res.data.productCategories;
   };

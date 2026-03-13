@@ -25,7 +25,7 @@ function CategoryUpdateAdmin() {
   =======================*/
   const fetchData = async () => {
     const res = await axios.post(
-      `http://localhost:3001/api/category-product/detail/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/category-product/detail/${id}`,
     );
     return res.data.productCategory;
   };
@@ -38,7 +38,7 @@ function CategoryUpdateAdmin() {
   =======================*/
   const fetchCategoriesTree = async () => {
     const res = await axios.get(
-      "http://localhost:3001/api/category-product/tree",
+      `${import.meta.env.VITE_API_BACKEND}/category-product/tree`,
     );
 
     return res.data.data;
@@ -153,7 +153,7 @@ function CategoryUpdateAdmin() {
   =======================*/
   const updateCategory = async (payload) => {
     const res = await axios.patch(
-      `http://localhost:3001/api/category-product/update/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/category-product/update/${id}`,
       payload,
       {
         headers: {

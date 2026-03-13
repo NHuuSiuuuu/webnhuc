@@ -31,7 +31,7 @@ function OrderDetail() {
     queryKey: ["order", id],
     queryFn: async () => {
       const { data } = await axios.get(
-        `http://localhost:3001/api/order/success/${id}`,
+        `${import.meta.env.VITE_API_BACKEND}/order/success/${id}`,
       );
       return data;
     },
@@ -40,7 +40,9 @@ function OrderDetail() {
   // Hủy đơn hàng
   const { mutate } = useMutation({
     mutationFn: async () =>
-      await axios.post(`http://localhost:3001/api/order/cancel/${id}`),
+      await axios.post(
+        `${import.meta.env.VITE_API_BACKEND}/order/cancel/${id}`,
+      ),
 
     onSuccess: () => {
       toast.success("Hủy đơn hàng thành công");

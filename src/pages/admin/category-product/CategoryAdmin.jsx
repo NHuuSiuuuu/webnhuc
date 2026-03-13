@@ -11,7 +11,7 @@ function CategoryAdmin() {
   const [sort, setSort] = useState("");
   const listCategory = async ({ queryKey }) => {
     const [, page, sort, filter] = queryKey;
-    let url = `http://localhost:3001/api/category-product/productCategories?page=${page}`;
+    let url = `${import.meta.env.VITE_API_BACKEND}/category-product/productCategories?page=${page}`;
 
     if (filter) url += `&filter=status:${filter}`;
 
@@ -29,7 +29,7 @@ function CategoryAdmin() {
   // API Xóa Danh  Mục SP
   const deleteCategory = async (id) => {
     const res = await axios.patch(
-      `http://localhost:3001/api/category-product/delete/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/category-product/delete/${id}`,
     );
 
     return res.data;

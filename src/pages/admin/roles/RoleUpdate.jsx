@@ -10,14 +10,16 @@ function RoleUpdate() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ title: "", description: "" });
   const fetchRolesDetail = async () => {
-    const res = await axios.get(`http://localhost:3001/api/roles/detail/${id}`);
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BACKEND}/roles/detail/${id}`,
+    );
     return res.data.data;
   };
 
   // Api update
   const updateRole = async (payload) => {
     const res = await axios.patch(
-      `http://localhost:3001/api/roles/update/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/roles/update/${id}`,
       payload,
     );
     return res.data;

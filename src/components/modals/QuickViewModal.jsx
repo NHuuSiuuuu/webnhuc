@@ -40,7 +40,7 @@ function QuickViewModal({ selectedProduct, openDialog ,setOpendialog}) {
 
   const { mutate } = useMutation({
     mutationFn: async (payload) => {
-      return await axios.post(`http://localhost:3001/api/cart/create`, payload);
+      return await axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/create`, payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["cart", cartId]);

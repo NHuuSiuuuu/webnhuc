@@ -27,7 +27,7 @@ function ProductAdmin() {
   =======================*/
   const fetchApi = async () => {
     // Lấy dữ liệu từ queryKey của ReactQuery ra để dùng
-    let url = `http://localhost:3001/api/product/products?page=${page}`;
+    let url = `${import.meta.env.VITE_API_BACKEND}/product/products?page=${page}`;
 
     // 2 thằng này dùng find để tìm bên database chứ không dùng hàm filter
     if (statusFilter) url += `&filter=status:${statusFilter}`;
@@ -44,7 +44,7 @@ function ProductAdmin() {
   =======================*/
   const fetchCategories = async () => {
     const res = await axios.post(
-      `http://localhost:3001/api/category-product/productCategories`,
+      `${import.meta.env.VITE_API_BACKEND}/category-product/productCategories`,
     );
     return res.data.productCategories;
   };
@@ -68,7 +68,7 @@ function ProductAdmin() {
   =======================*/
   const deleteProduct = async (id) => {
     const res = await axios.patch(
-      `http://localhost:3001/api/product/delete/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/product/delete/${id}`,
     );
     return res.data;
   };

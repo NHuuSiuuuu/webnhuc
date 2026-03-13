@@ -23,7 +23,7 @@ function Header({ active }) {
   const [errorQuantitySize, setErrorQuantitySize] = useState(false);
 
   const fetchCart = async () => {
-    const res = await axios.post(`http://localhost:3001/api/cart/get`, {
+    const res = await axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/get`, {
       cart_id,
     });
     return res.data.cart;
@@ -31,7 +31,7 @@ function Header({ active }) {
 
   const deleteProductInCartMutation = useMutation({
     mutationFn: (payload) =>
-      axios.post(`http://localhost:3001/api/cart/delete`, payload),
+      axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/delete`, payload),
 
     onSuccess: () => {
       toast.success("Xóa thành công sản phẩm trong giỏ hàng!");

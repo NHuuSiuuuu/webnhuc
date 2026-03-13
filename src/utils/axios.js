@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: `${import.meta.env.VITE_API_BACKEND}`,
 });
 
 // Gán token vào localStorage trước khi gửi request lên backend
@@ -42,7 +42,7 @@ instance.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          "http://localhost:3001/api/refresh-token",
+          `${import.meta.env.VITE_API_BACKEND}/refresh-token`,
           {
             refresh_token: refreshToken,
           },

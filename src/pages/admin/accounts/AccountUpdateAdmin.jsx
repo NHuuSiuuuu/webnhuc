@@ -10,13 +10,13 @@ function AccountCreateAdmin() {
   const { id: idAccount } = useParams();
 
   const fetchRoles = async () => {
-    const res = await axios.get("http://localhost:3001/api/roles/index");
+    const res = await axios.get(`${import.meta.env.VITE_API_BACKEND}/roles/index`);
     return res.data.data;
   };
 
   const fetchDetailAccount = async (data) => {
     const res = await axios.get(
-      `http://localhost:3001/api/account/detail/${idAccount}`,
+      `${import.meta.env.VITE_API_BACKEND}/account/detail/${idAccount}`,
       data,
     );
     return res.data.data;
@@ -24,7 +24,7 @@ function AccountCreateAdmin() {
 
   const fetchUpdateAccount = async (data) => {
     const res = await axios.patch(
-      `http://localhost:3001/api/account/update/${idAccount}`,
+      `${import.meta.env.VITE_API_BACKEND}/account/update/${idAccount}`,
       data,
     );
   };

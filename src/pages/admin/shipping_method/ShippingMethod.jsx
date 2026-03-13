@@ -28,7 +28,7 @@ function ShippingMethod() {
   =======================*/
   const fetchShippingMethod = async ({ queryKey }) => {
     const [, page, sort, filter] = queryKey;
-    let url = `http://localhost:3001/api/shipping-method/index?page=${page}`;
+    let url = `${import.meta.env.VITE_API_BACKEND}I_BACKEND}/shipping-method/index?page=${page}`;
 
     if (filter) url += `&filter=status:${filter}`;
     if (sort) url += `&sort=${sort}`;
@@ -49,7 +49,7 @@ function ShippingMethod() {
   const { mutate: removeSM } = useMutation({
     mutationFn: async (id) => {
       return await axios.delete(
-        `http://localhost:3001/api/shipping-method/delete/${id}`,
+        `${import.meta.env.VITE_API_BACKEND}/shipping-method/delete/${id}`,
       );
     },
     onSuccess: () => {

@@ -16,7 +16,7 @@ function OrderTracking() {
     mutationKey: ["orderTracking"],
     mutationFn: async (payload) => {
       return await axios.post(
-        `http://localhost:3001/api/order/tracking`,
+        `${import.meta.env.VITE_API_BACKEND}/order/tracking`,
         payload,
       );
     },

@@ -112,7 +112,7 @@ function ProductUpdateAdmin() {
   =======================*/
   const fetchData = async () => {
     const res = await axios.get(
-      `http://localhost:3001/api/product/detail/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}I_BACKEND}I_BACKEND}/product/detail/${id}`,
     );
     return res.data.product;
   };
@@ -126,7 +126,7 @@ function ProductUpdateAdmin() {
   =======================*/
   const fetchCategoriesTree = async () => {
     const res = await axios.get(
-      "http://localhost:3001/api/category-product/tree",
+      `${import.meta.env.VITE_API_BACKEND}/category-product/tree`,
     );
     return res.data.data;
   };
@@ -176,7 +176,7 @@ function ProductUpdateAdmin() {
   =======================*/
   const updateProduct = async (payload) => {
     const res = await axios.patch(
-      `http://localhost:3001/api/product/update/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}I_BACKEND}/product/update/${id}`,
       payload,
       {
         headers: {

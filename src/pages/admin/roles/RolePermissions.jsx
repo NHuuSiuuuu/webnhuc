@@ -30,18 +30,20 @@ function RolePermissions() {
     {
       group: "Phân quyền",
       prefix: "permission",
-      actions: [ "update"],
+      actions: ["update"],
     },
   ];
 
   const fetchRoles = async () => {
-    const res = await axios.get("http://localhost:3001/api/roles/index");
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BACKEND}/roles/index`,
+    );
     return res.data.data;
   };
 
   const fetchPermissions = async (payload) => {
     const res = await axios.patch(
-      "http://localhost:3001/api/roles/permissions",
+      `${import.meta.env.VITE_API_BACKEND}/roles/permissions`,
       payload,
     );
   };

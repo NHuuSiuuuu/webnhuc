@@ -71,7 +71,7 @@ function ProductsCategory({ category_id, title_breadcrumb }) {
     queryKey: ["searchProducts", debounceValue],
     queryFn: async () => {
       const { data } = await axios.get(
-        `http://localhost:3001/api/product/search?keyword=${debounceValue}`,
+        `${import.meta.env.VITE_API_BACKEND}/product/search?keyword=${debounceValue}`,
       );
       return data;
     },
@@ -80,7 +80,7 @@ function ProductsCategory({ category_id, title_breadcrumb }) {
   });
 
   const fetchListProducts = async () => {
-    let url = `http://localhost:3001/api/product/category/${category_id}?page=${page}`;
+    let url = `${import.meta.env.VITE_API_BACKEND}/product/category/${category_id}?page=${page}`;
 
     if (sort) url += `&sort=${sort}`;
     if (filter) url += `&filter=featured:${filter}`;
@@ -116,7 +116,10 @@ function ProductsCategory({ category_id, title_breadcrumb }) {
     };
     alert("Sản phẩm đã được thêm vào giỏ hàng!");
     console.log("payload", payload);
-    await axios.post(`http://localhost:3001/api/cart/create`, payload);
+    await axios.post(
+      `${import.meta.env.VITE_API_BACKEND}/cart/create`,
+      payload,
+    );
   };
 
   const handleSearchValue = (e) => {

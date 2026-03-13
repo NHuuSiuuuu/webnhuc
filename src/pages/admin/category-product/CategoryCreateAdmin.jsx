@@ -67,7 +67,7 @@ function CategoryCreateAdmin() {
   =======================*/
   const createCategory = async (data) => {
     const res = await axios.post(
-      "http://localhost:3001/api/category-product/create",
+      `${import.meta.env.VITE_API_BACKEND}/category-product/create`,
       data,
       {
         headers: {
@@ -95,7 +95,7 @@ function CategoryCreateAdmin() {
         position: "",
         thumbnail: null,
       });
-      navigate("http://localhost:5173/admin/products-category");
+      navigate(-1);
     },
     onError: (error) => {
       (console.log(error), alert("Tạo danh mục sản phẩm thất bại"));
@@ -107,7 +107,7 @@ function CategoryCreateAdmin() {
   =======================*/
   const fetchCategoryTree = async () => {
     const res = await axios.get(
-      "http://localhost:3001/api/category-product/tree",
+      `${import.meta.env.VITE_API_BACKEND}/category-product/tree`,
     );
     return res.data.data;
   };

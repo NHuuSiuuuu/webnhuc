@@ -31,7 +31,9 @@ function Orders() {
   } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
-      const { data } = await axios.get(`http://localhost:3001/api/order/index`);
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_BACKEND}/order/index`,
+      );
       return data;
     },
   });
@@ -39,9 +41,12 @@ function Orders() {
   // Api hủy đơn hàng
   const { mutate: adminCancelOrder } = useMutation({
     mutationFn: async (id) =>
-      await axios.post(`http://localhost:3001/api/order/admin-cancel`, {
-        id: id,
-      }),
+      await axios.post(
+        `${import.meta.env.VITE_API_BACKEND}/order/admin-cancel`,
+        {
+          id: id,
+        },
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries(["orders"]);
     },
@@ -51,7 +56,7 @@ function Orders() {
   const { mutate: updateStatusOrder } = useMutation({
     mutationFn: async (data) =>
       await axios.post(
-        `http://localhost:3001/api/order/admin-update-order-status`,
+        `${import.meta.env.VITE_API_BACKEND}/order/admin-update-order-status`,
         data,
       ),
     onSuccess: () => {
@@ -63,7 +68,7 @@ function Orders() {
   const { mutate: refundOrder } = useMutation({
     mutationFn: async (id) =>
       await axios.post(
-        `http://localhost:3001/api/order/admin-refund-order`,
+        `${import.meta.env.VITE_API_BACKEND}/order/admin-refund-order`,
         id,
       ),
     onSuccess: () => {

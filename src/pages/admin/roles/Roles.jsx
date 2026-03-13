@@ -8,14 +8,16 @@ function Roles() {
 
   // Api list roles
   const fetchRoles = async () => {
-    const res = await axios.get("http://localhost:3001/api/roles/index");
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BACKEND}/roles/index`,
+    );
     return res.data.data;
   };
 
   // Api xóa role
   const fetchDeleteRole = async (id) => {
     const res = await axios.delete(
-      `http://localhost:3001/api/roles/delete/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/roles/delete/${id}`,
     );
     return res.data;
   };

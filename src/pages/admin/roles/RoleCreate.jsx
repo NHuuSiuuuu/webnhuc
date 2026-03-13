@@ -10,7 +10,7 @@ function RoleCreate() {
   const [formData, setFormData] = useState({});
   const fetchCreateRole = async (data) => {
     const res = await axios.post(
-      "http://localhost:3001/api/roles/create",
+      `${import.meta.env.VITE_API_BACKEND}/roles/create`,
       data,
     );
     return res.data;

@@ -126,7 +126,7 @@ function ProductCreateAdmin() {
   =======================*/
   const createProduct = async (data) => {
     const res = await axios.post(
-      "http://localhost:3001/api/product/create",
+      `${import.meta.env.VITE_API_BACKEND}/product/create`,
       data,
       {
         headers: {
@@ -143,7 +143,7 @@ function ProductCreateAdmin() {
   =======================*/
   const fetchCategoryTree = async () => {
     const res = await axios.get(
-      "http://localhost:3001/api/category-product/tree",
+      `${import.meta.env.VITE_API_BACKEND}/category-product/tree`,
     );
     return res.data.data;
   };

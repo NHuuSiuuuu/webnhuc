@@ -19,7 +19,7 @@ function ProductDetail() {
   =======================*/
   const fetchProductDetail = async () => {
     const res = await axios.get(
-      `http://localhost:3001/api/product/detail/${slug}`,
+      `${import.meta.env.VITE_API_BACKEND}/product/detail/${slug}`,
     );
     return res.data.product;
   };
@@ -77,7 +77,10 @@ function ProductDetail() {
     };
     alert("Sản phẩm đã được thêm vào giỏ hàng!");
     console.log(payload);
-    await axios.post(`http://localhost:3001/api/cart/create`, payload);
+    await axios.post(
+      `${import.meta.env.VITE_API_BACKEND}/cart/create`,
+      payload,
+    );
     // Cập nhật lại dữ liệu giỏ hàng cho Header và cart drawer
     queryClient.invalidateQueries(["cart", cartId]);
   };

@@ -7,7 +7,7 @@ import { Link } from "react-router";
 function AccountAdmin() {
   const [roles, setRoles] = useState({});
   const fetchAccounts = async () => {
-    const res = await axios.get("http://localhost:3001/api/account/index");
+    const res = await axios.get(`${import.meta.env.VITE_API_BACKEND}/account/index`);
     return res.data.data;
   };
   const { data, isLoading, isError } = useQuery({
@@ -17,7 +17,7 @@ function AccountAdmin() {
 
   // Permission
   const fetchRoles = async () => {
-    const res = await axios.get("http://localhost:3001/api/roles/index");
+    const res = await axios.get(`${import.meta.env.VITE_API_BACKEND}/roles/index`);
     return res.data.data;
   };
 

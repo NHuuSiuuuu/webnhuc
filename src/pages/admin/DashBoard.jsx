@@ -12,7 +12,7 @@ function Dashboard() {
   });
 
   const fetchGetMe = async () => {
-    const res = await axios.get("http://localhost:3001/api/account/getMe");
+    const res = await axios.get(`${import.meta.env.VITE_API_BACKEND}/account/getMe`);
     return res.data.data;
   };
 
@@ -20,8 +20,8 @@ function Dashboard() {
   const fetchStats = async () => {
     try {
       // Gọi các API thống kê
-      const productsRes = await axios.get("http://localhost:3001/api/product/products?page=0&limit=1");
-      const categoriesRes = await axios.post("http://localhost:3001/api/category-product/productCategories");
+      const productsRes = await axios.get(`${import.meta.env.VITE_API_BACKEND}/product/products?page=0&limit=1`);
+      const categoriesRes = await axios.post(`${import.meta.env.VITE_API_BACKEND}/category-product/productCategories`);
       // Cần thêm API cho orders và users
       
       return {

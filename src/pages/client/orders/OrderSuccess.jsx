@@ -19,7 +19,7 @@ function OrderSuccess() {
     queryKey: ["order"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `http://localhost:3001/api/order/success/${id}`,
+        `${import.meta.env.VITE_API_BACKEND}/order/success/${id}`,
       );
       return data;
     },

@@ -29,7 +29,7 @@ function ShippingMethodUpdate() {
     queryKey: ["ShippingMethod"],
     queryFn: async () => {
       const data = await axios.get(
-        `http://localhost:3001/api/shipping-method/detail/${id}`,
+        `${import.meta.env.VITE_API_BACKEND}I_BACKEND}/shipping-method/detail/${id}`,
       );
       return data.data.data;
     },
@@ -42,7 +42,7 @@ function ShippingMethodUpdate() {
   } = useMutation({
     mutationFn: async (payload) => {
       return await axios.patch(
-        `http://localhost:3001/api/shipping-method/update/${id}`,
+        `${import.meta.env.VITE_API_BACKEND}/shipping-method/update/${id}`,
         payload,
         {
           headers: {

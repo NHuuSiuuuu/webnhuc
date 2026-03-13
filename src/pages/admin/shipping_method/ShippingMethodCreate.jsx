@@ -23,7 +23,7 @@ function ShippingMethodCreate() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (payload) => {
       return await axios.post(
-        `http://localhost:3001/api/shipping-method/create`,
+        `${import.meta.env.VITE_API_BACKEND}/shipping-method/create`,
         payload,
         {
           headers: {
@@ -355,11 +355,16 @@ function ShippingMethodCreate() {
                         <img
                           className="object-cover w-full h-32"
                           src={URL.createObjectURL(formData?.thumbnail)}
-                        // alt={`preview-${index}`}
+                          // alt={`preview-${index}`}
                         />
                         <button
                           type="button"
-                          onClick={() => setFormData((prev) => ({ ...prev, thumbnail: null }))}
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              thumbnail: null,
+                            }))
+                          }
                           className="absolute flex items-center justify-center w-8 h-8 text-white transition-opacity bg-red-500 rounded-full opacity-0 top-2 right-2 group-hover:opacity-100 hover:bg-red-600"
                         >
                           <FontAwesomeIcon icon={faX} />

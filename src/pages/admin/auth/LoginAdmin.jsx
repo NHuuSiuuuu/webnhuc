@@ -10,7 +10,10 @@ function LoginAdmin() {
 
   //   Api đăng nhập
   const fetchLogin = async (data) => {
-    const res = await axios.post(`http://localhost:3001/api/login`, data);
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_BACKEND}/login`,
+      data,
+    );
     return res.data;
   };
 

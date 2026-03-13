@@ -32,7 +32,7 @@ function HomePage() {
     queryKey: ["searchProducts", debounceValue],
     queryFn: async () => {
       const { data } = await axios.get(
-        `http://localhost:3001/api/product/search?keyword=${debounceValue}`,
+        `${import.meta.env.VITE_API_BACKEND}/product/search?keyword=${debounceValue}`,
       );
       return data;
     },
