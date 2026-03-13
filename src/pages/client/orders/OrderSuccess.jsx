@@ -234,7 +234,7 @@ function OrderSuccess() {
           </Link>
 
           <Link
-            to={`http://localhost:5173/orders/detail/${id}`}
+            to={`/orders/detail/${id}`}
             className="py-4 text-xs font-medium tracking-widest text-center text-white uppercase transition-all duration-300 bg-black hover:bg-gray-800"
           >
             Theo Dõi Đơn Hàng

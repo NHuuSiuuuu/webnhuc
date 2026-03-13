@@ -63,7 +63,7 @@ function Register() {
         </form>
         <br />
         <Link
-          to="http://localhost:5173/login"
+          to="/login"
           type="button"
           className="py-2 text-white transition bg-blue-500 rounded hover:bg-blue-600"
         >

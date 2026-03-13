@@ -60,7 +60,7 @@ function Login() {
           Quên mật khẩu?
         </button>
 
-        <Link to="http://localhost:5173/register"
+        <Link to="/register"
           type="button"
           className="py-2 text-white transition bg-blue-500 rounded hover:bg-blue-600"
         >

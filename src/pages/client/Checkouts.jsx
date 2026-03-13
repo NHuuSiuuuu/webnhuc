@@ -64,7 +64,7 @@ function Checkout() {
   } = useMutation({
     mutationFn: async (payload) => {
       return await axios.post(
-        `http://localhost:3001/api/order/create`,
+        `${import.meta.env.VITE_API_BACKEND}/order/create`,
         payload,
       );
     },
@@ -73,7 +73,7 @@ function Checkout() {
       if (res.data.payment === "vnpay") {
         window.location.href = res.data.vnpayResponse;
       } else {
-        navigate(`http://localhost:5173/orders/success/${res.data.order._id}`);
+        navigate(`/orders/success/${res.data.order._id}`);
       }
 
       // navigate(`/orders/success/${res.data.order._id}`);
