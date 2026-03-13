@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import Logout from "../auth/logout";
+import Logout from "../auth/Logout";
 
 function Sidebar() {
   return (
