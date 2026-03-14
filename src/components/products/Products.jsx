@@ -14,6 +14,8 @@ import { Link } from "react-router";
 import Slider from "react-slick";
 import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
 import Pagination from "../layout/Pagination";
+import LoadingPage from "../comon/LoadingPage";
+import ErrorPage from "../comon/ErrorPage";
 
 function Products() {
   const [opened, setOpened] = useState(false);
@@ -96,43 +98,10 @@ function Products() {
     mutate(payload);
   };
   const totalPage = data?.totalPage || 0;
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto border-b-2 rounded-full border-[#a47b67] animate-spin"></div>
-          <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
-        </div>
-      </div>
-    );
-  if (isError)
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="max-w-md p-8 text-center border border-red-200 rounded-lg bg-red-50">
-          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full">
-            <FontAwesomeIcon
-              icon={faCircleExclamation}
-              className="text-red-600"
-            />
-          </div>
-          <h3 className="mb-2 text-xl font-semibold text-red-800">
-            Đã xảy ra lỗi
-          </h3>
-          <p className="text-gray-600">
-            Không thể tải danh sách sản phẩm. Vui lòng thử lại sau.
-          </p>
 
-          <button
-            onClick={() => window.location.reload()}
-            className="w-30  my-[6px] h-10 bg-white cursor-pointer rounded-3xl border-2 border-[#991B1B] shadow-[inset_0px_-2px_0px_1px_#991B1B] group hover:bg-[#991B1B] transition duration-300 ease-in-out"
-          >
-            <span className="font-medium text-[#333] group-hover:text-white">
-              Thử lại
-            </span>
-          </button>
-        </div>
-      </div>
-    );
+  if (isLoading) return <LoadingPage />;
+  if (isError) return <ErrorPage />;
+
   return (
     <div>
       {/* Breadcrumb: Hiển thị đường dẫn phân cấp của trang hiện tại  */}

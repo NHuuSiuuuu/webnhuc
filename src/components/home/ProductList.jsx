@@ -5,9 +5,11 @@ import { ZoomIn } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
 import QuickViewModal from "../modals/QuickViewModal";
+import LoadingPage from "../comon/LoadingPage";
+import ErrorPage from "../comon/ErrorPage";
 
 function ProductList() {
   const [openDialog, setOpendialog] = useState(false);
@@ -38,7 +40,9 @@ function ProductList() {
   }, []);
 
   const fetchApi = async () => {
-    const res = await axios.get(`${import.meta.env.VITE_API_BACKEND}/product?limit=20`);
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BACKEND}/product?limit=20`,
+    );
     return res.data;
   };
   // data: dữ liệu api
@@ -50,43 +54,44 @@ function ProductList() {
   });
   // console.log("isDragging", isDragging);
 
-  if (isLoading) return <div>Loading ....</div>;
+  // Dùng useMemo tránh slider re-render lại toàn bộ
+  const settings = useMemo(
+    () => ({
+      dots: sliderConfig.dots,
+      infinite: true,
+      speed: 500,
+      slidesToShow: sliderConfig.slidesToShow,
+      rows: sliderConfig.rows,
+      slidesToScroll: 1,
+      slidesPerRow: 1,
+      pauseOnHover: false, // thêm dòng này
+      pauseOnFocus: false, // thêm dòng này nếu dùng autoplay
 
-  if (isError) return <div>Lỗi rồi</div>;
+      // autoplay: true, // Bật auto
+      // autoplaySpeed: 1000, // 5s đổi slide
 
-  const settings = {
-    dots: sliderConfig.dots,
-    infinite: true,
-    speed: 500,
-    slidesToShow: sliderConfig.slidesToShow,
-    rows: sliderConfig.rows,
-    slidesToScroll: 1,
-    slidesPerRow: 1,
-    pauseOnHover: false, // thêm dòng này
-    pauseOnFocus: false, // thêm dòng này nếu dùng autoplay
+      swipeToSlide: true, // cho phép vuốt tự do không bị cứng 1 bước
 
-    // autoplay: true, // Bật auto
-    // autoplaySpeed: 1000, // 5s đổi slide
+      beforeChange: () => {
+        isDragging.current = true;
+      }, //  không re-render
+      afterChange: () => {
+        isDragging.current = false;
+      }, //  không re-render
+      touchThreshold: 10,
 
-    swipeToSlide: true, // cho phép vuốt tự do không bị cứng 1 bước
-
-    beforeChange: () => {
-      isDragging.current = true;
-    }, //  không re-render
-    afterChange: () => {
-      isDragging.current = false;
-    }, //  không re-render
-    touchThreshold: 10,
-
-    dotsClass: "slick-dots !-my-[20px] !flex !justify-center ",
-    // Custom từng DOT (chấm)
-    customPaging: (i) => (
-      <div className="text-sm text-[#a47b67] border  border-[#a47b67]">
-        {i + 1}
-      </div>
-    ),
-  };
-
+      dotsClass: "slick-dots !-my-[20px] !flex !justify-center ",
+      // Custom từng DOT (chấm)
+      customPaging: (i) => (
+        <div className="text-sm text-[#a47b67] border  border-[#a47b67]">
+          {i + 1}
+        </div>
+      ),
+    }),
+    [],
+  );
+  if (isLoading) return <LoadingPage />;
+  if (isError) return <ErrorPage text="Không thể tải danh sách sản phẩm" />;
   return (
     <div className="relative w-full px-3 mx-auto mt-10 bg-white sm:px-4 md:px-16 xl:px-18 md:mt-20 lg:mt-35">
       <div className="mx-auto ">
@@ -98,9 +103,9 @@ function ProductList() {
         </Link>
       </div>
       <Slider {...settings}>
-        {data.products.map((item, index) => (
+        {data?.products.map((item, index) => (
           <Link
-            key={item.id}
+            key={index}
             onClick={(e) => {
               if (isDragging.current) {
                 e.preventDefault();
@@ -108,7 +113,7 @@ function ProductList() {
             }}
             to={`/products/${item.slug}`}
           >
-            {/* Sản phâm 1 */}
+            {/* Sản phâm */}
             <div className="px-[15px]  overflow-hidden ">
               <div className="relative overflow-hidden product-img group aspect-[3/4]">
                 {/* icon */}

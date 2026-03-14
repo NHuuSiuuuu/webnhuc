@@ -1,6 +1,6 @@
 import { ChevronDown, Menu, ShoppingBag, User, X } from "lucide-react";
 import Tippy from "@tippyjs/react/headless";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -12,20 +12,25 @@ import { formatPrice, calculateDiscountedPrice } from "../../utils/price";
 function Header({ active }) {
   const [open, setOpen] = useState(false);
   const [openCart, setOpenCart] = useState(false);
-
-  // Đảm bảo luôn có cart_id ngay khi Header được mount
-  let cart_id = localStorage.getItem("cart_id");
-  if (!cart_id) {
-    cart_id = crypto.randomUUID();
-    localStorage.setItem("cart_id", cart_id);
-  }
   const queryClient = useQueryClient();
-  const [errorQuantitySize, setErrorQuantitySize] = useState(false);
+
+  // Đảm bảo luôn có cart_id ngay khi Header được mount và chỉ chạy 1 lần
+  const cart_id = useMemo(() => {
+    let id = localStorage.getItem("cart_id");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("cart_id", id);
+    }
+    return id;
+  }, []); // Chỉ chạy logic này 1 lần khi component này mount
 
   const fetchCart = async () => {
-    const res = await axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/get`, {
-      cart_id,
-    });
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_BACKEND}/cart/get`,
+      {
+        cart_id,
+      },
+    );
     return res.data.cart;
   };
 
@@ -35,7 +40,9 @@ function Header({ active }) {
 
     onSuccess: () => {
       toast.success("Xóa thành công sản phẩm trong giỏ hàng!");
-      queryClient.invalidateQueries(["cart", cart_id]);
+      queryClient.invalidateQueries({
+        queryKey: ["cart", cart_id],
+      });
     },
 
     onError: (error) => {
@@ -56,9 +63,31 @@ function Header({ active }) {
     queryKey: ["cart", cart_id],
     queryFn: fetchCart,
     enabled: !!cart_id, // chỉ gội api khi tồn tại cart_id
+    // Dùng staleTime để tránh gọi API liên tục
+    /*Header mount
+        → gọi API cart
+      Chuyển page
+        → dùng lại cache
+        → KHÔNG gọi API
+      Trong 5 phút
+        → vẫn dùng cache **/
+    staleTime: 1000 * 60 * 5, // 5 phút
   });
-  if (isLoading) return <div>Đang loading ...</div>;
-  if (isError) return <div>lỗi</div>;
+  {
+    isLoading && (
+      <div className="p-4 space-y-2">
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+    );
+  }
+  {
+    isError && (
+      <p className="p-4 text-sm text-red-500">Không thể tải giỏ hàng</p>
+    );
+  }
+
   // console.log(data);
   return (
     <div>
@@ -70,14 +99,9 @@ function Header({ active }) {
         ${active ? "fixed top-0 left-0 z-50 shadow-sm" : "relative"}
       `}
       >
-        {/* className={`
-            container mx-auto h-full
-            transition-all duration-300
-            ${active ? "py-0" : "py-4"}
-          `}> */}
         <div className={`container mx-auto md:px-4 `}>
           <div
-            className={`flex justify-between  md:flex transition-all duration-300 ${
+            className={`flex justify-between md:flex transition-all duration-300 ${
               active ? "py-0" : "py-[15px]"
             }`}
           >

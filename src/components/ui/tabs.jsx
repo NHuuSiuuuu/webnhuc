@@ -31,9 +31,9 @@ function TabsTrigger({ className, ...props }) {
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "relative after:absolute after:left-0 after:bottom-0 after:h-[2px]  after:bg-[#888888] after:scale-x-0 data-[state=active]:after:scale-x-100 after:w-full after:duration-300 after:transition-transform  data-[state=active]:text-[#888888]  md:inline-flex  flex-1 items-center justify-center px-2 py-1 mr-[30px] text-sm font-semibold whitespace-nowrap  disabled:pointer-events-none  uppercase",
+        "relative after:absolute after:left-0 after:bottom-0 after:h-[2px]  after:bg-[#888888] after:scale-x-0 data-[state=active]:after:scale-x-100 after:w-full after:duration-300 after:transition-transform  data-[state=active]:text-[#888888]  md:inline-flex  lg:flex-1 items-center justify-center px-2 py-1 mr-[30px] text-sm font-semibold whitespace-nowrap  disabled:pointer-events-none  uppercase",
         className
-      )} 
+      )}
       {...props}
     />
   );
