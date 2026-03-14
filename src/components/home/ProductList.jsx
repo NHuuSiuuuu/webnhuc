@@ -88,8 +88,9 @@ function ProductList() {
         </div>
       ),
     }),
-    [],
+    [sliderConfig],
   );
+
   if (isLoading) return <LoadingPage />;
   if (isError) return <ErrorPage text="Không thể tải danh sách sản phẩm" />;
   return (
