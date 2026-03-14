@@ -218,7 +218,7 @@ function Checkout() {
   // console.log("feee", fee);
   // console.log("provisionalPrice", selectedShippingMethod);
   return (
-    <div className="mx-auto h-[1000px] w-[70%]">
+    <div className="mx-auto h-[1000px] w-[90%] lg:w-[70%]">
       <div className="flex-3 md:flex md:flex-1 my-[20px] border-b border-[#e6e6e6] border-solid justify-start items-center px-[15px]">
         {/* Logo */}
         <Link to="/" className="block text-[40px]">
