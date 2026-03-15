@@ -14,7 +14,7 @@ function HeroSide() {
     cssEase: "linear",
   };
   return (
-    <div className="relative z-20 slider-container">
+    <div className="relative slider-container">
       <Slider {...settings}>
         <div>
           <a>

@@ -2,7 +2,7 @@ import { Outlet } from "react-router";
 import Header from "./Header";
 import Footer from "./Footer";
 import TopBar from "./TopBar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Slide, ToastContainer } from "react-toastify";
 
 function LayoutDefault() {
@@ -22,21 +22,32 @@ function LayoutDefault() {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      if (Math.floor(scrollY) >= 60) {
-        setScrolled(true);
-        console.log("hahah");
-      } else {
-        setScrolled(false);
-      }
+      const isScroller = window.scrollY > 60;
+      setScrolled((prev) => (prev !== isScroller ? isScroller : prev)); //Scroll chạy trước → JS chạy sau ko dùng thì ngược lại
+      console.log( window.scrollY )
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  });
+  }, []);
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Slide}
+      />
+
       {/* Top Bar */}
       <TopBar hidden={scrolled} />
 

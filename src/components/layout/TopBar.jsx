@@ -9,7 +9,6 @@ import useDebounce from "@/hooks/useDebounce.hook";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleXmark,
-  faMagnifyingGlass,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router";
@@ -17,7 +16,7 @@ import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
 
 // import { formatPrice,calculateDiscountedPrice } from "../../utils/price";
 
-function TopBar() {
+function TopBar({ scrolled }) {
   const [searchValue, setSearchValue] = useState("");
   const [showResult, setShowResult] = useState(true);
   const debounceValue = useDebounce(searchValue, 500);
@@ -44,10 +43,11 @@ function TopBar() {
   const handleHideResult = () => {
     setShowResult(false);
   };
+
   return (
     <div id="topbar">
-      <div className="container px-4 mx-auto ">
-        <div className="hidden sm:block">
+      <div className="container hidden px-4 mx-auto md:block ">
+        <div className="block">
           <div className="items-center justify-center text-center md:flex ">
             {/* Liên hệ */}
             <div className="flex-1 hidden px-4 tracking-wider md:flex ">
@@ -70,7 +70,7 @@ function TopBar() {
             </div>
 
             {/* Tìm kiếm */}
-            <div className="flex-1 hidden px-4 md:flex">
+            <div className="justify-end flex-1 hidden px-4 md:flex">
               <HeadlessTippy
                 appendTo={() => document.body}
                 interactive
