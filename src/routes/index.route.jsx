@@ -40,6 +40,7 @@ import OrderDetailPage from "@/pages/admin/orders/OrderDetailAdmin";
 import AdminOrderDetail from "@/pages/admin/orders/OrderDetailAdmin";
 import ProducstNew from "@/pages/client/products/ProductsNew";
 import Account from "@/pages/client/account/Account";
+import AuthRedirect from "@/components/admin/layout/AuthRedirect";
 
 export const routes = [
   {
@@ -67,14 +68,30 @@ export const routes = [
         path: "products/:slug",
         element: <ProductDetail />,
       },
-      {
-        path: "account/",
-        element: <Account />,
-      },
+
       {
         path: "tracking",
         element: <OrderTracking />,
       },
+      {
+        path: "/account",
+
+        element: <Account />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <AuthRedirect />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      }
     ],
   },
   {
@@ -89,14 +106,14 @@ export const routes = [
     path: "orders/detail/:id",
     element: <OrderDetail />,
   },
-  {
-    path: "account/login/",
-    element: <Login />,
-  },
-  {
-    path: "account/register/",
-    element: <Register />,
-  },
+  // {
+  //   path: "account/login/",
+  //   element: <Login />,
+  // },
+  // {
+  //   path: "account/register/",
+  //   element: <Register />,
+  // },
 
   {
     path: "/admin/login",

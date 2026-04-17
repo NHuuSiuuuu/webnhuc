@@ -15,39 +15,40 @@ function Login() {
         data,
       );
     },
-    onSuccess: ({ data }) => {
-      // navigate("/");
-      console.log(data)
+    onSuccess: () => {
+      navigate("/");
+      toast.success("Đăng nhập thành công!");
     },
     onError: () => {
-      toast.error("Đăng nhập tài không khoản thành công!");
+      toast.error("Đăng nhập không thành công!");
     },
   });
-
-  const handleRegister = (e) => {
-    mutate(formData);
-  };
-  console.log(formData);
 
   return (
     <div className="flex min-h-screen bg-white">
       {/* Left beige panel */}
       <div className="hidden lg:flex flex-col justify-between w-[42%] shrink-0 bg-[#f5f2ec] px-10 py-12">
         <span className="inline-block bg-[#111] text-[#f5f2ec] text-[18px] tracking-[0.3em] uppercase px-2 py-[30px]">
-          BỐ MÀY ĐÂY~~~
+           NHuu · Boutique
         </span>
         <div>
           <p className="text-[2.8rem] font-medium text-[#111] tracking-[-0.03em] leading-none mb-[0.4rem]">
             NHuu
           </p>
           <p className="text-[11px] tracking-[0.15em] uppercase text-[#888]">
-            Streetwear · Localbrand
+            NHuu · Boutique
           </p>
         </div>
       </div>
 
       {/* Right form panel */}
-      <div className="flex-1 flex flex-col justify-center px-10 py-8 max-w-[460px] mx-auto w-full">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mutate(formData);
+        }}
+        className="flex-1 flex flex-col justify-center px-10 py-8 max-w-[460px] mx-auto w-full"
+      >
         <p className="text-[16px] tracking-[0.28em] uppercase text-[#aaa] mb-8">
           Đăng nhập
         </p>
@@ -96,10 +97,7 @@ function Login() {
         </div>
 
         <button
-          type="button"
-          onClick={(e) => {
-            handleRegister(e);
-          }}
+          type="submit"
           className="w-full mt-4 py-[0.9rem] px-6 bg-[#111] hover:bg-[#333] active:bg-black text-white text-[14px] font-medium tracking-[0.25em] uppercase border-none rounded-none cursor-pointer transition-colors duration-200"
         >
           {isPending ? "Đang đăng nhập" : "Đăng nhập"}
@@ -116,13 +114,13 @@ function Login() {
         <p className="text-[14px] text-[#aaa] tracking-[0.03em]">
           Chưa có tài khoản?{" "}
           <Link
-            to="/register"
+            to="/account/register"
             className="text-[#111] no-underline border-b border-[#111] pb-px"
           >
             Đăng ký ngay
           </Link>
         </p>
-      </div>
+      </form>
     </div>
   );
 }

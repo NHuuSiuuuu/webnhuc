@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import CartDrawer from "../cart/CartDrawer";
 import MobileNav from "../cart/MobileNav";
 import useCart from "@/hooks/useCartId";
+import useAuth from "@/hooks/useAuth";
 
 function Header({ active }) {
   const [open, setOpen] = useState(false);
@@ -15,6 +16,8 @@ function Header({ active }) {
   useEffect(() => {
     setCartMounted(true);
   }, []);
+
+  const { data: user, isLoading: loadingUser } = useAuth();
 
   const { data, isLoading, isError, cart_id } = useCart();
 
@@ -27,8 +30,13 @@ function Header({ active }) {
       </div>
     );
   if (isError)
-    return <p className="p-4 text-sm text-red-500">Không thể tải giỏ hàng</p>;
-
+    return (
+      <div className="p-4 space-y-2">
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+    );
   return (
     <div>
       <div
@@ -126,11 +134,15 @@ function Header({ active }) {
 
             {/* User */}
             <div className="flex justify-end pr-[15px] sm:flex flex-1 md:justify-center items-center flex-wrap gap-1.5">
-              <Link className="inline-flex items-center">
+              <Link to="/account" className="inline-flex items-center">
                 <User className="size-8 pr-[10px]" />{" "}
-                <p className="hidden sm:text-[#a47b67] sm:block">
-                  Hi, Huu Nguyen
-                </p>
+                {loadingUser ? (
+                  <p className="hidden sm:text-[#a47b67] sm:block">...</p>
+                ) : (
+                  <p className="hidden sm:text-[#a47b67] sm:block">
+                    Hi, {user?.data?.fullName}
+                  </p>
+                )}
               </Link>
               <Link className="inline-flex items-center">
                 <span>
