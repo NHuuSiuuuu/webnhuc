@@ -1,7 +1,6 @@
 import HeroSlide from "../components/home/HeroSlide";
 import CategoryList from "../components/home/CategoryList";
 import ProductList from "../components/home/ProductList";
-import Footer from "../components/layout/Footer";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,12 +12,14 @@ import {
 // import Tippy from "@tippyjs/react";
 import HeadlessTippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css"; // optional
-import useDebounce from "@/hooks/useDebounce.hook";
+import useDebounce from "@/hooks/useDebounce";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from "react-router";
 import { formatPrice, calculateDiscountedPrice } from "../utils/price";
+import { Helmet } from "react-helmet-async";
+import SeoHead from "@/components/comon/SeoHead";
 
 function HomePage() {
   const [searchValue, setSearchValue] = useState("");
@@ -48,6 +49,7 @@ function HomePage() {
   };
   return (
     <>
+      <SeoHead/>
       <HeadlessTippy
         appendTo={() => document.body}
         interactive

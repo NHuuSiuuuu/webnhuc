@@ -112,7 +112,7 @@ function ProductUpdateAdmin() {
   =======================*/
   const fetchData = async () => {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_BACKEND}I_BACKEND}I_BACKEND}/product/detail/${id}`,
+      `${import.meta.env.VITE_API_BACKEND}/product/detail/${id}`,
     );
     return res.data.product;
   };

@@ -5,22 +5,14 @@ import { useEffect, useState } from "react";
 import { Slide, toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router";
 import { formatPrice, calculateDiscountedPrice } from "../../utils/price";
+import { deleteCartItem, getCart } from "@/apis/cart.api";
 
 function Cart() {
   const cart_id = localStorage.getItem("cart_id");
   const queryClient = useQueryClient();
-  const [errorQuantitySize, setErrorQuantitySize] = useState(false);
-
-  const fetchCart = async () => {
-    const res = await axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/get`, {
-      cart_id,
-    });
-    return res.data.cart;
-  };
 
   const deleteProductInCartMutation = useMutation({
-    mutationFn: (payload) =>
-      axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/delete`, payload),
+    mutationFn: (payload) => deleteCartItem(payload),
 
     onSuccess: () => {
       toast.success("Xóa thành công sản phẩm trong giỏ hàng!");
@@ -34,10 +26,10 @@ function Cart() {
 
   const updateProductInCartMutation = useMutation({
     mutationFn: (payload) => {
-      return axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/update`, payload);
+      updateCartItem(payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["cart", cart_id]);
+      queryClient.invalidateQueries({ queryKey: ["cart", cart_id] });
       console.log("Cập nhật số lượng thành công!");
     },
 
@@ -75,12 +67,11 @@ function Cart() {
   console.log(cart_id);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["cart", cart_id],
-    queryFn: fetchCart,
+    queryFn: () => getCart(cart_id),
     enabled: !!cart_id, // chỉ gội api khi tồn tại cart_id
   });
   if (isLoading) return <div>Đang loading ...</div>;
   if (isError) return <div>lỗi</div>;
-  console.log();
 
   return (
     <>
@@ -97,7 +88,6 @@ function Cart() {
         theme="light"
         transition={Slide}
       />
-      ;
       <div id="layout-cart">
         <div className="container mx-auto ">
           <div className="pb-[30px] after:w-[60px] after:h-[4px] after:bg-[#252a2b] after:mt-[25px] after:content-[''] after:block after:mx-auto">
@@ -155,14 +145,6 @@ function Cart() {
                               {size?.name} {size?.stock}
                             </p>
 
-                            {errorQuantitySize && (
-                              <div className="flex items-center my-[16px]">
-                                <span className="font-medium text-[#FF424F]">
-                                  Số lượng bạn chọn đã đạt mức tối đa của sản
-                                  phẩm này
-                                </span>
-                              </div>
-                            )}
                             <div className="flex items-center justify-between">
                               <div className="quantity-area quantity-cart">
                                 <input
@@ -174,6 +156,7 @@ function Cart() {
                                       item?.product_id._id,
                                       item?.size_id,
                                       Math.max(1, item?.quantity - 1),
+                                      size?.stock,
                                     )
                                   }
                                 />

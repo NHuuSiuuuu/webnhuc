@@ -1,3 +1,4 @@
+import SeoHead from "@/components/comon/SeoHead";
 import { formatPrice } from "@/utils/price";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -65,6 +66,7 @@ function OrderTracking() {
   console.log(searchResult);
   return (
     <div className="min-h-screen bg-[#faf8f6] overflow-hidden">
+      <SeoHead title="Tra Cứu Đơn Hàng" />
       <div
         className={`max-w-4xl mx-auto px-8 transition-all duration-1000 ${mounted ? "opacity-100" : "opacity-0"}`}
       >

@@ -1,32 +1,23 @@
-import {
-  faChevronRight,
-  faHandHolding,
-  faTruck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
 import { faCreditCard, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import SeoHead from "@/components/comon/SeoHead";
+import { toast } from "react-toastify";
+import { createOrder, getCart, getshippingMethod } from "@/apis/cart.api";
+import useAddressSelector from "@/hooks/useAddressSelector";
+import { ChevronDown } from "lucide-react";
 
 // Trong component Checkout
 
 function Checkout() {
   const navigate = useNavigate();
-  const [selectedProvinceCode, setSelectedProvinceCode] = useState("");
-  const [selectedDistrictCode, setSelectedDistrictCode] = useState("");
-  const [selectedWardCode, setSelectedWardCode] = useState("");
-
-  const [selectedProvinceName, setSelectedProvinceName] = useState("");
-  const [selectedDistrictName, setSelectedDistrictName] = useState("");
-  const [selectedWardName, setSelectedWardName] = useState("");
-
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [selectedShippingMethod, setSelectedShippingMethod] = useState("");
   const [fee, setFee] = useState(null);
-  const [freeThreshold, setFreeThreshold] = useState(null);
   const cart_id = localStorage.getItem("cart_id");
   const [form, setForm] = useState({
     fullName: "",
@@ -37,37 +28,19 @@ function Checkout() {
     paymentMethod: "",
   });
 
-  const fetchCart = async () => {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_BACKEND}/cart/get`,
-      {
-        cart_id,
-      },
-    );
-    return res.data.cart;
-  };
   const {
     data: carts = [],
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["cart", cart_id],
-    queryFn: fetchCart,
+    queryFn: () => getCart(cart_id),
     enabled: !!cart_id, // chỉ gội api khi tồn tại cart_id
   });
 
   // Gửi data lên db
-  const {
-    mutate,
-    isError: errorCreateOrder,
-    isPending,
-  } = useMutation({
-    mutationFn: async (payload) => {
-      return await axios.post(
-        `${import.meta.env.VITE_API_BACKEND}/order/create`,
-        payload,
-      );
-    },
+  const { mutate } = useMutation({
+    mutationFn: () => createOrder(payload),
     onSuccess: (res) => {
       console.log(res.data.payment);
       if (res.data.payment === "vnpay") {
@@ -75,82 +48,30 @@ function Checkout() {
       } else {
         navigate(`/orders/success/${res.data.order._id}`);
       }
-
-      // navigate(`/orders/success/${res.data.order._id}`);
     },
   });
 
   const { data: shippingMethod = [] } = useQuery({
     queryKey: ["shippingMethod"],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_BACKEND}/shipping-method/index`,
-      );
-      return data.data;
-    },
+    queryFn: () => getshippingMethod(),
   });
 
-  // Lấy tỉnh
-  const { data: provinces = [] } = useQuery({
-    queryKey: ["provinces"],
-    queryFn: async () => {
-      const { data } = await axios.get(`https://provinces.open-api.vn/api/p/`);
-      return data;
-    },
-  });
-  useEffect(() => {
-    if (selectedProvinceCode && provinces.length > 0) {
-      const province = provinces.find((p) => p.code == selectedProvinceCode);
-      if (province) setSelectedProvinceName(province.name);
-    }
-  }, [selectedProvinceCode, provinces]);
+  const {
+    selectedProvinceCode,
+    setSelectedProvinceCode,
+    selectedDistrictCode,
+    setSelectedDistrictCode,
+    selectedWardCode,
+    setSelectedWardCode,
+    selectedProvinceName,
+    selectedDistrictName,
+    selectedWardName,
+    provinces,
+    districts,
+    wards,
+  } = useAddressSelector();
 
-  // Lấy quận huyện
-  const { data: districts = [] } = useQuery({
-    queryKey: ["districts", selectedProvinceCode],
-    queryFn: async () => {
-      if (!selectedProvinceCode) return [];
-      const { data } = await axios.get(
-        `https://provinces.open-api.vn/api/p/${selectedProvinceCode}?depth=2`,
-      );
-      return data.districts || [];
-    },
-    enabled: !!selectedProvinceCode,
-    onSuccess: () => {
-      setSelectedDistrictCode("");
-      setSelectedWardCode("");
-    },
-  });
-  useEffect(() => {
-    if (selectedDistrictCode && districts.length > 0) {
-      const district = districts.find((p) => p.code == selectedDistrictCode);
-      if (district) setSelectedDistrictName(district.name);
-    }
-  }, [selectedDistrictCode, districts]);
-
-  // Lấy phường xã
-  const { data: wards = [] } = useQuery({
-    queryKey: ["wards", selectedDistrictCode],
-    queryFn: async () => {
-      if (!selectedDistrictCode) return [];
-      const { data } = await axios.get(
-        `https://provinces.open-api.vn/api/d/${selectedDistrictCode}?depth=2`,
-      );
-      return data.wards || [];
-    },
-    enabled: !!selectedDistrictCode,
-    onSuccess: () => {
-      setSelectedWardCode("");
-    },
-  });
-
-  useEffect(() => {
-    if (selectedWardCode && wards.length > 0) {
-      const ward = wards.find((p) => p.code == selectedWardCode);
-      if (ward) setSelectedWardName(ward.name);
-    }
-  }, [selectedWardCode, wards]);
-
+  // Giá tạm thời
   const provisionalPrice = carts?.products?.reduce((acc, curr) => {
     return (
       Number(acc) +
@@ -178,7 +99,6 @@ function Checkout() {
     } else {
       setFee(method.fee);
     }
-    console.log("method", method);
   }, [selectedShippingMethod, provisionalPrice, shippingMethod]);
 
   if (isLoading) return <div>Đang loading ...</div>;
@@ -201,24 +121,28 @@ function Checkout() {
     },
   };
 
-  const handleClickShippingMethod = (item) => {
-    setSelectedShippingMethod(item.code);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!form.fullName || !form.phone || !selectedProvinceName) {
+      toast.error("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+    if (!selectedShippingMethod) {
+      toast.error("Vui lòng chọn phương thức vận chuyển");
+      return;
+    }
+
     mutate(payload);
   };
-  // console.log("cart", carts);
 
-  // console.log(selectedDistrictCode);
-  console.log("form", payload);
-  // console.log("paymentMethod", paymentMethod);
-  console.log("shippingMethod", shippingMethod);
-  // console.log("feee", fee);
-  // console.log("provisionalPrice", selectedShippingMethod);
   return (
     <div className="mx-auto h-[1000px] w-[90%] lg:w-[70%]">
+      <SeoHead
+        title="Thanh Toán"
+        description="Thanh toán đơn hàng tại NHUU"
+        type="website"
+      />
       <div className="flex-3 md:flex md:flex-1 my-[20px] border-b border-[#e6e6e6] border-solid justify-start items-center px-[15px]">
         {/* Logo */}
         <Link to="/" className="block text-[40px]">
@@ -324,26 +248,14 @@ function Checkout() {
                   <option value="" className="text-gray-400">
                     Chọn tỉnh/thành
                   </option>
-                  {provinces.map((item) => (
+                  {provinces?.map((item) => (
                     <option key={item.code} value={item.code}>
                       {item.name}
                     </option>
                   ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+                  <ChevronDown className="w-5 h-5 text-gray-400" />
                 </div>
               </div>
 
@@ -372,19 +284,7 @@ function Checkout() {
                   ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+                  <ChevronDown className="w-5 h-5 text-gray-400" />
                 </div>
               </div>
 
@@ -413,19 +313,7 @@ function Checkout() {
                   ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
+                  <ChevronDown className="w-5 h-5 text-gray-400" />
                 </div>
               </div>
             </div>
@@ -483,7 +371,7 @@ function Checkout() {
                               : "border-gray-200 bg-white hover:border-blue-400 " // Khi hover (không chọn)
                           }`}
                 onClick={() => {
-                  handleClickShippingMethod(item);
+                  setSelectedShippingMethod(item.code);
                 }}
               >
                 {/* Left side */}
@@ -630,7 +518,7 @@ function Checkout() {
                   );
                   return (
                     <tr
-                      key={item.product_id._id}
+                      key={`${item.product_id._id}-${item.size_id}`}
                       className="border-b-[#bcbcbc] border-b-[1px] border-dotted"
                     >
                       <td className="p-[10px] w-[100px]">
@@ -725,7 +613,7 @@ function Checkout() {
                     </span>
                     <div className="text-right">
                       <div className="text-2xl font-bold text-amber-700">
-                        {formatPrice(provisionalPrice + fee)}
+                        {formatPrice(provisionalPrice + (fee ?? 0))}
                       </div>
                       <div className="text-xs text-gray-500">
                         Đã bao gồm VAT

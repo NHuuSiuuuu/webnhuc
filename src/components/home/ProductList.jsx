@@ -3,13 +3,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ZoomIn } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { Link } from "react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
 import QuickViewModal from "../modals/QuickViewModal";
 import LoadingPage from "../comon/LoadingPage";
 import ErrorPage from "../comon/ErrorPage";
+import { getProducts } from "@/apis/products.api";
 
 function ProductList() {
   const [openDialog, setOpendialog] = useState(false);
@@ -39,18 +39,10 @@ function ProductList() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const fetchApi = async () => {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_BACKEND}/product?limit=20`,
-    );
-    return res.data;
-  };
-  // data: dữ liệu api
-  // isLoading: đang loading
-  // isError: có lỗi
+ 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["products"],
-    queryFn: fetchApi,
+    queryFn: () => getProducts(),
   });
   // console.log("isDragging", isDragging);
 
@@ -104,15 +96,15 @@ function ProductList() {
         </Link>
       </div>
       <Slider {...settings}>
-        {data?.products.map((item, index) => (
+        {data?.products.map((item) => (
           <Link
-            key={index}
+            key={item.slug}
             onClick={(e) => {
               if (isDragging.current) {
                 e.preventDefault();
               }
             }}
-            to={`/products/${item.slug}`}
+            to={`/products/${item?.slug}`}
           >
             {/* Sản phâm */}
             <div className="px-[15px]  overflow-hidden ">
@@ -137,26 +129,26 @@ function ProductList() {
                 </div>
 
                 <div className="">
-                  {item.stock === 0 ? (
+                  {item?.stock === 0 ? (
                     <div className="absolute text-[#a47b67] z-10 product-sale left-[10px] top-[10px] text-[12px] px-[15px] py-[10px] font-bold leading-1  bg-white">
                       Hết hàng
                     </div>
                   ) : (
                     <div className="absolute z-10 product-sale right-[10px] top-[10px] text-[12px] px-[15px] py-[10px] font-bold leading-1 text-[#f94c43] bg-white">
-                      {item.discountPercentage &&
-                        `-${item.discountPercentage}%`}
+                      {item?.discountPercentage &&
+                        `-${item?.discountPercentage}%`}
                     </div>
                   )}
                   <img
                     className="absolute inset-0 object-cover w-full h-full"
-                    src={item.thumbnail[0]}
-                    alt={item.title}
+                    src={item?.thumbnail[0]}
+                    alt={item?.title}
                   />
 
                   <img
                     className="absolute inset-0 object-cover w-full h-full transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-                    src={item.thumbnail[1]}
-                    alt={item.title}
+                    src={item?.thumbnail[1]}
+                    alt={item?.title}
                   />
                 </div>
               </div>
@@ -165,31 +157,31 @@ function ProductList() {
                   <p
                     // có thể viết là: truncate = overflow-hidden + whitespace-nowrap (không cho xuống dòng) + text-overflow: ellopsis (Hiện ...) : Combo luôn đi chung nhau
                     className="text-[14px] font-medium leading-1.2 overflow-hidden whitespace-nowrap block text-ellipsis"
-                    title={item.title}
+                    title={item?.title}
                   >
-                    {item.title}
+                    {item?.title}
                   </p>
                 </h3>
                 <div>
                   {/* Giá đã giảm */}
-                  {item.discountPercentage ? (
+                  {item?.discountPercentage ? (
                     <>
                       <span className="text-[14px] text-[#f94c43] font-medium leading-1">
                         {formatPrice(
                           calculateDiscountedPrice(
-                            item.price,
-                            item.discountPercentage,
+                            item?.price,
+                            item?.discountPercentage,
                           ),
                         )}
                       </span>
                       {/* Giá gốc */}
                       <span className="ml-2.5 text-[13px] text-[#939393] font-medium leading-1 line-through">
-                        {formatPrice(item.price)}
+                        {formatPrice(item?.price)}
                       </span>
                     </>
                   ) : (
                     <span className="ml-2.5 text-[14px] text-[#000000] font-medium leading-1 ">
-                      {formatPrice(item.price)}
+                      {formatPrice(item?.price)}
                     </span>
                   )}
                 </div>

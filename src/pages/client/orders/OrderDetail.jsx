@@ -15,6 +15,7 @@ import { formatPrice } from "@/utils/price";
 import { toast } from "react-toastify";
 import { Slide, ToastContainer } from "react-toastify";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function OrderDetail() {
   const { id } = useParams();

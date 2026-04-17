@@ -1,16 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "../../../utils/axios";
-import { useNavigate } from "react-router";
 
-function Logout() {
-  const navigate = useNavigate();
-
+function Account() {
   const { mutate } = useMutation({
     mutationFn: async () => {
       return await axios.get(`${import.meta.env.VITE_API_BACKEND}/logout`);
-    },
-    onSuccess: () => {
-      navigate("/admin/login");
     },
   });
   return (
@@ -23,4 +17,4 @@ function Logout() {
   );
 }
 
-export default Logout;
+export default Account;

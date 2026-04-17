@@ -1,12 +1,11 @@
 import { ChevronDown, Menu, ShoppingBag, User, X } from "lucide-react";
 import Tippy from "@tippyjs/react/headless";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { useQuery } from "@tanstack/react-query";
 
-import { getCart } from "@/apis/cart.api";
 import CartDrawer from "../cart/CartDrawer";
 import MobileNav from "../cart/MobileNav";
+import useCart from "@/hooks/useCartId";
 
 function Header({ active }) {
   const [open, setOpen] = useState(false);
@@ -16,43 +15,19 @@ function Header({ active }) {
   useEffect(() => {
     setCartMounted(true);
   }, []);
-  // Đảm bảo luôn có cart_id ngay khi Header được mount và chỉ chạy 1 lần
-  const cart_id = useMemo(() => {
-    let id = localStorage.getItem("cart_id");
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("cart_id", id);
-    }
-    return id;
-  }, []); // Chỉ chạy logic này 1 lần khi component này mount
 
-  // console.log(cart_id);
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["cart", cart_id],
-    queryFn: () => getCart(cart_id),
-    enabled: !!cart_id, // chỉ gội api khi tồn tại cart_id
-    // Dùng staleTime để tránh gọi API liên tục
-    /*Header mount
-        → gọi API cart
-      Chuyển page
-        → dùng lại cache
-        → KHÔNG gọi API
-      Trong 5 phút
-        → vẫn dùng cache **/
-    staleTime: 1000 * 60 * 5, // 5 phút
-  });
+  const { data, isLoading, isError, cart_id } = useCart();
 
-  isLoading && (
-    <div className="p-4 space-y-2">
-      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-    </div>
-  );
-  {
-    if (isError)
-      return <p className="p-4 text-sm text-red-500">Không thể tải giỏ hàng</p>;
-  }
+  if (isLoading)
+    return (
+      <div className="p-4 space-y-2">
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+    );
+  if (isError)
+    return <p className="p-4 text-sm text-red-500">Không thể tải giỏ hàng</p>;
 
   return (
     <div>
@@ -72,10 +47,9 @@ function Header({ active }) {
             {/* Logo */}
             <div className="flex-3 md:flex md:flex-1 justify-center items-center px-[15px]">
               <Link
-                href="/"
+                to="/"
                 className="block text-[40px] text-[20px] text-center"
               >
-                {/* <img src="./logo.png" alt="" className="mx-auto size-20" /> */}
                 NHUU
               </Link>
             </div>
@@ -84,25 +58,25 @@ function Header({ active }) {
             <div className="hidden md:flex flex-2">
               <nav className="nav">
                 <ul className="text-center">
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/products/san-pham-moi">New Arrivals</Link>
                   </li>
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/products">ALL</Link>
                   </li>
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/ao-nu">TOPS</Link>
                   </li>
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/vay">SKIRTS</Link>
                   </li>
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/set-quan-ao-nu">SETS</Link>
                   </li>
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/products">BIKINI</Link>
                   </li>
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/products">ACCESORIES</Link>
                   </li>
                   <Tippy
@@ -134,7 +108,7 @@ function Header({ active }) {
                     </li>
                   </Tippy>
 
-                  <li class="inline-block py-5">
+                  <li className="inline-block py-5">
                     <Link to="/tracking" className="">
                       Tra cứu đơn hàng
                     </Link>
@@ -144,7 +118,7 @@ function Header({ active }) {
             </div>
 
             {/* Nav mobile */}
-            <div class="flex pl-[15px] order-first flex-1 justify-start items-center md:hidden">
+            <div className="flex pl-[15px] order-first flex-1 justify-start items-center md:hidden">
               <button onClick={() => setOpen(!open)}>
                 <Menu />
               </button>
@@ -168,7 +142,9 @@ function Header({ active }) {
                       className="size-8 pr-[10px]"
                     />
                     <div className="absolute top-0 right-0">
-                      <span className="font-bold">{data?.products.length}</span>
+                      <span className="font-bold">
+                        {data?.products?.length}
+                      </span>
                     </div>
                   </div>
                 </span>

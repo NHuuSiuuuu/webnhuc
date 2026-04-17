@@ -19,3 +19,13 @@ export const searchProducts = async (debounceValue) => {
   );
   return data;
 };
+
+/* =======================
+    Danh sách sản phẩm
+  =======================*/
+export const getProducts = async (limit = 20) => {
+  const { data } = await axios.get(
+    `${import.meta.env.VITE_API_BACKEND}/product?limit=${limit}`,
+  );
+  return data;
+};

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "../../../utils/axios";
 
-function LoginAdmin() {
+function Login() {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
   const { mutate, isPending } = useMutation({
@@ -16,8 +16,8 @@ function LoginAdmin() {
       );
     },
     onSuccess: ({ data }) => {
-      navigate("http://localhost:5173/admin/product/create");
-      console.log(data);
+      // navigate("/");
+      console.log(data)
     },
     onError: () => {
       toast.error("Đăng nhập tài không khoản thành công!");
@@ -31,14 +31,32 @@ function LoginAdmin() {
 
   return (
     <div className="flex min-h-screen bg-white">
+      {/* Left beige panel */}
+      <div className="hidden lg:flex flex-col justify-between w-[42%] shrink-0 bg-[#f5f2ec] px-10 py-12">
+        <span className="inline-block bg-[#111] text-[#f5f2ec] text-[18px] tracking-[0.3em] uppercase px-2 py-[30px]">
+          BỐ MÀY ĐÂY~~~
+        </span>
+        <div>
+          <p className="text-[2.8rem] font-medium text-[#111] tracking-[-0.03em] leading-none mb-[0.4rem]">
+            NHuu
+          </p>
+          <p className="text-[11px] tracking-[0.15em] uppercase text-[#888]">
+            Streetwear · Localbrand
+          </p>
+        </div>
+      </div>
+
       {/* Right form panel */}
       <div className="flex-1 flex flex-col justify-center px-10 py-8 max-w-[460px] mx-auto w-full">
         <p className="text-[16px] tracking-[0.28em] uppercase text-[#aaa] mb-8">
           Đăng nhập
         </p>
         <h1 className="text-[1.4rem] font-medium text-[#111] tracking-[-0.02em] mb-1">
-          ADMIN
+          Chào mừng trở lại!
         </h1>
+        <p className="text-[14px] text-[#bbb] tracking-[0.02em] mb-8">
+          Đăng nhập để tiếp tục mua sắm
+        </p>
 
         <div className="relative shadow-2xs my-[15px]">
           <input
@@ -68,6 +86,15 @@ function LoginAdmin() {
           </label>
         </div>
 
+        <div className="flex justify-end mt-1 mb-2">
+          <Link
+            to="/forgot-password"
+            className="text-[12px] text-[#888] hover:text-[#111] transition-colors no-underline border-b border-[#ccc] pb-px"
+          >
+            Quên mật khẩu?
+          </Link>
+        </div>
+
         <button
           type="button"
           onClick={(e) => {
@@ -77,9 +104,27 @@ function LoginAdmin() {
         >
           {isPending ? "Đang đăng nhập" : "Đăng nhập"}
         </button>
+
+        <div className="flex items-center gap-2.5 my-6">
+          <div className="flex-1 h-px bg-[#ece9e3]" />
+          <span className="text-[12px] tracking-[0.2em] uppercase text-[#ccc]">
+            hoặc
+          </span>
+          <div className="flex-1 h-px bg-[#ece9e3]" />
+        </div>
+
+        <p className="text-[14px] text-[#aaa] tracking-[0.03em]">
+          Chưa có tài khoản?{" "}
+          <Link
+            to="/register"
+            className="text-[#111] no-underline border-b border-[#111] pb-px"
+          >
+            Đăng ký ngay
+          </Link>
+        </p>
       </div>
     </div>
   );
 }
 
-export default LoginAdmin;
+export default Login;

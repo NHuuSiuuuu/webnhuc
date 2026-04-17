@@ -1,24 +1,28 @@
-import React, { useEffect } from "react";
 import AllRoute from "./components/AllRoute";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-
+import { Slide, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { HelmetProvider } from "react-helmet-async";
 function App() {
-  const fetchApi = async () => {
-    const res = await axios.get(
-      `${import.meta.env.REACT_API_BACKEND}/api/product/products`
-    );
-    console.log("res:", res.data);
-    return res.data;
-  };
-  // const query = useQuery({ queryKey: ["todos"], queryFn: fetchApi });
-  // console.log("query: ", query);
-
-  // useEffect(() => {
-  //   fetchApi();
-  // }, []);
-
-  return <AllRoute />;
+  return (
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Slide}
+      />
+      <HelmetProvider>
+        <AllRoute />
+      </HelmetProvider>
+    </>
+  );
 }
 
 export default App;

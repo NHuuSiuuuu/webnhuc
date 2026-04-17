@@ -26,3 +26,31 @@ export const getCart = async (cart_id) => {
 export const deleteCartItem = async (payload) => {
   return axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/delete`, payload);
 };
+
+/* =======================
+    Update sản phẩm trong giỏ hàng
+  =======================*/
+export const updateCartItem = async (payload) => {
+  return axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/update`, payload);
+};
+
+/* =======================
+    Tạo order
+  =======================*/
+export const createOrder = async (payload) => {
+  return axios.post(
+    `${import.meta.env.VITE_API_BACKEND}/order/create`,
+    payload,
+  );
+};
+
+/* =======================
+    API lấy phương thức vận chuyển
+  =======================*/
+export const getshippingMethod = async () => {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_BACKEND}/shipping-method/index`,
+    {},
+  );
+  return res.data.data;
+};

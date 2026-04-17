@@ -2,7 +2,7 @@ import { Outlet } from "react-router";
 import Header from "./Header";
 import Footer from "./Footer";
 import TopBar from "./TopBar";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Slide, ToastContainer } from "react-toastify";
 import Chatbot from "./Chatbot";
 

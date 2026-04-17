@@ -12,8 +12,8 @@ import CategoryAdmin from "@/pages/admin/category-product/CategoryAdmin";
 import CategoryUpdateAdmin from "@/pages/admin/category-product/CategoryUpdateAdmin";
 import CategoryCreateAdmin from "@/pages/admin/category-product/CategoryCreateAdmin";
 import CategoryDetail from "@/pages/admin/category-product/CategoryDetail";
-import Login from "@/pages/client/user/login";
-import Register from "@/pages/client/user/register";
+import Login from "@/pages/client/account/Login";
+import Register from "@/pages/client/account/Register";
 import Roles from "@/pages/admin/roles/Roles";
 import RoleCreate from "@/pages/admin/roles/RoleCreate";
 import RoleUpdate from "@/pages/admin/roles/RoleUpdate";
@@ -39,6 +39,7 @@ import OrderTracking from "@/pages/client/tracking/Tracking";
 import OrderDetailPage from "@/pages/admin/orders/OrderDetailAdmin";
 import AdminOrderDetail from "@/pages/admin/orders/OrderDetailAdmin";
 import ProducstNew from "@/pages/client/products/ProductsNew";
+import Account from "@/pages/client/account/Account";
 
 export const routes = [
   {
@@ -67,12 +68,8 @@ export const routes = [
         element: <ProductDetail />,
       },
       {
-        path: "login/",
-        element: <Login />,
-      },
-      {
-        path: "register/",
-        element: <Register />,
+        path: "account/",
+        element: <Account />,
       },
       {
         path: "tracking",
@@ -91,6 +88,14 @@ export const routes = [
   {
     path: "orders/detail/:id",
     element: <OrderDetail />,
+  },
+  {
+    path: "account/login/",
+    element: <Login />,
+  },
+  {
+    path: "account/register/",
+    element: <Register />,
   },
 
   {

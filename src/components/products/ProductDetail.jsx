@@ -14,6 +14,7 @@ import ErrorPage from "../comon/ErrorPage";
 
 import { getProductDetail } from "../../apis/products.api";
 import { addToCart } from "@/apis/cart.api";
+import SeoHead from "@/components/comon/SeoHead";
 
 function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(null);
@@ -74,7 +75,6 @@ function ProductDetail() {
     mutate(payload);
   };
 
-
   const handleOnClickSize = (quantity) => {
     if (selectedSize.stock > quantity) {
       setQuantity(quantity + 1);
@@ -124,10 +124,16 @@ function ProductDetail() {
   };
   if (isLoading) return <LoadingPage />;
   if (isError) return <ErrorPage />;
-
+  console.log("dâd", product?.thumbnail?.[0]);
   return (
     // product detail
     <div id="product" className="mt-[40px]">
+      <SeoHead
+        title={product?.title}
+        image={product?.thumbnail?.[0]}
+        description={product?.description}
+      />
+
       <div className="container mx-auto">
         <div className="grid-cols-12 lg:grid mb-[40px]">
           {/* LEFT:  Img Product */}

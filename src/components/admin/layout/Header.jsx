@@ -22,9 +22,9 @@ function Header() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin">
-            <div class="flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <svg
-                class="animate-spin border-indigo-600"
+                className="border-indigo-600 animate-spin"
                 xmlns="http://www.w3.org/2000/svg"
                 width="52"
                 height="52"
@@ -90,7 +90,7 @@ function Header() {
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <h1 class="bg-gradient-to-r font-bold text-4xl from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text">
+            <h1 className="inline-block text-4xl font-bold text-transparent bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 bg-clip-text">
               NHuu ADMIN
             </h1>
             {/* Right Side */}

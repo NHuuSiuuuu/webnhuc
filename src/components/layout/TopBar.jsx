@@ -1,47 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import { useState } from "react";
-// import Tippy from "@tippyjs/react";
 import HeadlessTippy from "@tippyjs/react/headless";
 import "tippy.js/dist/tippy.css"; // optional
-import useDebounce from "@/hooks/useDebounce.hook";
+import useDebounce from "@/hooks/useDebounce";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleXmark,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router";
 import { calculateDiscountedPrice, formatPrice } from "../../utils/price";
+import { searchProducts } from "@/apis/products.api";
 
-// import { formatPrice,calculateDiscountedPrice } from "../../utils/price";
-
-function TopBar({ scrolled }) {
+function TopBar() {
   const [searchValue, setSearchValue] = useState("");
   const [showResult, setShowResult] = useState(true);
   const debounceValue = useDebounce(searchValue, 500);
 
-  const {
-    data: searchData,
-    isLoading: searchLoading,
-    isError: searchError,
-  } = useQuery({
+  const { data: searchData, isLoading: searchLoading } = useQuery({
     queryKey: ["searchProducts", debounceValue],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_BACKEND}/product/search?keyword=${debounceValue}`,
-      );
-      return data;
-    },
+    queryFn: () => searchProducts(debounceValue),
 
     enabled: debounceValue.trim() !== "", // Điều kiện dể query chạy
   });
-  const handleSearchValue = (e) => {
-    setSearchValue(e.target.value);
-  };
 
   const handleHideResult = () => {
     setShowResult(false);
+  };
+
+  const handleClear = () => {
+    setShowResult(false);
+    setSearchValue("");
   };
 
   return (
@@ -54,11 +41,11 @@ function TopBar({ scrolled }) {
               <ul>
                 <li>
                   <span>
-                    <a href="">nhuu@gmail.com</a>
+                    <Link to="">nhuu@gmail.com</Link>
                   </span>
                   <span className="h-9">|</span>
                   <span>
-                    <a href="">Hotline: 012 456 789</a>
+                    <Link to="">Hotline: 012 456 789</Link>
                   </span>
                 </li>
               </ul>
@@ -102,44 +89,37 @@ function TopBar({ scrolled }) {
                     >
                       {searchData?.products.map((item) => (
                         <div
-                          key={item.slug}
+                          key={item?.slug}
                           className="flex items-start border-b border-dotted border-[#dfe0e1] gap-4 p-[14px] hover:bg-[#fdf8f6] transition-colors"
                         >
                           <Link
-                            onClick={() => {
-                              setShowResult(false);
-                              setSearchValue("");
-                            }}
-                            key={item.slug}
-                            to={`/products/${item.slug}`}
+                            onClick={handleClear}
+                            to={`/products/${item?.slug}`}
                             className="shrink-0"
                           >
                             <img
-                              alt={item.title}
-                              src={item.thumbnail[1]}
+                              alt={item?.title}
+                              src={item?.thumbnail?.[1]}
                               className="object-cover w-[60px] h-[80px] "
                             />
                           </Link>
                           <div className="flex-1 flex flex-col justify-between h-[80px]">
                             <Link
-                              onClick={() => {
-                                setShowResult(false);
-                                setSearchValue("");
-                              }}
+                              onClick={handleClear}
                               className="text-[#a47b67] text-[14px] font-medium mb-[4px] whitespace-pre-line block"
-                              to={`/products/${item.slug}`}
+                              to={`/products/${item?.slug}`}
                             >
-                              {item.title}
+                              {item?.title}
                             </Link>
                             <div>
                               <p className="inline-block text-[14px] text-[#a47b67] font-normal">
-                                {formatPrice(item.price)}
+                                {formatPrice(item?.price)}
                               </p>
                               <p className="inline ml-[5px] text-[13px] text-[#797979] line-through">
                                 {formatPrice(
                                   calculateDiscountedPrice(
-                                    item.price,
-                                    item.discountPercentage,
+                                    item?.price,
+                                    item?.discountPercentage,
                                   ),
                                 )}
                               </p>
@@ -154,7 +134,7 @@ function TopBar({ scrolled }) {
                 <div className="relative bg-white ">
                   <div className="flex items-center ">
                     <input
-                      onChange={(e) => handleSearchValue(e)}
+                      onChange={(e) => setSearchValue(e.target.value)}
                       type="text"
                       value={searchValue}
                       onFocus={() => setShowResult(true)}
@@ -166,13 +146,7 @@ function TopBar({ scrolled }) {
                     <div className="absolute right-[40px] flex items-center">
                       <div>
                         {!!searchValue && !searchLoading && (
-                          <button
-                            className="clear"
-                            onClick={() => {
-                              setShowResult(false);
-                              setSearchValue("");
-                            }}
-                          >
+                          <button className="clear" onClick={handleClear}>
                             <FontAwesomeIcon
                               className="text-[#ccc] text-[13px] hover:text-[#999] transition"
                               icon={faCircleXmark}
@@ -190,10 +164,7 @@ function TopBar({ scrolled }) {
                   </div>
 
                   <button
-                    onClick={() => {
-                      setShowResult(false);
-                      setSearchValue("");
-                    }}
+                    onClick={handleClear}
                     className="absolute -translate-y-1/2 opacity-75 right-4 top-1/2 size-4"
                   >
                     <Search className="size-4" />

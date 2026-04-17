@@ -1,9 +1,11 @@
+import { Link } from "react-router";
+
 function CategoryList() {
   return (
     <div className="absolute z-20 w-[94%] sm:w-[90%] md:w-[84%] lg:w-[75%] p-[15px] bg-white shadow-xl flex flex-row justify-between gap-2 mx-auto -translate-x-1/2 -translate-y-[50%]
       left-1/2 ">
       <div className="relative overflow-hidden group">
-        <a href="" className="block">
+        <Link to="" className="block">
           <img
             src="https://file.hstatic.net/1000321269/file/bannersmallweb2_4ec403296f764ed49d8594dec0e88f79.jpg"
             alt="Áo nữ"
@@ -12,29 +14,29 @@ function CategoryList() {
 
           {/* Khung đục lỗ */}
           <div className="absolute opacity-0 border border-white inset-7 group-hover:opacity-100 transition-opacity duration-300 ease-in-out shadow-[0_0_0_9999px_rgba(0,0,0,0.2)]"></div>
-        </a>
+        </Link>
       </div>
 
       <div className="relative overflow-hidden group">
-        <a href="" className="block">
+        <Link to="" className="block">
           <img
             src="https://file.hstatic.net/1000321269/file/bannersmallweb2__2__dfb73fc1206e4596a4dec1bba191e0dc.jpg"
             alt="Áo khoác"
             className="object-cover w-full h-auto"
           />
           <div className="absolute opacity-0 border border-white inset-7 group-hover:opacity-100 transition-opacity duration-300 ease-in-out shadow-[0_0_0_9999px_rgba(0,0,0,0.2)]"></div>
-        </a>
+        </Link>
       </div>
 
       <div className="relative overflow-hidden group">
-        <a href="" className="block">
+        <Link to="" className="block">
           <img
             src="https://file.hstatic.net/1000321269/file/bannersmallweb2__1__ab108ac8e4b74ec7a95f8c3bd373ed6f.jpg"
             alt="Váy"
             className="object-cover w-full h-auto"
           />
           <div className="absolute opacity-0 border border-white inset-7 group-hover:opacity-100 transition-opacity duration-300 ease-in-out shadow-[0_0_0_9999px_rgba(0,0,0,0.2)]"></div>
-        </a>
+        </Link>
       </div>
     </div>
   );
