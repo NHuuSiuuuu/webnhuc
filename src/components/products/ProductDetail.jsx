@@ -15,6 +15,7 @@ import ErrorPage from "../comon/ErrorPage";
 import { getProductDetail } from "../../apis/products.api";
 import { addToCart } from "@/apis/cart.api";
 import SeoHead from "@/components/comon/SeoHead";
+import ProductsRelated from "@/components/products/ProductsRelated";
 
 function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState(null);
@@ -124,7 +125,6 @@ function ProductDetail() {
   };
   if (isLoading) return <LoadingPage />;
   if (isError) return <ErrorPage />;
-  console.log("dâd", product?.thumbnail?.[0]);
   return (
     // product detail
     <div id="product" className="mt-[40px]">
@@ -463,10 +463,11 @@ function ProductDetail() {
         </div>
         <div>
           <div className="text-center">
-            <h2 className="mt-[10px] mb-[50px] font-medium uppercase text-[28px]">
+            <h2 className="mt-[10px]  font-medium uppercase text-[28px]">
               Sản phẩm liên quan
             </h2>
           </div>
+          <ProductsRelated id={product?._id} />
         </div>
       </div>
     </div>

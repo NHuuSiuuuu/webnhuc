@@ -21,6 +21,8 @@ function Header({ active }) {
 
   const { data, isLoading, isError, cart_id } = useCart();
 
+  console.log("user", user);
+
   if (isLoading)
     return (
       <div className="p-4 space-y-2">
@@ -46,19 +48,19 @@ function Header({ active }) {
         ${active ? "fixed top-0 left-0 z-50 shadow-sm" : "relative"}
       `}
       >
-        <div className={`container mx-auto py-0 md:px-4 `}>
+        <div className={`container mx-auto py-0 md:px-4 py-2`}>
           <div
             className={`flex justify-between md:flex transition-all duration-300 ${
               active ? "py-0" : "md:py-[15px]"
             }`}
           >
             {/* Logo */}
-            <div className="flex-3 md:flex md:flex-1 justify-center items-center px-[15px]">
+            <div className="flex-3 flex md:flex md:flex-1 justify-center items-center px-[15px]">
               <Link
                 to="/"
-                className="block text-[40px] text-[20px] text-center"
+                className="block md:text-[30px] text-[20px] text-center"
               >
-                NHUU
+                NHUU Boutique
               </Link>
             </div>
 
@@ -134,16 +136,23 @@ function Header({ active }) {
 
             {/* User */}
             <div className="flex justify-end pr-[15px] sm:flex flex-1 md:justify-center items-center flex-wrap gap-1.5">
-              <Link to="/account" className="inline-flex items-center">
-                <User className="size-8 pr-[10px]" />{" "}
+              <div className="inline-flex items-center">
                 {loadingUser ? (
                   <p className="hidden sm:text-[#a47b67] sm:block">...</p>
-                ) : (
-                  <p className="hidden sm:text-[#a47b67] sm:block">
+                ) : user?.data ? (
+                  <Link
+                    to="/account"
+                    className=" hidden sm:text-[#a47b67] sm:block"
+                  >
                     Hi, {user?.data?.fullName}
-                  </p>
+                  </Link>
+                ) : (
+                  <Link to="/login" className="block text-center">
+                    <User className="size-8 pr-[10px] mx-auto" />{" "}
+                    <p className="hidden md:block">Đăng nhập</p>
+                  </Link>
                 )}
-              </Link>
+              </div>
               <Link className="inline-flex items-center">
                 <span>
                   <div className="relative">

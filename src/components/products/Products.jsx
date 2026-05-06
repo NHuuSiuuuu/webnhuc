@@ -353,7 +353,7 @@ function Products() {
               <div className="px-2 mb-[20px]  aspect-[3/4]">
                 {/* img product full */}
                 <img
-                  class=" object-cover h-full w-full overflow-hidden"
+                  className="object-cover w-full h-full overflow-hidden "
                   src={selectedProduct?.thumbnail[indexThumb]}
                   alt={selectedProduct?.title}
                 />

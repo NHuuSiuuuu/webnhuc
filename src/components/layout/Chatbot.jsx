@@ -56,7 +56,6 @@ function Chatbot() {
     },
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries();
-      console.log(data);
       setMessages((prev) => [...prev, { from: "bot", text: data.reply }]);
     },
     onError: () => {

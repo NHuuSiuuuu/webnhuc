@@ -16,7 +16,7 @@ function LoginAdmin() {
       );
     },
     onSuccess: ({ data }) => {
-      navigate("http://localhost:5173/admin/product/create");
+      navigate("/admin");
       console.log(data);
     },
     onError: () => {
@@ -27,7 +27,6 @@ function LoginAdmin() {
   const handleRegister = (e) => {
     mutate(formData);
   };
-  console.log(formData);
 
   return (
     <div className="flex min-h-screen bg-white">

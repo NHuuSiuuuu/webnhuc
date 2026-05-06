@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { createOrder, getCart, getshippingMethod } from "@/apis/cart.api";
 import useAddressSelector from "@/hooks/useAddressSelector";
 import { ChevronDown } from "lucide-react";
+import useAuth from "@/hooks/useAuth";
 
 // Trong component Checkout
 
@@ -19,6 +20,8 @@ function Checkout() {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState("");
   const [fee, setFee] = useState(null);
   const cart_id = localStorage.getItem("cart_id");
+  const { data, isLoading: loadingUser } = useAuth();
+  const user = data?.data;
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -82,6 +85,15 @@ function Checkout() {
         curr.quantity
     );
   }, 0);
+  useEffect(() => {
+    if (!user) return;
+
+    setForm((prev) => ({
+      ...prev,
+      fullName: user.fullName || "",
+      email: user.email || "",
+    }));
+  }, [user]);
 
   useEffect(() => {
     if (!selectedShippingMethod) return;
@@ -135,6 +147,7 @@ function Checkout() {
 
     mutate(payload);
   };
+  console.log(form);
 
   return (
     <div className="mx-auto h-[1000px] w-[90%] lg:w-[70%]">
@@ -189,6 +202,7 @@ function Checkout() {
                 type="text"
                 onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                 placeholder="Họ và tên"
+                value={form?.fullName}
                 className="w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
               />
               <label className="text-[#333333] pointer-events-none font-medium left-[22px] peer-focus:-translate-y-1/2 px-[4px] translate-y-1/2 bg-white transition-all duration-200 opacity-0 peer-focus:opacity-100 absolute peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:opacity-100">
@@ -201,6 +215,7 @@ function Checkout() {
                 <input
                   type="text"
                   placeholder="Email"
+                  value={form?.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="z-50 w-full peer border border-[#d9d9d9] rounded-[4px] py-[14px] pr-[40px] pl-[26px] focus:outline-[#338dbc] focus:placeholder-transparent"
                 />

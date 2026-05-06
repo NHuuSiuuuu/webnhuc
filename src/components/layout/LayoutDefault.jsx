@@ -12,7 +12,7 @@ function LayoutDefault() {
     const handleScroll = () => {
       const isScroller = window.scrollY > 60;
       setScrolled((prev) => (prev !== isScroller ? isScroller : prev)); //Scroll chạy trước → JS chạy sau ko dùng thì ngược lại
-      console.log(window.scrollY);
+      // console.log(window.scrollY);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
 

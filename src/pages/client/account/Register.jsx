@@ -18,7 +18,7 @@ function Register() {
     },
     onSuccess: () => {
       toast.success("Tạo tài khoản thành công!");
-      navigate("/account/login");
+      navigate("/login");
     },
     onError: (error) => {
       toast.error(error.response.data.message);
@@ -152,7 +152,7 @@ function Register() {
         <p className="text-[14px] text-[#aaa] tracking-[0.03em]">
           Đã có tài khoản?{" "}
           <Link
-            to="/account/login"
+            to="/login"
             className="text-[#111] no-underline border-b border-[#111] pb-px"
           >
             Đăng nhập

@@ -24,7 +24,6 @@ import AccountCreateAdmin from "@/pages/admin/accounts/AccountCreateAdmin";
 import AccountUpdateAdmin from "@/pages/admin/accounts/AccountUpdateAdmin";
 import AccountDetail from "@/pages/admin/accounts/AccountDetail";
 import LoginAdmin from "@/pages/admin/auth/LoginAdmin";
-import ProtectedRoute from "@/components/admin/ProtectedRoute";
 import AccountMeAdmin from "@/pages/admin/accounts/AccountMeAdmin";
 import ProductDetailAdmin from "@/pages/admin/product/ProductDetailAdmin";
 import Checkout from "@/pages/client/Checkouts";
@@ -41,6 +40,9 @@ import AdminOrderDetail from "@/pages/admin/orders/OrderDetailAdmin";
 import ProducstNew from "@/pages/client/products/ProductsNew";
 import Account from "@/pages/client/account/Account";
 import AuthRedirect from "@/components/admin/layout/AuthRedirect";
+import ProtectedRoute from "@/components/protected-route/ProtectedRoute";
+import AuthRoute from "@/components/protected-route/AuthRoute";
+import AdminRoute from "@/components/protected-route/AdminRoute";
 
 export const routes = [
   {
@@ -73,16 +75,21 @@ export const routes = [
         path: "tracking",
         element: <OrderTracking />,
       },
-      {
-        path: "/account",
 
-        element: <Account />,
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "account",
+            element: <Account />,
+          },
+        ],
       },
     ],
   },
   {
     path: "/",
-    element: <AuthRedirect />,
+    element: <AuthRoute />,
     children: [
       {
         path: "login",
@@ -91,7 +98,7 @@ export const routes = [
       {
         path: "register",
         element: <Register />,
-      }
+      },
     ],
   },
   {
@@ -106,22 +113,21 @@ export const routes = [
     path: "orders/detail/:id",
     element: <OrderDetail />,
   },
-  // {
-  //   path: "account/login/",
-  //   element: <Login />,
-  // },
-  // {
-  //   path: "account/register/",
-  //   element: <Register />,
-  // },
 
   {
-    path: "/admin/login",
-    element: <LoginAdmin />,
+    path: "/admin",
+    element: <AuthRoute />,
+    children: [
+      {
+        path: "login",
+        element: <LoginAdmin />,
+      },
+    ],
   },
+ 
   {
     path: "/admin",
-    element: <ProtectedRoute />,
+    element: <AdminRoute />,
     children: [
       {
         element: <LayoutDefaultAdmin />,

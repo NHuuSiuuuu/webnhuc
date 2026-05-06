@@ -114,7 +114,7 @@ function Login() {
         <p className="text-[14px] text-[#aaa] tracking-[0.03em]">
           Chưa có tài khoản?{" "}
           <Link
-            to="/account/register"
+            to="/register"
             className="text-[#111] no-underline border-b border-[#111] pb-px"
           >
             Đăng ký ngay

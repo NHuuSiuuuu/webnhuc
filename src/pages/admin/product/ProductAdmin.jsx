@@ -167,23 +167,23 @@ function ProductAdmin() {
   });
 
   return (
-    <div className="min-h-screen p-4 bg-gray-50 md:p-6">
+    <div className="min-h-screen p-4 md:p-6 bg-white dark:bg-[#0f1117]">
       {/* Bộ lọc trạng thái */}
       <div>
-        <div className="mb-8">
-          <div className="flex justify-between gap-4">
+        <div className="mb-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800 md:text-3xl">
+              <h1 className="text-2xl font-bold text-gray-800 md:text-3xl dark:text-white">
                 Quản lý sản phẩm
               </h1>
-              <p className="mt-1 text-gray-600">
+              <p className="mt-1 text-gray-600 dark:text-gray-400">
                 Tổng số sản phẩm:{" "}
                 <span className="font-semibold">{data?.total || 0}</span>
               </p>
             </div>
 
             <Link to="/admin/product/create">
-              <div className="relative inline-flex items-center justify-center h-12 px-6 overflow-hidden font-medium duration-500 rounded-md group bg-gradient-to-r from-blue-600 to-blue-800 text-neutral-200">
+              <div className="relative inline-flex items-center justify-center h-10 px-6 overflow-hidden font-medium duration-500 rounded-md group bg-gradient-to-r from-blue-600 to-blue-800 text-neutral-200">
                 <div className="translate-x-0 opacity-100 transition group-hover:-translate-x-[150%] group-hover:opacity-0">
                   Thêm sản phẩm
                 </div>
@@ -194,18 +194,26 @@ function ProductAdmin() {
             </Link>
           </div>
         </div>
+
         {/* Filter Section */}
-        <div className="p-6 mb-8 bg-white border border-gray-200 shadow-sm ">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div
+          className="p-4 mb-6 rounded-xl border shadow-sm  bg-white dark:bg-[#16181f]
+                      border-gray-200 dark:border-white/[0.06]"
+        >
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {/* Status Filter */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Trạng thái hoạt động
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                Trạng thái
               </label>
               <select
                 value={statusFilter}
                 onChange={handleStatusFilter}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
+                className="w-full px-3 py-2 text-sm rounded-lg border transition
+                         bg-white        dark:bg-[#0f1117]
+                         border-gray-300 dark:border-white/[0.08]
+                         text-gray-700   dark:text-gray-200
+                         focus:outline-none focus:ring-2  focus:border-transparent"
               >
                 <option value="">Tất cả trạng thái</option>
                 <option value="active">Hoạt động</option>
@@ -215,13 +223,17 @@ function ProductAdmin() {
 
             {/* Featured Filter */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Sản phẩm nổi bật
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
+                Nổi bật
               </label>
               <select
                 value={filter}
                 onChange={handleFeaturedFilter}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
+                className="w-full px-3 py-2 text-sm rounded-lg border transition
+                         bg-white        dark:bg-[#0f1117]
+                         border-gray-300 dark:border-white/[0.08]
+                         text-gray-700   dark:text-gray-200
+                         focus:outline-none focus:ring-2  focus:border-transparent"
               >
                 <option value="">Tất cả</option>
                 <option value="1">Nổi bật</option>
@@ -231,13 +243,17 @@ function ProductAdmin() {
 
             {/* Sort */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
+              <label className="block mb-2 text-sm font-medium dark:text-gray-300">
                 Sắp xếp theo
               </label>
               <select
                 value={sort}
                 onChange={handleSort}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
+                className="w-full px-3 py-2 text-sm rounded-lg border transition
+                         bg-white        dark:bg-[#0f1117]
+                         border-gray-300 dark:border-white/[0.08]
+                         text-gray-700   dark:text-gray-200
+                         focus:outline-none focus:ring-2  focus:border-transparent"
               >
                 <option value="">Mặc định</option>
                 <option value="title:asc">Tên: A → Z</option>
@@ -257,7 +273,11 @@ function ProductAdmin() {
                   setSort("");
                   setStatusFilter("");
                 }}
-                className="w-full px-4 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition"
+                className="w-full px-3 py-2 text-sm rounded-lg border transition
+                         bg-white        dark:bg-[#0f1117]
+                         border-gray-300 dark:border-white/[0.08]
+                         text-gray-700   dark:text-gray-200
+                         focus:outline-none focus:ring-2  focus:border-transparent"
               >
                 <div className="flex items-center justify-center">
                   <FontAwesomeIcon
@@ -278,37 +298,50 @@ function ProductAdmin() {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {statusFilter && (
-                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">
-                    Trạng thái:{" "}
+                  <span
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full
+                                 text-black dark:text-white bg-[#02C621]
+                                 border border-indigo-200 dark:border-indigo-500/20"
+                  >
                     {statusFilter === "active"
                       ? "Đang hoạt động"
                       : "Dừng hoạt động"}
                     <button
                       onClick={() => setStatusFilter("")}
-                      className="ml-2 text-blue-600 hover:text-blue-800"
+                      className="leading-none opacity-60 hover:opacity-100"
                     >
                       ×
                     </button>
                   </span>
                 )}
                 {filter && (
-                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-purple-800 bg-purple-100 rounded-full">
+                  <span
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full
+                                 text-purple-700    dark:text-white
+                                 bg-purple-100      dark:bg-[#DC362E]
+                                 border border-purple-200 dark:border-purple-500/20"
+                  >
                     Nổi bật: {filter === "1" ? "Có" : "Không"}
                     <button
                       onClick={() => setFilter("")}
-                      className="ml-2 text-purple-600 hover:text-purple-800"
+                      className="leading-none opacity-60 hover:opacity-100"
                     >
                       ×
                     </button>
                   </span>
                 )}
                 {sort && (
-                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">
-                    Sắp xếp: {sort.includes("price") ? "Giá" : "Tên"}{" "}
+                  <span
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full
+                                 text-emerald-700   dark:text-emerald-300
+                                 bg-emerald-100     dark:bg-emerald-500/10
+                                 border border-emerald-200 dark:border-emerald-500/20"
+                  >
+                    {sort.includes("price") ? "Giá" : "Tên"}{" "}
                     {sort.includes("asc") ? "↑" : "↓"}
                     <button
                       onClick={() => setSort("")}
-                      className="ml-2 text-green-600 hover:text-green-800"
+                      className="leading-none opacity-60 hover:opacity-100"
                     >
                       ×
                     </button>
@@ -322,57 +355,68 @@ function ProductAdmin() {
 
       {/* Products Table */}
       {data.products.length === 0 ? (
-        <div>
-          <h1 className="font-medium text-center text-red-500 text-[20px]">
-            Không có sản phẩm nào{" "}
-          </h1>
+        <div
+          className="py-16 text-center rounded-xl border
+                        bg-white        dark:bg-[#16181f]
+                        border-gray-200 dark:border-white/[0.06]"
+        >
+          <p className="text-sm text-gray-400 dark:text-gray-500">
+            Không có sản phẩm nào
+          </p>
         </div>
       ) : (
-        <div className="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
+        <div
+          className="rounded-xl border overflow-hidden
+                        bg-white        dark:bg-[#16181f]
+                        border-gray-200 dark:border-white/[0.06]"
+        >
+          <div className="hidden overflow-x-auto md:block">
+            <table className="min-w-full ">
+              <thead>
+                <tr
+                  className="border-b border-gray-100 dark:border-white/[0.06]
+                               bg-gray-50 dark:bg-white/[0.02]"
+                >
                   <th
                     scope="col"
-                    className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase"
+                    className="px-5 py-3 text-sm font-semibold tracking-wider text-left text-gray-500 uppercase dark:text-white "
                   >
                     Sản phẩm
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase"
+                    className="px-5 py-3 text-sm font-semibold tracking-wider text-left text-gray-500 uppercase dark:text-white "
                   >
                     Danh mục
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase"
+                    className="px-5 py-3 text-sm font-semibold tracking-wider text-left text-gray-500 uppercase dark:text-white "
                   >
                     Giá
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase"
+                    className="px-5 py-3 text-sm font-semibold tracking-wider text-left text-gray-500 uppercase dark:text-white "
                   >
                     Tồn kho
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase"
+                    className="px-5 py-3 text-sm font-semibold tracking-wider text-left text-gray-500 uppercase dark:text-white "
                   >
                     Trạng thái
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase"
+                    className="px-5 py-3 text-sm font-semibold tracking-wider text-left text-gray-500 uppercase dark:text-white "
                   >
                     Người tạo
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-700 uppercase"
-                  >
+                    className="px-5 py-3 text-sm font-semibold tracking-wider text-left text-gray-500 uppercase dark:text-white "
+                  >   
                     Hành động
                   </th>
                 </tr>
@@ -512,7 +556,7 @@ function ProductAdmin() {
           </div>
 
           {/* Pagination */}
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+          {/* <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <button
@@ -534,7 +578,7 @@ function ProductAdmin() {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

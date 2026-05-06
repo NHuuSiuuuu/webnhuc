@@ -64,7 +64,7 @@ function Cart() {
       quantity: quantity,
     });
   };
-  console.log(cart_id);
+  // console.log(cart_id);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["cart", cart_id],
     queryFn: () => getCart(cart_id),

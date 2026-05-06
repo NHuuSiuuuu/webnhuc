@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import Slider from "react-slick";
 
-function QuickViewModal({ selectedProduct, openDialog ,setOpendialog}) {
+function QuickViewModal({ selectedProduct, openDialog, setOpendialog }) {
   //   const [openDialog, setOpendialog] = useState(false);
   //   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -40,16 +40,18 @@ function QuickViewModal({ selectedProduct, openDialog ,setOpendialog}) {
 
   const { mutate } = useMutation({
     mutationFn: async (payload) => {
-      return await axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/create`, payload);
+      return await axios.post(
+        `${import.meta.env.VITE_API_BACKEND}/cart/create`,
+        payload,
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["cart", cartId]);
-      setOpendialog(false)
+      setOpendialog(false);
       alert("Sản phẩm đã được thêm vào giỏ hàng!");
     },
   });
   const handleAddToCart = async (productId) => {
-    console.log("heheheh")
     if (!selectedSize) {
       setErrorSize(true);
     }
@@ -59,7 +61,6 @@ function QuickViewModal({ selectedProduct, openDialog ,setOpendialog}) {
       quantity: quantity,
       size_id: selectedSize?._id,
     };
-    console.log("payload", payload);
     mutate(payload);
   };
 
@@ -97,7 +98,7 @@ function QuickViewModal({ selectedProduct, openDialog ,setOpendialog}) {
             <div className="px-2 mb-[20px]  aspect-[3/4]">
               {/* img product full */}
               <img
-                class=" object-cover h-full w-full overflow-hidden"
+                className="object-cover w-full h-full overflow-hidden "
                 src={selectedProduct?.thumbnail[indexThumb]}
                 alt={selectedProduct?.title}
               />

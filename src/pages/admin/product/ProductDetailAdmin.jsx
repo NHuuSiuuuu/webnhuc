@@ -66,9 +66,9 @@ function ProductDetailAdmin() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin">
-            <div class="flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <svg
-                class="animate-spin border-indigo-600"
+                className="animate-spin border-indigo-600"
                 xmlns="http://www.w3.org/2000/svg"
                 width="52"
                 height="52"

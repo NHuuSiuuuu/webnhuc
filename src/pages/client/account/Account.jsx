@@ -1,14 +1,21 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "../../../utils/axios";
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 function Account() {
   const { data, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("profile");
   const { mutate } = useMutation({
     mutationFn: async () => {
       return await axios.get(`${import.meta.env.VITE_API_BACKEND}/logout`);
+    },
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["auth"] });
+      navigate("/");
     },
   });
 
@@ -81,11 +88,11 @@ function Account() {
                   {data?.data?.email}
                 </p>
 
-                <div className="p-4 border rounded bg-gray-50">
+                {/* <div className="p-4 border rounded bg-gray-50">
                   <p className="text-sm text-gray-500">
                     Bạn chưa có địa chỉ nào.
                   </p>
-                </div>
+                </div> */}
               </div>
             </>
           )}

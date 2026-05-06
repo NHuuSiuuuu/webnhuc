@@ -1,20 +1,17 @@
-import axios from "axios";
+import axios from "../utils/axios";
 
 /* =======================
     API thêm sản phẩm vào giỏ
   =======================*/
 export const addToCart = async (payload) => {
-  return await axios.post(
-    `${import.meta.env.VITE_API_BACKEND}/cart/create`,
-    payload,
-  );
+  return await axios.post("/cart/create", payload);
 };
 
 /* =======================
     API lấy giỏ hàng
   =======================*/
 export const getCart = async (cart_id) => {
-  const res = await axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/get`, {
+  const res = await axios.post("/cart/get", {
     cart_id,
   });
   return res.data.cart;
@@ -24,7 +21,7 @@ export const getCart = async (cart_id) => {
     Xóa sản phẩm trong giỏ hàng
   =======================*/
 export const deleteCartItem = async (payload) => {
-  return axios.post(`${import.meta.env.VITE_API_BACKEND}/cart/delete`, payload);
+  return axios.post("/cart/delete", payload);
 };
 
 /* =======================

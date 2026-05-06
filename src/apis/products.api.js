@@ -1,12 +1,10 @@
-import axios from "axios";
+import axios from "../utils/axios";
 
 /* =======================
     API chi tiết sản phẩm
   =======================*/
 export const getProductDetail = async (slug) => {
-  const res = await axios.get(
-    `${import.meta.env.VITE_API_BACKEND}/product/detail/${slug}`,
-  );
+  const res = await axios.get(`/product/detail/${slug}`);
   return res.data.product;
 };
 
@@ -15,7 +13,7 @@ export const getProductDetail = async (slug) => {
   =======================*/
 export const searchProducts = async (debounceValue) => {
   const { data } = await axios.get(
-    `${import.meta.env.VITE_API_BACKEND}/product/search?keyword=${debounceValue}`,
+    `/product/search?keyword=${debounceValue}`,
   );
   return data;
 };
@@ -24,8 +22,6 @@ export const searchProducts = async (debounceValue) => {
     Danh sách sản phẩm
   =======================*/
 export const getProducts = async (limit = 20) => {
-  const { data } = await axios.get(
-    `${import.meta.env.VITE_API_BACKEND}/product?limit=${limit}`,
-  );
+  const { data } = await axios.get(`/product?limit=${limit}`);
   return data;
 };

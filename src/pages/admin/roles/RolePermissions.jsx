@@ -32,6 +32,21 @@ function RolePermissions() {
       prefix: "permission",
       actions: ["update"],
     },
+    {
+      group: "Giỏ hàng",
+      prefix: "cart",
+      actions: ["view", "create", "update"],
+    },
+    {
+      group: "Hồ sơ",
+      prefix: "profile",
+      actions: ["view", "update"],
+    },
+    {
+      group: "Thống kê",
+      prefix: "dashboard",
+      actions: ["view"],
+    },
   ];
 
   const fetchRoles = async () => {

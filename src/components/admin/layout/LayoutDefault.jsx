@@ -3,10 +3,12 @@ import Sidebar from "@/components/admin/layout/SideBar";
 import Header from "./Header";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
 function AdminLayout() {
+  const [showMenu, setShowMenu] = useState(false);
   return (
-    <div>
-      <Header />
+    <div className="min-h-screen">
+      <Header showMenu={showMenu} setShowMenu={setShowMenu} />
 
       <ToastContainer
         position="top-right"
@@ -22,9 +24,13 @@ function AdminLayout() {
         transition={Slide}
       />
 
-      <div className="flex min-h-screen bg-gray-100">
-        <Sidebar />
-        <div className="flex-1 ">
+      <div className="">
+        <Sidebar showMenu={showMenu} setShowMenu={setShowMenu} />
+           <div
+          className={`transition-[margin] duration-300 ${
+            showMenu ? "md:ml-56 xl:ml-60" : "md:ml-0"
+          }`}
+        >
           <Outlet />
         </div>
       </div>
